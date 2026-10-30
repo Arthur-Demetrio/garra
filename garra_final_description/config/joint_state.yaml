@@ -4,6 +4,12 @@ joint_state_publisher:
   ros__parameters:
     # Joint names and default positions
     zeros:
+      Revolucionar_46: 0.0
+      Revolucionar_49: 0.0
+      Revolucionar_52: 0.0
 
     # Joints to publish
     source_list:
+      - Revolucionar_46
+      - Revolucionar_49
+      - Revolucionar_52

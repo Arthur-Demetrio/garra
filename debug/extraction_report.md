@@ -1,6 +1,6 @@
-# Extraction Report: garra final v1
+# Extraction Report: garra final v2
 
-**Exported:** 2026-10-30T11:35:38.138247
+**Exported:** 2026-10-30T12:35:18.595413
 **Exporter:** v3.1.1
 
 ## Summary
@@ -56,11 +56,11 @@
 | Depth | 0 |
 | Path segments | Caixa_motor_pequeno |
 | **Transforms** | |
-| Global position (m) | (-0.098912, 0.050634, 0.064249) |
-| Global position (mm) | (-98.91, 50.63, 64.25) |
-| Local transform (m) | (-0.098912, 0.050634, 0.064249) |
+| Global position (m) | (-0.099360, 0.050634, 0.065784) |
+| Global position (mm) | (-99.36, 50.63, 65.78) |
+| Local transform (m) | (-0.099360, 0.050634, 0.065784) |
 | Assembly context depth | 0 |
-| transform2 (m) | (-0.098912, 0.050634, 0.064249) |
+| transform2 (m) | (-0.099360, 0.050634, 0.065784) |
 | **Physical** | |
 | Mass | 0.051342 kg (51.342 g) |
 | Volume | 6.540375e-06 m³ |
@@ -68,8 +68,8 @@
 | Surface area | 4.488229e-03 m² |
 | Body count | 1 |
 | CoM (component-local, m) | (0.131091, -0.048591, 0.140803) |
-| CoM (global, m) | (0.032179, 0.002043, 0.205052) |
-| CoM (global, mm) | (32.18, 2.04, 205.05) |
+| CoM (global, m) | (0.031731, 0.002043, 0.206588) |
+| CoM (global, mm) | (31.73, 2.04, 206.59) |
 | **Inertia at origin (kg·m²)** | |
 | Ixx, Iyy, Izz | 1.150703e-03, 1.911295e-03, 1.007030e-03 |
 | Ixy, Ixz, Iyz | 3.270420e-04, -9.476727e-04, 3.512714e-04 |
@@ -93,11 +93,11 @@
 | Depth | 0 |
 | Path segments | MOTOR_1_1 |
 | **Transforms** | |
-| Global position (m) | (-0.090873, 0.001681, 0.068753) |
-| Global position (mm) | (-90.87, 1.68, 68.75) |
-| Local transform (m) | (-0.090873, 0.001681, 0.068753) |
+| Global position (m) | (-0.091230, 0.001681, 0.070121) |
+| Global position (mm) | (-91.23, 1.68, 70.12) |
+| Local transform (m) | (-0.091230, 0.001681, 0.070121) |
 | Assembly context depth | 0 |
-| transform2 (m) | (-0.090873, 0.001681, 0.068753) |
+| transform2 (m) | (-0.091230, 0.001681, 0.070121) |
 | **Physical** | |
 | Mass | 0.089211 kg (89.211 g) |
 | Volume | 3.304102e-05 m³ |
@@ -105,8 +105,8 @@
 | Surface area | 6.789859e-03 m² |
 | Body count | 1 |
 | CoM (component-local, m) | (0.116478, 0.000261, 0.173840) |
-| CoM (global, m) | (0.025605, 0.001942, 0.242593) |
-| CoM (global, mm) | (25.60, 1.94, 242.59) |
+| CoM (global, m) | (0.025248, 0.001942, 0.243961) |
+| CoM (global, mm) | (25.25, 1.94, 243.96) |
 | **Inertia at origin (kg·m²)** | |
 | Ixx, Iyy, Izz | 2.711535e-03, 3.930895e-03, 1.225295e-03 |
 | Ixy, Ixz, Iyz | -2.712119e-06, -1.806319e-03, -4.047079e-06 |
@@ -130,11 +130,11 @@
 | Depth | 0 |
 | Path segments | MOTOR_1 |
 | **Transforms** | |
-| Global position (m) | (0.025703, 0.004856, 0.015718) |
-| Global position (mm) | (25.70, 4.86, 15.72) |
-| Local transform (m) | (0.025703, 0.004856, 0.015718) |
+| Global position (m) | (0.024219, 0.004856, 0.014674) |
+| Global position (mm) | (24.22, 4.86, 14.67) |
+| Local transform (m) | (0.024219, 0.004856, 0.014674) |
 | Assembly context depth | 0 |
-| transform2 (m) | (0.025703, 0.004856, 0.015718) |
+| transform2 (m) | (0.024219, 0.004856, 0.014674) |
 | **Physical** | |
 | Mass | 0.089211 kg (89.211 g) |
 | Volume | 3.304102e-05 m³ |
@@ -142,8 +142,8 @@
 | Surface area | 6.789859e-03 m² |
 | Body count | 1 |
 | CoM (component-local, m) | (0.053925, -0.033237, 0.166019) |
-| CoM (global, m) | (0.079628, -0.028381, 0.181737) |
-| CoM (global, mm) | (79.63, -28.38, 181.74) |
+| CoM (global, m) | (0.078145, -0.028381, 0.180693) |
+| CoM (global, mm) | (78.14, -28.38, 180.69) |
 | **Inertia at origin (kg·m²)** | |
 | Ixx, Iyy, Izz | 2.578269e-03, 2.733233e-03, 3.772619e-04 |
 | Ixy, Ixz, Iyz | 1.598525e-04, -8.031183e-04, 4.922118e-04 |
@@ -167,11 +167,11 @@
 | Depth | 0 |
 | Path segments | M_dulo_1 |
 | **Transforms** | |
-| Global position (m) | (0.024207, 0.005500, 0.011101) |
-| Global position (mm) | (24.21, 5.50, 11.10) |
-| Local transform (m) | (0.024207, 0.005500, 0.011101) |
+| Global position (m) | (0.022628, 0.005500, 0.010090) |
+| Global position (mm) | (22.63, 5.50, 10.09) |
+| Local transform (m) | (0.022628, 0.005500, 0.010090) |
 | Assembly context depth | 0 |
-| transform2 (m) | (0.024207, 0.005500, 0.011101) |
+| transform2 (m) | (0.022628, 0.005500, 0.010090) |
 | **Physical** | |
 | Mass | 0.096143 kg (96.143 g) |
 | Volume | 6.966854e-05 m³ |
@@ -179,8 +179,8 @@
 | Surface area | 2.826159e-02 m² |
 | Body count | 1 |
 | CoM (component-local, m) | (0.018424, -0.033973, 0.129529) |
-| CoM (global, m) | (0.042631, -0.028473, 0.140629) |
-| CoM (global, mm) | (42.63, -28.47, 140.63) |
+| CoM (global, m) | (0.041052, -0.028473, 0.139618) |
+| CoM (global, mm) | (41.05, -28.47, 139.62) |
 | **Inertia at origin (kg·m²)** | |
 | Ixx, Iyy, Izz | 1.843536e-03, 1.878926e-03, 2.645731e-04 |
 | Ixy, Ixz, Iyz | 6.003142e-05, -3.330741e-04, 4.229598e-04 |
@@ -204,11 +204,11 @@
 | Depth | 0 |
 | Path segments | M_dulo_2 |
 | **Transforms** | |
-| Global position (m) | (-0.094079, 0.001666, 0.065810) |
-| Global position (mm) | (-94.08, 1.67, 65.81) |
-| Local transform (m) | (-0.094079, 0.001666, 0.065810) |
+| Global position (m) | (-0.094496, 0.001666, 0.067245) |
+| Global position (mm) | (-94.50, 1.67, 67.24) |
+| Local transform (m) | (-0.094496, 0.001666, 0.067245) |
 | Assembly context depth | 0 |
-| transform2 (m) | (-0.094079, 0.001666, 0.065810) |
+| transform2 (m) | (-0.094496, 0.001666, 0.067245) |
 | **Physical** | |
 | Mass | 0.056531 kg (56.531 g) |
 | Volume | 4.096449e-05 m³ |
@@ -216,8 +216,8 @@
 | Surface area | 1.699774e-02 m² |
 | Body count | 1 |
 | CoM (component-local, m) | (0.101319, 0.000462, 0.177963) |
-| CoM (global, m) | (0.007240, 0.002128, 0.243773) |
-| CoM (global, mm) | (7.24, 2.13, 243.77) |
+| CoM (global, m) | (0.006823, 0.002128, 0.245208) |
+| CoM (global, mm) | (6.82, 2.13, 245.21) |
 | **Inertia at origin (kg·m²)** | |
 | Ixx, Iyy, Izz | 1.799096e-03, 2.426723e-03, 6.371895e-04 |
 | Ixy, Ixz, Iyz | -2.525339e-06, -1.019333e-03, -4.645831e-06 |
@@ -281,7 +281,9 @@
 | Bounding box (mm) | 97.62 × 75.00 × 107.20 |
 | **Material & Appearance** | |
 | Material | Laminado_vermelho_fosco |
-| Appearance |  |
+| Appearance | Pl_stico_Fosco_Vermelho |
+| Color (RGB 0-1) | (0.769, 0.208, 0.153) |
+| Color (RGB 0-255) | (196, 53, 39) |
 
 #### 🔧 COMPONENT: `motor_pequeno`
 
@@ -292,11 +294,11 @@
 | Depth | 0 |
 | Path segments | motor_pequeno |
 | **Transforms** | |
-| Global position (m) | (0.197991, 0.059543, -0.014312) |
-| Global position (mm) | (197.99, 59.54, -14.31) |
-| Local transform (m) | (0.197991, 0.059543, -0.014312) |
+| Global position (m) | (0.195846, 0.059543, -0.018929) |
+| Global position (mm) | (195.85, 59.54, -18.93) |
+| Local transform (m) | (0.195846, 0.059543, -0.018929) |
 | Assembly context depth | 0 |
-| transform2 (m) | (0.197991, 0.059543, -0.014312) |
+| transform2 (m) | (0.195846, 0.059543, -0.018929) |
 | **Physical** | |
 | Mass | 0.055658 kg (55.658 g) |
 | Volume | 7.090186e-06 m³ |
@@ -304,8 +306,8 @@
 | Surface area | 2.430329e-03 m² |
 | Body count | 1 |
 | CoM (component-local, m) | (-0.080077, 0.169352, -0.057500) |
-| CoM (global, m) | (0.117914, 0.228895, -0.071812) |
-| CoM (global, mm) | (117.91, 228.89, -71.81) |
+| CoM (global, m) | (0.115769, 0.228895, -0.076429) |
+| CoM (global, mm) | (115.77, 228.89, -76.43) |
 | **Inertia at origin (kg·m²)** | |
 | Ixx, Iyy, Izz | 1.784147e-03, 5.439570e-04, 1.958775e-03 |
 | Ixy, Ixz, Iyz | 7.545367e-04, -2.562725e-04, 5.419831e-04 |
@@ -366,11 +368,11 @@
 | Depth | 0 |
 | Path segments | showder_servo_horn |
 | **Transforms** | |
-| Global position (m) | (-0.110801, -0.021500, 0.071796) |
-| Global position (mm) | (-110.80, -21.50, 71.80) |
-| Local transform (m) | (-0.110801, -0.021500, 0.071796) |
+| Global position (m) | (-0.111090, -0.021500, 0.073577) |
+| Global position (mm) | (-111.09, -21.50, 73.58) |
+| Local transform (m) | (-0.111090, -0.021500, 0.073577) |
 | Assembly context depth | 0 |
-| transform2 (m) | (-0.110801, -0.021500, 0.071796) |
+| transform2 (m) | (-0.111090, -0.021500, 0.073577) |
 | **Physical** | |
 | Mass | 0.007175 kg (7.175 g) |
 | Volume | 9.140453e-07 m³ |
@@ -378,8 +380,8 @@
 | Surface area | 9.214295e-04 m² |
 | Body count | 1 |
 | CoM (component-local, m) | (-0.022615, 0.090649, 0.001500) |
-| CoM (global, m) | (-0.133416, 0.069149, 0.073296) |
-| CoM (global, mm) | (-133.42, 69.15, 73.30) |
+| CoM (global, m) | (-0.133705, 0.069149, 0.075077) |
+| CoM (global, mm) | (-133.71, 69.15, 75.08) |
 | **Inertia at origin (kg·m²)** | |
 | Ixx, Iyy, Izz | 5.928869e-05, 4.156142e-06, 6.340178e-05 |
 | Ixy, Ixz, Iyz | 1.500951e-05, 2.434067e-07, -9.756399e-07 |
@@ -403,11 +405,11 @@
 | Depth | 0 |
 | Path segments | showder_servo_horn |
 | **Transforms** | |
-| Global position (m) | (0.004347, -0.004000, 0.277179) |
-| Global position (mm) | (4.35, -4.00, 277.18) |
-| Local transform (m) | (0.004347, -0.004000, 0.277179) |
+| Global position (m) | (0.008301, -0.004000, 0.276523) |
+| Global position (mm) | (8.30, -4.00, 276.52) |
+| Local transform (m) | (0.008301, -0.004000, 0.276523) |
 | Assembly context depth | 0 |
-| transform2 (m) | (0.004347, -0.004000, 0.277179) |
+| transform2 (m) | (0.008301, -0.004000, 0.276523) |
 | **Physical** | |
 | Mass | 0.007175 kg (7.175 g) |
 | Volume | 9.140453e-07 m³ |
@@ -415,8 +417,8 @@
 | Surface area | 9.214295e-04 m² |
 | Body count | 1 |
 | CoM (component-local, m) | (-0.022615, 0.090649, 0.001500) |
-| CoM (global, m) | (-0.018269, 0.086649, 0.278679) |
-| CoM (global, mm) | (-18.27, 86.65, 278.68) |
+| CoM (global, m) | (-0.014314, 0.086649, 0.278023) |
+| CoM (global, mm) | (-14.31, 86.65, 278.02) |
 | **Inertia at origin (kg·m²)** | |
 | Ixx, Iyy, Izz | 5.928869e-05, 4.156142e-06, 6.340178e-05 |
 | Ixy, Ixz, Iyz | 1.500951e-05, 2.434067e-07, -9.756399e-07 |
@@ -443,11 +445,11 @@
 | Path segments | Nova_Pin_a → Componente4_Espelhar |
 | Parent path | `Nova Pinça v4:1` |
 | **Transforms** | |
-| Global position (m) | (0.097628, 0.002043, 0.128465) |
-| Global position (mm) | (97.63, 2.04, 128.47) |
-| Local transform (m) | (-0.002043, 0.003465, 0.052372) |
+| Global position (m) | (0.098472, 0.002043, 0.125903) |
+| Global position (mm) | (98.47, 2.04, 125.90) |
+| Local transform (m) | (-0.002043, 0.000903, 0.051528) |
 | Assembly context depth | 1 |
-| transform2 (m) | (0.097628, 0.002043, 0.128465) |
+| transform2 (m) | (0.098472, 0.002043, 0.125903) |
 | **Physical** | |
 | Mass | 0.026701 kg (26.701 g) |
 | Volume | 3.401383e-06 m³ |
@@ -455,8 +457,8 @@
 | Surface area | 2.797691e-03 m² |
 | Body count | 1 |
 | CoM (component-local, m) | (-0.000000, 0.004855, -0.001500) |
-| CoM (global, m) | (0.097628, 0.006898, 0.126965) |
-| CoM (global, mm) | (97.63, 6.90, 126.97) |
+| CoM (global, m) | (0.098472, 0.006898, 0.124403) |
+| CoM (global, mm) | (98.47, 6.90, 124.40) |
 | **Inertia at origin (kg·m²)** | |
 | Ixx, Iyy, Izz | 1.796676e-06, 6.386314e-06, 8.022785e-06 |
 | Ixy, Ixz, Iyz | 1.394440e-21, -1.178302e-19, 1.944641e-07 |
@@ -481,11 +483,11 @@
 | Path segments | Nova_Pin_a → Componente4 |
 | Parent path | `Nova Pinça v4:1` |
 | **Transforms** | |
-| Global position (m) | (0.106642, 0.002043, 0.124134) |
-| Global position (mm) | (106.64, 2.04, 124.13) |
-| Local transform (m) | (-0.002043, -0.000866, 0.043358) |
+| Global position (m) | (0.107394, 0.002043, 0.121386) |
+| Global position (mm) | (107.39, 2.04, 121.39) |
+| Local transform (m) | (-0.002043, -0.003614, 0.042606) |
 | Assembly context depth | 1 |
-| transform2 (m) | (0.106642, 0.002043, 0.124134) |
+| transform2 (m) | (0.107394, 0.002043, 0.121386) |
 | **Physical** | |
 | Mass | 0.047563 kg (47.563 g) |
 | Volume | 6.058971e-06 m³ |
@@ -493,8 +495,8 @@
 | Surface area | 4.715965e-03 m² |
 | Body count | 1 |
 | CoM (component-local, m) | (-0.000000, -0.002370, 0.001500) |
-| CoM (global, m) | (0.106642, -0.000328, 0.125634) |
-| CoM (global, mm) | (106.64, -0.33, 125.63) |
+| CoM (global, m) | (0.107394, -0.000328, 0.122886) |
+| CoM (global, mm) | (107.39, -0.33, 122.89) |
 | **Inertia at origin (kg·m²)** | |
 | Ixx, Iyy, Izz | 5.546301e-06, 1.274196e-05, 1.800288e-05 |
 | Ixy, Ixz, Iyz | 1.043041e-18, 3.869571e-20, 1.691098e-07 |
@@ -519,11 +521,11 @@
 | Path segments | Nova_Pin_a → Componente5_Espelhar_1 |
 | Parent path | `Nova Pinça v4:1` |
 | **Transforms** | |
-| Global position (m) | (0.104962, -0.000624, 0.120637) |
-| Global position (mm) | (104.96, -0.62, 120.64) |
-| Local transform (m) | (0.000624, -0.004363, 0.045038) |
+| Global position (m) | (0.105641, -0.000624, 0.117924) |
+| Global position (mm) | (105.64, -0.62, 117.92) |
+| Local transform (m) | (0.000624, -0.007076, 0.044359) |
 | Assembly context depth | 1 |
-| transform2 (m) | (0.104962, -0.000624, 0.120637) |
+| transform2 (m) | (0.105641, -0.000624, 0.117924) |
 | **Physical** | |
 | Mass | 0.004572 kg (4.572 g) |
 | Volume | 5.823631e-07 m³ |
@@ -531,8 +533,8 @@
 | Surface area | 6.844810e-04 m² |
 | Body count | 1 |
 | CoM (component-local, m) | (0.034851, -0.029094, -0.008500) |
-| CoM (global, m) | (0.139812, -0.029718, 0.112137) |
-| CoM (global, mm) | (139.81, -29.72, 112.14) |
+| CoM (global, m) | (0.140492, -0.029718, 0.109424) |
+| CoM (global, mm) | (140.49, -29.72, 109.42) |
 | **Inertia at origin (kg·m²)** | |
 | Ixx, Iyy, Izz | 4.575465e-06, 5.947644e-06, 9.855663e-06 |
 | Ixy, Ixz, Iyz | 4.504996e-06, 1.354232e-06, -1.130546e-06 |
@@ -557,11 +559,11 @@
 | Path segments | Nova_Pin_a → Componente5_Espelhar_Espelhar |
 | Parent path | `Nova Pinça v4:1` |
 | **Transforms** | |
-| Global position (m) | (0.095948, -0.000624, 0.124968) |
-| Global position (mm) | (95.95, -0.62, 124.97) |
-| Local transform (m) | (0.000624, -0.000032, 0.054052) |
+| Global position (m) | (0.096720, -0.000624, 0.122442) |
+| Global position (mm) | (96.72, -0.62, 122.44) |
+| Local transform (m) | (0.000624, -0.002558, 0.053280) |
 | Assembly context depth | 1 |
-| transform2 (m) | (0.095948, -0.000624, 0.124968) |
+| transform2 (m) | (0.096720, -0.000624, 0.122442) |
 | **Physical** | |
 | Mass | 0.004572 kg (4.572 g) |
 | Volume | 5.823631e-07 m³ |
@@ -569,8 +571,8 @@
 | Surface area | 6.844810e-04 m² |
 | Body count | 1 |
 | CoM (component-local, m) | (0.034851, -0.029094, 0.008500) |
-| CoM (global, m) | (0.130799, -0.029718, 0.133468) |
-| CoM (global, mm) | (130.80, -29.72, 133.47) |
+| CoM (global, m) | (0.131570, -0.029718, 0.130942) |
+| CoM (global, mm) | (131.57, -29.72, 130.94) |
 | **Inertia at origin (kg·m²)** | |
 | Ixx, Iyy, Izz | 4.575465e-06, 5.947644e-06, 9.855663e-06 |
 | Ixy, Ixz, Iyz | 4.504996e-06, -1.354232e-06, 1.130546e-06 |
@@ -595,11 +597,11 @@
 | Path segments | Nova_Pin_a → Componente5_Espelhar |
 | Parent path | `Nova Pinça v4:1` |
 | **Transforms** | |
-| Global position (m) | (0.095948, 0.004709, 0.124968) |
-| Global position (mm) | (95.95, 4.71, 124.97) |
-| Local transform (m) | (-0.004709, -0.000032, 0.054052) |
+| Global position (m) | (0.096720, 0.004709, 0.122442) |
+| Global position (mm) | (96.72, 4.71, 122.44) |
+| Local transform (m) | (-0.004709, -0.002558, 0.053280) |
 | Assembly context depth | 1 |
-| transform2 (m) | (0.095948, 0.004709, 0.124968) |
+| transform2 (m) | (0.096720, 0.004709, 0.122442) |
 | **Physical** | |
 | Mass | 0.004572 kg (4.572 g) |
 | Volume | 5.823631e-07 m³ |
@@ -607,8 +609,8 @@
 | Surface area | 6.844810e-04 m² |
 | Body count | 1 |
 | CoM (component-local, m) | (0.034851, -0.029094, -0.008500) |
-| CoM (global, m) | (0.130799, -0.024385, 0.116468) |
-| CoM (global, mm) | (130.80, -24.39, 116.47) |
+| CoM (global, m) | (0.131570, -0.024385, 0.113942) |
+| CoM (global, mm) | (131.57, -24.39, 113.94) |
 | **Inertia at origin (kg·m²)** | |
 | Ixx, Iyy, Izz | 4.575465e-06, 5.947644e-06, 9.855663e-06 |
 | Ixy, Ixz, Iyz | 4.504996e-06, 1.354232e-06, -1.130546e-06 |
@@ -633,11 +635,11 @@
 | Path segments | Nova_Pin_a → Componente5 |
 | Parent path | `Nova Pinça v4:1` |
 | **Transforms** | |
-| Global position (m) | (0.104962, 0.004709, 0.120637) |
-| Global position (mm) | (104.96, 4.71, 120.64) |
-| Local transform (m) | (-0.004709, -0.004363, 0.045038) |
+| Global position (m) | (0.105641, 0.004709, 0.117924) |
+| Global position (mm) | (105.64, 4.71, 117.92) |
+| Local transform (m) | (-0.004709, -0.007076, 0.044359) |
 | Assembly context depth | 1 |
-| transform2 (m) | (0.104962, 0.004709, 0.120637) |
+| transform2 (m) | (0.105641, 0.004709, 0.117924) |
 | **Physical** | |
 | Mass | 0.004572 kg (4.572 g) |
 | Volume | 5.823631e-07 m³ |
@@ -645,8 +647,8 @@
 | Surface area | 6.844810e-04 m² |
 | Body count | 1 |
 | CoM (component-local, m) | (0.034851, -0.029094, 0.008500) |
-| CoM (global, m) | (0.139812, -0.024385, 0.129137) |
-| CoM (global, mm) | (139.81, -24.39, 129.14) |
+| CoM (global, m) | (0.140492, -0.024385, 0.126424) |
+| CoM (global, mm) | (140.49, -24.39, 126.42) |
 | **Inertia at origin (kg·m²)** | |
 | Ixx, Iyy, Izz | 4.575465e-06, 5.947644e-06, 9.855663e-06 |
 | Ixy, Ixz, Iyz | 4.504996e-06, -1.354232e-06, 1.130546e-06 |
@@ -671,11 +673,11 @@
 | Path segments | Nova_Pin_a → Componente6_Espelhar |
 | Parent path | `Nova Pinça v4:1` |
 | **Transforms** | |
-| Global position (m) | (0.104962, -0.000624, 0.120637) |
-| Global position (mm) | (104.96, -0.62, 120.64) |
-| Local transform (m) | (0.000624, -0.004363, 0.045038) |
+| Global position (m) | (0.105641, -0.000624, 0.117924) |
+| Global position (mm) | (105.64, -0.62, 117.92) |
+| Local transform (m) | (0.000624, -0.007076, 0.044359) |
 | Assembly context depth | 1 |
-| transform2 (m) | (0.104962, -0.000624, 0.120637) |
+| transform2 (m) | (0.105641, -0.000624, 0.117924) |
 | **Physical** | |
 | Mass | 0.039125 kg (39.125 g) |
 | Volume | 4.984072e-06 m³ |
@@ -683,8 +685,8 @@
 | Surface area | 2.556261e-03 m² |
 | Body count | 1 |
 | CoM (component-local, m) | (0.030510, -0.059008, -0.006605) |
-| CoM (global, m) | (0.135472, -0.059632, 0.114032) |
-| CoM (global, mm) | (135.47, -59.63, 114.03) |
+| CoM (global, m) | (0.136151, -0.059632, 0.111319) |
+| CoM (global, mm) | (136.15, -59.63, 111.32) |
 | **Inertia at origin (kg·m²)** | |
 | Ixx, Iyy, Izz | 1.457138e-04, 4.027378e-05, 1.804102e-04 |
 | Ixy, Ixz, Iyz | 7.205894e-05, 7.986761e-06, -1.559564e-05 |
@@ -709,11 +711,11 @@
 | Path segments | Nova_Pin_a → Componente6 |
 | Parent path | `Nova Pinça v4:1` |
 | **Transforms** | |
-| Global position (m) | (0.104962, 0.004709, 0.120637) |
-| Global position (mm) | (104.96, 4.71, 120.64) |
-| Local transform (m) | (-0.004709, -0.004363, 0.045038) |
+| Global position (m) | (0.105641, 0.004709, 0.117924) |
+| Global position (mm) | (105.64, 4.71, 117.92) |
+| Local transform (m) | (-0.004709, -0.007076, 0.044359) |
 | Assembly context depth | 1 |
-| transform2 (m) | (0.104962, 0.004709, 0.120637) |
+| transform2 (m) | (0.105641, 0.004709, 0.117924) |
 | **Physical** | |
 | Mass | 0.039125 kg (39.125 g) |
 | Volume | 4.984072e-06 m³ |
@@ -721,8 +723,8 @@
 | Surface area | 2.556261e-03 m² |
 | Body count | 1 |
 | CoM (component-local, m) | (0.030510, -0.059008, 0.006605) |
-| CoM (global, m) | (0.135472, -0.054300, 0.127242) |
-| CoM (global, mm) | (135.47, -54.30, 127.24) |
+| CoM (global, m) | (0.136151, -0.054300, 0.124529) |
+| CoM (global, mm) | (136.15, -54.30, 124.53) |
 | **Inertia at origin (kg·m²)** | |
 | Ixx, Iyy, Izz | 1.457138e-04, 4.027378e-05, 1.804102e-04 |
 | Ixy, Ixz, Iyz | 7.205894e-05, -7.986761e-06, 1.559564e-05 |
@@ -747,11 +749,11 @@
 | Path segments | Nova_Pin_a → Healical_Gear_20R_0_00_m_1_0_1 |
 | Parent path | `Nova Pinça v4:1` |
 | **Transforms** | |
-| Global position (m) | (0.102135, -0.011957, 0.126300) |
-| Global position (mm) | (102.14, -11.96, 126.30) |
-| Local transform (m) | (0.011957, 0.001300, 0.047865) |
+| Global position (m) | (0.102933, -0.011957, 0.123644) |
+| Global position (mm) | (102.93, -11.96, 123.64) |
+| Local transform (m) | (0.011957, -0.001356, 0.047067) |
 | Assembly context depth | 1 |
-| transform2 (m) | (0.102135, -0.011957, 0.126300) |
+| transform2 (m) | (0.102933, -0.011957, 0.123644) |
 | **Physical** | |
 | Mass | 0.013454 kg (13.454 g) |
 | Volume | 1.713906e-06 m³ |
@@ -759,8 +761,8 @@
 | Surface area | 1.606652e-03 m² |
 | Body count | 1 |
 | CoM (component-local, m) | (0.004805, -0.003882, -0.000000) |
-| CoM (global, m) | (0.106940, -0.015839, 0.126300) |
-| CoM (global, mm) | (106.94, -15.84, 126.30) |
+| CoM (global, m) | (0.107738, -0.015839, 0.123644) |
+| CoM (global, mm) | (107.74, -15.84, 123.64) |
 | **Inertia at origin (kg·m²)** | |
 | Ixx, Iyy, Izz | 1.009190e-06, 1.397553e-06, 2.370864e-06 |
 | Ixy, Ixz, Iyz | 9.091344e-07, 1.193989e-20, 1.237566e-20 |
@@ -785,11 +787,11 @@
 | Path segments | Nova_Pin_a → Healical_Gear_20R_0_00_m_1_0 |
 | Parent path | `Nova Pinça v4:1` |
 | **Transforms** | |
-| Global position (m) | (0.102135, 0.016043, 0.126300) |
-| Global position (mm) | (102.14, 16.04, 126.30) |
-| Local transform (m) | (-0.016043, 0.001300, 0.047865) |
+| Global position (m) | (0.102933, 0.016043, 0.123644) |
+| Global position (mm) | (102.93, 16.04, 123.64) |
+| Local transform (m) | (-0.016043, -0.001356, 0.047067) |
 | Assembly context depth | 1 |
-| transform2 (m) | (0.102135, 0.016043, 0.126300) |
+| transform2 (m) | (0.102933, 0.016043, 0.123644) |
 | **Physical** | |
 | Mass | 0.013454 kg (13.454 g) |
 | Volume | 1.713906e-06 m³ |
@@ -797,8 +799,8 @@
 | Surface area | 1.606652e-03 m² |
 | Body count | 1 |
 | CoM (component-local, m) | (-0.004805, 0.003882, 0.000000) |
-| CoM (global, m) | (0.097330, 0.019924, 0.126300) |
-| CoM (global, mm) | (97.33, 19.92, 126.30) |
+| CoM (global, m) | (0.098128, 0.019924, 0.123644) |
+| CoM (global, mm) | (98.13, 19.92, 123.64) |
 | **Inertia at origin (kg·m²)** | |
 | Ixx, Iyy, Izz | 1.009190e-06, 1.397553e-06, 2.370864e-06 |
 | Ixy, Ixz, Iyz | 9.091344e-07, 6.972201e-22, 0.000000e+00 |
@@ -823,11 +825,11 @@
 | Path segments | Nova_Pin_a → Healical_Gear_8R_0_00_m_1_0 |
 | Parent path | `Nova Pinça v4:1` |
 | **Transforms** | |
-| Global position (m) | (0.102135, 0.002043, 0.126300) |
-| Global position (mm) | (102.14, 2.04, 126.30) |
-| Local transform (m) | (-0.002043, 0.001300, 0.047865) |
+| Global position (m) | (0.102933, 0.002043, 0.123644) |
+| Global position (mm) | (102.93, 2.04, 123.64) |
+| Local transform (m) | (-0.002043, -0.001356, 0.047067) |
 | Assembly context depth | 1 |
-| transform2 (m) | (0.102135, 0.002043, 0.126300) |
+| transform2 (m) | (0.102933, 0.002043, 0.123644) |
 | **Physical** | |
 | Mass | 0.001261 kg (1.261 g) |
 | Volume | 1.606567e-07 m³ |
@@ -835,8 +837,8 @@
 | Surface area | 3.243915e-04 m² |
 | Body count | 1 |
 | CoM (component-local, m) | (0.000000, 0.000000, 0.000000) |
-| CoM (global, m) | (0.102135, 0.002043, 0.126300) |
-| CoM (global, mm) | (102.14, 2.04, 126.30) |
+| CoM (global, m) | (0.102933, 0.002043, 0.123644) |
+| CoM (global, mm) | (102.93, 2.04, 123.64) |
 | **Inertia at origin (kg·m²)** | |
 | Ixx, Iyy, Izz | 8.455303e-09, 8.455303e-09, 1.354753e-08 |
 | Ixy, Ixz, Iyz | 2.178813e-23, -5.447032e-24, -2.723516e-24 |
@@ -857,7 +859,7 @@
 
 | Property | Value |
 |----------|-------|
-| Defining component | garra_final (garra final v1) |
+| Defining component | garra_final (garra final v2) |
 | Suppressed | False |
 | Motion type | rigid (enum=0) |
 | Axis | (0.0000, 0.0000, 1.0000) |
@@ -875,33 +877,11 @@
 | occ2.global (assembled) | (0.0000, 0.0000, 0.0000) |
 | **Picked origin (m)** | (-0.003041, 0.000000, 0.067392) via `geometryOrOriginOne` |
 
-#### 🔧 Joint: `R_gido_46` (regular)
-
-| Property | Value |
-|----------|-------|
-| Defining component | garra_final (garra final v1) |
-| Suppressed | False |
-| Motion type | rigid (enum=0) |
-| Axis | (0.0000, 0.0000, 1.0000) |
-| **Connections** | |
-| Parent (occ2) | `shoulder_motor` |
-| Parent path | `shoulder_motor:1` |
-| Child (occ1) | `showder_servo_horn` |
-| Child path | `showder_servo_horn:1` |
-| **Geometry (all sources, raw cm)** | |
-| geometryOrOriginOne | (-2.5239, -2.4500, 8.6593) |
-| geometryOrOriginTwo | (-2.5239, -2.4500, 8.6593) |
-| occ1.transform | (-11.0801, -2.1500, 7.1796) ctx_depth=0 |
-| occ1.global (assembled) | (-11.0801, -2.1500, 7.1796) |
-| occ2.transform | (-0.2399, 0.0644, 0.0258) ctx_depth=0 |
-| occ2.global (assembled) | (-0.2399, 0.0644, 0.0258) |
-| **Picked origin (m)** | (-0.025239, -0.024500, 0.086593) via `geometryOrOriginOne` |
-
 #### 🔧 Joint: `R_gido_47` (regular)
 
 | Property | Value |
 |----------|-------|
-| Defining component | garra_final (garra final v1) |
+| Defining component | garra_final (garra final v2) |
 | Suppressed | False |
 | Motion type | rigid (enum=0) |
 | Axis | (0.0000, 0.0000, 1.0000) |
@@ -913,17 +893,17 @@
 | **Geometry (all sources, raw cm)** | |
 | geometryOrOriginOne | (-2.5239, -2.4500, 8.6593) |
 | geometryOrOriginTwo | (-2.5239, -2.4500, 8.6593) |
-| occ1.transform | (2.4207, 0.5500, 1.1101) ctx_depth=0 |
-| occ1.global (assembled) | (2.4207, 0.5500, 1.1101) |
-| occ2.transform | (-11.0801, -2.1500, 7.1796) ctx_depth=0 |
-| occ2.global (assembled) | (-11.0801, -2.1500, 7.1796) |
+| occ1.transform | (2.2628, 0.5500, 1.0090) ctx_depth=0 |
+| occ1.global (assembled) | (2.2628, 0.5500, 1.0090) |
+| occ2.transform | (-11.1090, -2.1500, 7.3577) ctx_depth=0 |
+| occ2.global (assembled) | (-11.1090, -2.1500, 7.3577) |
 | **Picked origin (m)** | (-0.025239, -0.024500, 0.086593) via `geometryOrOriginOne` |
 
 #### 🔧 Joint: `R_gido_48` (regular)
 
 | Property | Value |
 |----------|-------|
-| Defining component | garra_final (garra final v1) |
+| Defining component | garra_final (garra final v2) |
 | Suppressed | False |
 | Motion type | rigid (enum=0) |
 | Axis | (0.0000, 0.0000, 1.0000) |
@@ -933,41 +913,19 @@
 | Child (occ1) | `MOTOR_1` |
 | Child path | `MOTOR (1):1` |
 | **Geometry (all sources, raw cm)** | |
-| geometryOrOriginOne | (2.7813, -2.8500, 19.4222) |
-| geometryOrOriginTwo | (2.7813, -2.8500, 19.4222) |
-| occ1.transform | (2.5703, 0.4856, 1.5718) ctx_depth=0 |
-| occ1.global (assembled) | (2.5703, 0.4856, 1.5718) |
-| occ2.transform | (2.4207, 0.5500, 1.1101) ctx_depth=0 |
-| occ2.global (assembled) | (2.4207, 0.5500, 1.1101) |
-| **Picked origin (m)** | (0.027813, -0.028500, 0.194222) via `geometryOrOriginOne` |
-
-#### 🔧 Joint: `R_gido_49` (regular)
-
-| Property | Value |
-|----------|-------|
-| Defining component | garra_final (garra final v1) |
-| Suppressed | False |
-| Motion type | rigid (enum=0) |
-| Axis | (0.0000, 0.0000, 1.0000) |
-| **Connections** | |
-| Parent (occ2) | `MOTOR_1` |
-| Parent path | `MOTOR (1):1` |
-| Child (occ1) | `showder_servo_horn` |
-| Child path | `showder_servo_horn:2` |
-| **Geometry (all sources, raw cm)** | |
-| geometryOrOriginOne | (4.0785, -0.4000, 19.8362) |
-| geometryOrOriginTwo | (4.0785, -0.4000, 19.8362) |
-| occ1.transform | (0.4347, -0.4000, 27.7179) ctx_depth=0 |
-| occ1.global (assembled) | (0.4347, -0.4000, 27.7179) |
-| occ2.transform | (2.5703, 0.4856, 1.5718) ctx_depth=0 |
-| occ2.global (assembled) | (2.5703, 0.4856, 1.5718) |
-| **Picked origin (m)** | (0.040785, -0.004000, 0.198362) via `geometryOrOriginOne` |
+| geometryOrOriginOne | (3.0038, -2.8500, 19.3096) |
+| geometryOrOriginTwo | (3.0038, -2.8500, 19.3096) |
+| occ1.transform | (2.4219, 0.4856, 1.4674) ctx_depth=0 |
+| occ1.global (assembled) | (2.4219, 0.4856, 1.4674) |
+| occ2.transform | (2.2628, 0.5500, 1.0090) ctx_depth=0 |
+| occ2.global (assembled) | (2.2628, 0.5500, 1.0090) |
+| **Picked origin (m)** | (0.030038, -0.028500, 0.193096) via `geometryOrOriginOne` |
 
 #### 🔧 Joint: `R_gido_50` (regular)
 
 | Property | Value |
 |----------|-------|
-| Defining component | garra_final (garra final v1) |
+| Defining component | garra_final (garra final v2) |
 | Suppressed | False |
 | Motion type | rigid (enum=0) |
 | Axis | (0.0000, 0.0000, 1.0000) |
@@ -977,19 +935,19 @@
 | Child (occ1) | `M_dulo_2` |
 | Child path | `Módulo 2:1` |
 | **Geometry (all sources, raw cm)** | |
-| geometryOrOriginOne | (4.0785, -0.4000, 19.8362) |
-| geometryOrOriginTwo | (4.0785, -0.4000, 19.8362) |
-| occ1.transform | (-9.4079, 0.1666, 6.5810) ctx_depth=0 |
-| occ1.global (assembled) | (-9.4079, 0.1666, 6.5810) |
-| occ2.transform | (0.4347, -0.4000, 27.7179) ctx_depth=0 |
-| occ2.global (assembled) | (0.4347, -0.4000, 27.7179) |
-| **Picked origin (m)** | (0.040785, -0.004000, 0.198362) via `geometryOrOriginOne` |
+| geometryOrOriginOne | (4.3093, -0.4000, 19.6966) |
+| geometryOrOriginTwo | (4.3093, -0.4000, 19.6966) |
+| occ1.transform | (-9.4496, 0.1666, 6.7245) ctx_depth=0 |
+| occ1.global (assembled) | (-9.4496, 0.1666, 6.7245) |
+| occ2.transform | (0.8301, -0.4000, 27.6523) ctx_depth=0 |
+| occ2.global (assembled) | (0.8301, -0.4000, 27.6523) |
+| **Picked origin (m)** | (0.043093, -0.004000, 0.196966) via `geometryOrOriginOne` |
 
 #### 🔧 Joint: `R_gido_51` (regular)
 
 | Property | Value |
 |----------|-------|
-| Defining component | garra_final (garra final v1) |
+| Defining component | garra_final (garra final v2) |
 | Suppressed | False |
 | Motion type | rigid (enum=0) |
 | Axis | (0.0000, 0.0000, 1.0000) |
@@ -999,41 +957,19 @@
 | Child (occ1) | `MOTOR_1_1` |
 | Child path | `MOTOR (1) (1):1` |
 | **Geometry (all sources, raw cm)** | |
-| geometryOrOriginOne | (7.1398, 0.1942, 18.3782) |
-| geometryOrOriginTwo | (7.1398, 0.1942, 18.3782) |
-| occ1.transform | (-9.0873, 0.1681, 6.8753) ctx_depth=0 |
-| occ1.global (assembled) | (-9.0873, 0.1681, 6.8753) |
-| occ2.transform | (-9.4079, 0.1666, 6.5810) ctx_depth=0 |
-| occ2.global (assembled) | (-9.4079, 0.1666, 6.5810) |
-| **Picked origin (m)** | (0.071398, 0.001942, 0.183782) via `geometryOrOriginOne` |
-
-#### 🔧 Joint: `R_gido_52` (regular)
-
-| Property | Value |
-|----------|-------|
-| Defining component | garra_final (garra final v1) |
-| Suppressed | False |
-| Motion type | rigid (enum=0) |
-| Axis | (0.0000, 0.0000, 1.0000) |
-| **Connections** | |
-| Parent (occ2) | `MOTOR_1_1` |
-| Parent path | `MOTOR (1) (1):1` |
-| Child (occ1) | `Caixa_motor_pequeno` |
-| Child path | `Caixa motor pequeno:1` |
-| **Geometry (all sources, raw cm)** | |
-| geometryOrOriginOne | (8.7242, 0.2043, 14.8988) |
-| geometryOrOriginTwo | (8.7242, 0.2043, 14.8988) |
-| occ1.transform | (-9.8912, 5.0634, 6.4249) ctx_depth=0 |
-| occ1.global (assembled) | (-9.8912, 5.0634, 6.4249) |
-| occ2.transform | (-9.0873, 0.1681, 6.8753) ctx_depth=0 |
-| occ2.global (assembled) | (-9.0873, 0.1681, 6.8753) |
-| **Picked origin (m)** | (0.087242, 0.002043, 0.148988) via `geometryOrOriginOne` |
+| geometryOrOriginOne | (7.3397, 0.1942, 18.1753) |
+| geometryOrOriginTwo | (7.3397, 0.1942, 18.1753) |
+| occ1.transform | (-9.1230, 0.1681, 7.0121) ctx_depth=0 |
+| occ1.global (assembled) | (-9.1230, 0.1681, 7.0121) |
+| occ2.transform | (-9.4496, 0.1666, 6.7245) ctx_depth=0 |
+| occ2.global (assembled) | (-9.4496, 0.1666, 6.7245) |
+| **Picked origin (m)** | (0.073397, 0.001942, 0.181753) via `geometryOrOriginOne` |
 
 #### 🔧 Joint: `R_gido_53` (regular)
 
 | Property | Value |
 |----------|-------|
-| Defining component | garra_final (garra final v1) |
+| Defining component | garra_final (garra final v2) |
 | Suppressed | False |
 | Motion type | rigid (enum=0) |
 | Axis | (0.0000, 0.0000, 1.0000) |
@@ -1043,19 +979,19 @@
 | Child (occ1) | `motor_pequeno` |
 | Child path | `motor pequeno v1:1` |
 | **Geometry (all sources, raw cm)** | |
-| geometryOrOriginOne | (7.3816, 0.2043, 12.1046) |
-| geometryOrOriginTwo | (7.3816, 0.2043, 12.1046) |
-| occ1.transform | (19.7991, 5.9543, -1.4312) ctx_depth=0 |
-| occ1.global (assembled) | (19.7991, 5.9543, -1.4312) |
-| occ2.transform | (-9.8912, 5.0634, 6.4249) ctx_depth=0 |
-| occ2.global (assembled) | (-9.8912, 5.0634, 6.4249) |
-| **Picked origin (m)** | (0.073816, 0.002043, 0.121046) via `geometryOrOriginOne` |
+| geometryOrOriginOne | (7.4511, 0.2043, 11.8980) |
+| geometryOrOriginTwo | (7.4511, 0.2043, 11.8980) |
+| occ1.transform | (19.5846, 5.9543, -1.8929) ctx_depth=0 |
+| occ1.global (assembled) | (19.5846, 5.9543, -1.8929) |
+| occ2.transform | (-9.9360, 5.0634, 6.5784) ctx_depth=0 |
+| occ2.global (assembled) | (-9.9360, 5.0634, 6.5784) |
+| **Picked origin (m)** | (0.074511, 0.002043, 0.118980) via `geometryOrOriginOne` |
 
 #### 🔧 Joint: `R_gido_54` (regular)
 
 | Property | Value |
 |----------|-------|
-| Defining component | garra_final (garra final v1) |
+| Defining component | garra_final (garra final v2) |
 | Suppressed | False |
 | Motion type | rigid (enum=0) |
 | Axis | (0.0000, 0.0000, 1.0000) |
@@ -1065,19 +1001,19 @@
 | Child (occ1) | `Componente4_Espelhar` |
 | Child path | `Nova Pinça v4:1+Componente4(Espelhar):1` |
 | **Geometry (all sources, raw cm)** | |
-| geometryOrOriginOne | (9.7628, 0.2043, 12.8465) |
-| geometryOrOriginTwo | (9.7628, 0.2043, 12.8465) |
-| occ1.transform | (-0.2043, 0.3465, 5.2372) ctx_depth=1 |
-| occ1.global (assembled) | (9.7628, 0.2043, 12.8465) |
-| occ2.transform | (19.7991, 5.9543, -1.4312) ctx_depth=0 |
-| occ2.global (assembled) | (19.7991, 5.9543, -1.4312) |
-| **Picked origin (m)** | (0.097628, 0.002043, 0.128465) via `geometryOrOriginOne` |
+| geometryOrOriginOne | (9.8472, 0.2043, 12.5903) |
+| geometryOrOriginTwo | (9.8472, 0.2043, 12.5903) |
+| occ1.transform | (-0.2043, 0.0903, 5.1528) ctx_depth=1 |
+| occ1.global (assembled) | (9.8472, 0.2043, 12.5903) |
+| occ2.transform | (19.5846, 5.9543, -1.8929) ctx_depth=0 |
+| occ2.global (assembled) | (19.5846, 5.9543, -1.8929) |
+| **Picked origin (m)** | (0.098472, 0.002043, 0.125903) via `geometryOrOriginOne` |
 
 #### 🔧 Joint: `R_gido_55` (regular)
 
 | Property | Value |
 |----------|-------|
-| Defining component | garra_final (garra final v1) |
+| Defining component | garra_final (garra final v2) |
 | Suppressed | False |
 | Motion type | rigid (enum=0) |
 | Axis | (0.0000, 0.0000, 1.0000) |
@@ -1087,19 +1023,19 @@
 | Child (occ1) | `Healical_Gear_20R_0_00_m_1_0` |
 | Child path | `Nova Pinça v4:1+Healical Gear (20R@0.00 m=1.0):1` |
 | **Geometry (all sources, raw cm)** | |
-| geometryOrOriginOne | (10.0332, 1.6043, 12.7166) |
-| geometryOrOriginTwo | (10.0332, 1.6043, 12.7166) |
-| occ1.transform | (-1.6043, 0.1300, 4.7865) ctx_depth=1 |
-| occ1.global (assembled) | (10.2135, 1.6043, 12.6300) |
-| occ2.transform | (-0.2043, 0.3465, 5.2372) ctx_depth=1 |
-| occ2.global (assembled) | (9.7628, 0.2043, 12.8465) |
-| **Picked origin (m)** | (0.100332, 0.016043, 0.127166) via `geometryOrOriginOne` |
+| geometryOrOriginOne | (10.1149, 1.6043, 12.4548) |
+| geometryOrOriginTwo | (10.1149, 1.6043, 12.4548) |
+| occ1.transform | (-1.6043, -0.1356, 4.7067) ctx_depth=1 |
+| occ1.global (assembled) | (10.2933, 1.6043, 12.3644) |
+| occ2.transform | (-0.2043, 0.0903, 5.1528) ctx_depth=1 |
+| occ2.global (assembled) | (9.8472, 0.2043, 12.5903) |
+| **Picked origin (m)** | (0.101149, 0.016043, 0.124548) via `geometryOrOriginOne` |
 
 #### 🔧 Joint: `R_gido_56` (regular)
 
 | Property | Value |
 |----------|-------|
-| Defining component | garra_final (garra final v1) |
+| Defining component | garra_final (garra final v2) |
 | Suppressed | False |
 | Motion type | rigid (enum=0) |
 | Axis | (0.0000, 0.0000, 1.0000) |
@@ -1109,19 +1045,19 @@
 | Child (occ1) | `Healical_Gear_20R_0_00_m_1_0_1` |
 | Child path | `Nova Pinça v4:1+Healical Gear (20R@0.00 m=1.0) (1):1` |
 | **Geometry (all sources, raw cm)** | |
-| geometryOrOriginOne | (10.0332, -1.1957, 12.7166) |
-| geometryOrOriginTwo | (10.0332, -1.1957, 12.7166) |
-| occ1.transform | (1.1957, 0.1300, 4.7865) ctx_depth=1 |
-| occ1.global (assembled) | (10.2135, -1.1957, 12.6300) |
-| occ2.transform | (-0.2043, 0.3465, 5.2372) ctx_depth=1 |
-| occ2.global (assembled) | (9.7628, 0.2043, 12.8465) |
-| **Picked origin (m)** | (0.100332, -0.011957, 0.127166) via `geometryOrOriginOne` |
+| geometryOrOriginOne | (10.1149, -1.1957, 12.4548) |
+| geometryOrOriginTwo | (10.1149, -1.1957, 12.4548) |
+| occ1.transform | (1.1957, -0.1356, 4.7067) ctx_depth=1 |
+| occ1.global (assembled) | (10.2933, -1.1957, 12.3644) |
+| occ2.transform | (-0.2043, 0.0903, 5.1528) ctx_depth=1 |
+| occ2.global (assembled) | (9.8472, 0.2043, 12.5903) |
+| **Picked origin (m)** | (0.101149, -0.011957, 0.124548) via `geometryOrOriginOne` |
 
 #### 🔧 Joint: `R_gido_57` (regular)
 
 | Property | Value |
 |----------|-------|
-| Defining component | garra_final (garra final v1) |
+| Defining component | garra_final (garra final v2) |
 | Suppressed | False |
 | Motion type | rigid (enum=0) |
 | Axis | (0.0000, 0.0000, 1.0000) |
@@ -1131,19 +1067,19 @@
 | Child (occ1) | `Componente5` |
 | Child path | `Nova Pinça v4:1+Componente5:1` |
 | **Geometry (all sources, raw cm)** | |
-| geometryOrOriginOne | (9.2156, -3.5272, 11.0149) |
-| geometryOrOriginTwo | (9.2156, -3.5272, 11.0149) |
-| occ1.transform | (-0.4709, -0.4363, 4.5038) ctx_depth=1 |
-| occ1.global (assembled) | (10.4962, 0.4709, 12.0637) |
-| occ2.transform | (1.1957, 0.1300, 4.7865) ctx_depth=1 |
-| occ2.global (assembled) | (10.2135, -1.1957, 12.6300) |
-| **Picked origin (m)** | (0.092156, -0.035272, 0.110149) via `geometryOrOriginOne` |
+| geometryOrOriginOne | (9.2620, -3.5272, 10.7704) |
+| geometryOrOriginTwo | (9.2620, -3.5272, 10.7704) |
+| occ1.transform | (-0.4709, -0.7076, 4.4359) ctx_depth=1 |
+| occ1.global (assembled) | (10.5641, 0.4709, 11.7924) |
+| occ2.transform | (1.1957, -0.1356, 4.7067) ctx_depth=1 |
+| occ2.global (assembled) | (10.2933, -1.1957, 12.3644) |
+| **Picked origin (m)** | (0.092620, -0.035272, 0.107704) via `geometryOrOriginOne` |
 
 #### 🔧 Joint: `R_gido_58` (regular)
 
 | Property | Value |
 |----------|-------|
-| Defining component | garra_final (garra final v1) |
+| Defining component | garra_final (garra final v2) |
 | Suppressed | False |
 | Motion type | rigid (enum=0) |
 | Axis | (0.0000, 0.0000, 1.0000) |
@@ -1153,19 +1089,19 @@
 | Child (occ1) | `Componente5_Espelhar` |
 | Child path | `Nova Pinça v4:1+Componente5(Espelhar):1` |
 | **Geometry (all sources, raw cm)** | |
-| geometryOrOriginOne | (9.5761, -3.5272, 10.8416) |
-| geometryOrOriginTwo | (9.5761, -3.5272, 10.8416) |
-| occ1.transform | (-0.4709, -0.0032, 5.4052) ctx_depth=1 |
-| occ1.global (assembled) | (9.5948, 0.4709, 12.4968) |
-| occ2.transform | (1.1957, 0.1300, 4.7865) ctx_depth=1 |
-| occ2.global (assembled) | (10.2135, -1.1957, 12.6300) |
-| **Picked origin (m)** | (0.095761, -0.035272, 0.108416) via `geometryOrOriginOne` |
+| geometryOrOriginOne | (9.6189, -3.5272, 10.5897) |
+| geometryOrOriginTwo | (9.6189, -3.5272, 10.5897) |
+| occ1.transform | (-0.4709, -0.2558, 5.3280) ctx_depth=1 |
+| occ1.global (assembled) | (9.6720, 0.4709, 12.2442) |
+| occ2.transform | (1.1957, -0.1356, 4.7067) ctx_depth=1 |
+| occ2.global (assembled) | (10.2933, -1.1957, 12.3644) |
+| **Picked origin (m)** | (0.096189, -0.035272, 0.105897) via `geometryOrOriginOne` |
 
 #### 🔧 Joint: `R_gido_59` (regular)
 
 | Property | Value |
 |----------|-------|
-| Defining component | garra_final (garra final v1) |
+| Defining component | garra_final (garra final v2) |
 | Suppressed | False |
 | Motion type | rigid (enum=0) |
 | Axis | (0.0000, 0.0000, 1.0000) |
@@ -1175,19 +1111,19 @@
 | Child (occ1) | `Componente5_Espelhar_1` |
 | Child path | `Nova Pinça v4:1+Componente5(Espelhar) (1):1` |
 | **Geometry (all sources, raw cm)** | |
-| geometryOrOriginOne | (9.2156, 3.9357, 11.0149) |
-| geometryOrOriginTwo | (9.2156, 3.9357, 11.0149) |
-| occ1.transform | (0.0624, -0.4363, 4.5038) ctx_depth=1 |
-| occ1.global (assembled) | (10.4962, -0.0624, 12.0637) |
-| occ2.transform | (-1.6043, 0.1300, 4.7865) ctx_depth=1 |
-| occ2.global (assembled) | (10.2135, 1.6043, 12.6300) |
-| **Picked origin (m)** | (0.092156, 0.039357, 0.110149) via `geometryOrOriginOne` |
+| geometryOrOriginOne | (9.2620, 3.9357, 10.7704) |
+| geometryOrOriginTwo | (9.2620, 3.9357, 10.7704) |
+| occ1.transform | (0.0624, -0.7076, 4.4359) ctx_depth=1 |
+| occ1.global (assembled) | (10.5641, -0.0624, 11.7924) |
+| occ2.transform | (-1.6043, -0.1356, 4.7067) ctx_depth=1 |
+| occ2.global (assembled) | (10.2933, 1.6043, 12.3644) |
+| **Picked origin (m)** | (0.092620, 0.039357, 0.107704) via `geometryOrOriginOne` |
 
 #### 🔧 Joint: `R_gido_60` (regular)
 
 | Property | Value |
 |----------|-------|
-| Defining component | garra_final (garra final v1) |
+| Defining component | garra_final (garra final v2) |
 | Suppressed | False |
 | Motion type | rigid (enum=0) |
 | Axis | (0.0000, 0.0000, 1.0000) |
@@ -1197,19 +1133,19 @@
 | Child (occ1) | `Componente5_Espelhar_Espelhar` |
 | Child path | `Nova Pinça v4:1+Componente5(Espelhar)(Espelhar):1` |
 | **Geometry (all sources, raw cm)** | |
-| geometryOrOriginOne | (9.5761, 3.9357, 10.8416) |
-| geometryOrOriginTwo | (9.5761, 3.9357, 10.8416) |
-| occ1.transform | (0.0624, -0.0032, 5.4052) ctx_depth=1 |
-| occ1.global (assembled) | (9.5948, -0.0624, 12.4968) |
-| occ2.transform | (-1.6043, 0.1300, 4.7865) ctx_depth=1 |
-| occ2.global (assembled) | (10.2135, 1.6043, 12.6300) |
-| **Picked origin (m)** | (0.095761, 0.039357, 0.108416) via `geometryOrOriginOne` |
+| geometryOrOriginOne | (9.6189, 3.9357, 10.5897) |
+| geometryOrOriginTwo | (9.6189, 3.9357, 10.5897) |
+| occ1.transform | (0.0624, -0.2558, 5.3280) ctx_depth=1 |
+| occ1.global (assembled) | (9.6720, -0.0624, 12.2442) |
+| occ2.transform | (-1.6043, -0.1356, 4.7067) ctx_depth=1 |
+| occ2.global (assembled) | (10.2933, 1.6043, 12.3644) |
+| **Picked origin (m)** | (0.096189, 0.039357, 0.105897) via `geometryOrOriginOne` |
 
 #### 🔧 Joint: `R_gido_61` (regular)
 
 | Property | Value |
 |----------|-------|
-| Defining component | garra_final (garra final v1) |
+| Defining component | garra_final (garra final v2) |
 | Suppressed | False |
 | Motion type | rigid (enum=0) |
 | Axis | (0.0000, 0.0000, 1.0000) |
@@ -1219,19 +1155,19 @@
 | Child (occ1) | `Componente6_Espelhar` |
 | Child path | `Nova Pinça v4:1+Componente6(Espelhar):1` |
 | **Geometry (all sources, raw cm)** | |
-| geometryOrOriginOne | (8.3553, 2.9096, 8.3006) |
-| geometryOrOriginTwo | (8.3553, 2.9096, 8.3006) |
-| occ1.transform | (0.0624, -0.4363, 4.5038) ctx_depth=1 |
-| occ1.global (assembled) | (10.4962, -0.0624, 12.0637) |
-| occ2.transform | (0.0624, -0.0032, 5.4052) ctx_depth=1 |
-| occ2.global (assembled) | (9.5948, -0.0624, 12.4968) |
-| **Picked origin (m)** | (0.083553, 0.029096, 0.083006) via `geometryOrOriginOne` |
+| geometryOrOriginOne | (8.3455, 2.9096, 8.0746) |
+| geometryOrOriginTwo | (8.3455, 2.9096, 8.0746) |
+| occ1.transform | (0.0624, -0.7076, 4.4359) ctx_depth=1 |
+| occ1.global (assembled) | (10.5641, -0.0624, 11.7924) |
+| occ2.transform | (0.0624, -0.2558, 5.3280) ctx_depth=1 |
+| occ2.global (assembled) | (9.6720, -0.0624, 12.2442) |
+| **Picked origin (m)** | (0.083455, 0.029096, 0.080746) via `geometryOrOriginOne` |
 
 #### 🔧 Joint: `R_gido_62` (regular)
 
 | Property | Value |
 |----------|-------|
-| Defining component | garra_final (garra final v1) |
+| Defining component | garra_final (garra final v2) |
 | Suppressed | False |
 | Motion type | rigid (enum=0) |
 | Axis | (0.0000, 0.0000, 1.0000) |
@@ -1241,19 +1177,19 @@
 | Child (occ1) | `Componente6` |
 | Child path | `Nova Pinça v4:1+Componente6:1` |
 | **Geometry (all sources, raw cm)** | |
-| geometryOrOriginOne | (7.9947, -2.5011, 8.4739) |
-| geometryOrOriginTwo | (7.9947, -2.5011, 8.4739) |
-| occ1.transform | (-0.4709, -0.4363, 4.5038) ctx_depth=1 |
-| occ1.global (assembled) | (10.4962, 0.4709, 12.0637) |
-| occ2.transform | (-0.4709, -0.4363, 4.5038) ctx_depth=1 |
-| occ2.global (assembled) | (10.4962, 0.4709, 12.0637) |
-| **Picked origin (m)** | (0.079947, -0.025011, 0.084739) via `geometryOrOriginOne` |
+| geometryOrOriginOne | (7.9886, -2.5011, 8.2553) |
+| geometryOrOriginTwo | (7.9886, -2.5011, 8.2553) |
+| occ1.transform | (-0.4709, -0.7076, 4.4359) ctx_depth=1 |
+| occ1.global (assembled) | (10.5641, 0.4709, 11.7924) |
+| occ2.transform | (-0.4709, -0.7076, 4.4359) ctx_depth=1 |
+| occ2.global (assembled) | (10.5641, 0.4709, 11.7924) |
+| **Picked origin (m)** | (0.079886, -0.025011, 0.082553) via `geometryOrOriginOne` |
 
 #### 🔧 Joint: `R_gido_63` (regular)
 
 | Property | Value |
 |----------|-------|
-| Defining component | garra_final (garra final v1) |
+| Defining component | garra_final (garra final v2) |
 | Suppressed | False |
 | Motion type | rigid (enum=0) |
 | Axis | (0.0000, 0.0000, 1.0000) |
@@ -1263,19 +1199,19 @@
 | Child (occ1) | `Healical_Gear_8R_0_00_m_1_0` |
 | Child path | `Nova Pinça v4:1+Healical Gear (8R@0.00 m=1.0):1` |
 | **Geometry (all sources, raw cm)** | |
-| geometryOrOriginOne | (10.0332, 0.2043, 12.7166) |
-| geometryOrOriginTwo | (10.0332, 0.2043, 12.7166) |
-| occ1.transform | (-0.2043, 0.1300, 4.7865) ctx_depth=1 |
-| occ1.global (assembled) | (10.2135, 0.2043, 12.6300) |
-| occ2.transform | (-0.2043, 0.3465, 5.2372) ctx_depth=1 |
-| occ2.global (assembled) | (9.7628, 0.2043, 12.8465) |
-| **Picked origin (m)** | (0.100332, 0.002043, 0.127166) via `geometryOrOriginOne` |
+| geometryOrOriginOne | (10.1149, 0.2043, 12.4548) |
+| geometryOrOriginTwo | (10.1149, 0.2043, 12.4548) |
+| occ1.transform | (-0.2043, -0.1356, 4.7067) ctx_depth=1 |
+| occ1.global (assembled) | (10.2933, 0.2043, 12.3644) |
+| occ2.transform | (-0.2043, 0.0903, 5.1528) ctx_depth=1 |
+| occ2.global (assembled) | (9.8472, 0.2043, 12.5903) |
+| **Picked origin (m)** | (0.101149, 0.002043, 0.124548) via `geometryOrOriginOne` |
 
 #### 🔧 Joint: `R_gido_64` (regular)
 
 | Property | Value |
 |----------|-------|
-| Defining component | garra_final (garra final v1) |
+| Defining component | garra_final (garra final v2) |
 | Suppressed | False |
 | Motion type | rigid (enum=0) |
 | Axis | (0.0000, 0.0000, 1.0000) |
@@ -1285,13 +1221,79 @@
 | Child (occ1) | `Componente4` |
 | Child path | `Nova Pinça v4:1+Componente4:1` |
 | **Geometry (all sources, raw cm)** | |
-| geometryOrOriginOne | (10.3938, -1.1957, 12.5434) |
-| geometryOrOriginTwo | (10.3938, -1.1957, 12.5434) |
-| occ1.transform | (-0.2043, -0.0866, 4.3358) ctx_depth=1 |
-| occ1.global (assembled) | (10.6642, 0.2043, 12.4134) |
-| occ2.transform | (1.1957, 0.1300, 4.7865) ctx_depth=1 |
-| occ2.global (assembled) | (10.2135, -1.1957, 12.6300) |
-| **Picked origin (m)** | (0.103938, -0.011957, 0.125434) via `geometryOrOriginOne` |
+| geometryOrOriginOne | (10.4717, -1.1957, 12.2741) |
+| geometryOrOriginTwo | (10.4717, -1.1957, 12.2741) |
+| occ1.transform | (-0.2043, -0.3614, 4.2606) ctx_depth=1 |
+| occ1.global (assembled) | (10.7394, 0.2043, 12.1386) |
+| occ2.transform | (1.1957, -0.1356, 4.7067) ctx_depth=1 |
+| occ2.global (assembled) | (10.2933, -1.1957, 12.3644) |
+| **Picked origin (m)** | (0.104717, -0.011957, 0.122741) via `geometryOrOriginOne` |
+
+#### 🔧 Joint: `Revolucionar_46` (regular)
+
+| Property | Value |
+|----------|-------|
+| Defining component | garra_final (garra final v2) |
+| Suppressed | False |
+| Motion type | revolute (enum=1) |
+| Axis | (0.0000, -1.0000, 0.0000) |
+| **Connections** | |
+| Parent (occ2) | `shoulder_motor` |
+| Parent path | `shoulder_motor:1` |
+| Child (occ1) | `showder_servo_horn` |
+| Child path | `showder_servo_horn:1` |
+| **Geometry (all sources, raw cm)** | |
+| geometryOrOriginOne | (-2.5239, -2.4500, 8.6593) |
+| geometryOrOriginTwo | (-2.5239, -2.4500, 8.6593) |
+| occ1.transform | (-11.1090, -2.1500, 7.3577) ctx_depth=0 |
+| occ1.global (assembled) | (-11.1090, -2.1500, 7.3577) |
+| occ2.transform | (-0.2399, 0.0644, 0.0258) ctx_depth=0 |
+| occ2.global (assembled) | (-0.2399, 0.0644, 0.0258) |
+| **Picked origin (m)** | (-0.025239, -0.024500, 0.086593) via `geometryOrOriginOne` |
+
+#### 🔧 Joint: `Revolucionar_49` (regular)
+
+| Property | Value |
+|----------|-------|
+| Defining component | garra_final (garra final v2) |
+| Suppressed | False |
+| Motion type | revolute (enum=1) |
+| Axis | (-0.0000, 1.0000, -0.0000) |
+| **Connections** | |
+| Parent (occ2) | `MOTOR_1` |
+| Parent path | `MOTOR (1):1` |
+| Child (occ1) | `showder_servo_horn` |
+| Child path | `showder_servo_horn:2` |
+| **Geometry (all sources, raw cm)** | |
+| geometryOrOriginOne | (4.3093, -0.4000, 19.6966) |
+| geometryOrOriginTwo | (4.3093, -0.4000, 19.6966) |
+| occ1.transform | (0.8301, -0.4000, 27.6523) ctx_depth=0 |
+| occ1.global (assembled) | (0.8301, -0.4000, 27.6523) |
+| occ2.transform | (2.4219, 0.4856, 1.4674) ctx_depth=0 |
+| occ2.global (assembled) | (2.4219, 0.4856, 1.4674) |
+| **Picked origin (m)** | (0.043093, -0.004000, 0.196966) via `geometryOrOriginOne` |
+
+#### 🔧 Joint: `Revolucionar_52` (regular)
+
+| Property | Value |
+|----------|-------|
+| Defining component | garra_final (garra final v2) |
+| Suppressed | False |
+| Motion type | revolute (enum=1) |
+| Axis | (-0.4517, -0.0000, -0.8922) |
+| **Connections** | |
+| Parent (occ2) | `MOTOR_1_1` |
+| Parent path | `MOTOR (1) (1):1` |
+| Child (occ1) | `Caixa_motor_pequeno` |
+| Child path | `Caixa motor pequeno:1` |
+| **Geometry (all sources, raw cm)** | |
+| geometryOrOriginOne | (8.8514, 0.2043, 14.6637) |
+| geometryOrOriginTwo | (8.8514, 0.2043, 14.6637) |
+| occ1.transform | (-9.9360, 5.0634, 6.5784) ctx_depth=0 |
+| occ1.global (assembled) | (-9.9360, 5.0634, 6.5784) |
+| occ2.transform | (-9.1230, 0.1681, 7.0121) ctx_depth=0 |
+| occ2.global (assembled) | (-9.1230, 0.1681, 7.0121) |
+| **Picked origin (m)** | (0.088514, 0.002043, 0.146637) via `geometryOrOriginOne` |
 
 ## Quick Comparison Table
 
@@ -1299,27 +1301,27 @@ Compare these values with Fusion 360 Properties panel (right-click → Propertie
 
 | Component | Mass (g) | World X,Y,Z (mm) | CoM X,Y,Z (mm) | Material |
 |-----------|----------|-------------------|-----------------|----------|
-| Caixa_motor_pequeno | 51.342 | (-98.91, 50.63, 64.25) | (32.18, 2.04, 205.05) | A_o |
-| MOTOR_1_1 | 89.211 | (-90.87, 1.68, 68.75) | (25.60, 1.94, 242.59) | Alum_nio_prata_anodizada |
-| MOTOR_1 | 89.211 | (25.70, 4.86, 15.72) | (79.63, -28.38, 181.74) | Alum_nio_prata_anodizada |
-| M_dulo_1 | 96.143 | (24.21, 5.50, 11.10) | (42.63, -28.47, 140.63) | Laminado_vermelho_fosco |
-| M_dulo_2 | 56.531 | (-94.08, 1.67, 65.81) | (7.24, 2.13, 243.77) | Laminado_vermelho_fosco |
-| Componente4_Espelhar | 26.701 | (97.63, 2.04, 128.47) | (97.63, 6.90, 126.97) | A_o |
-| Componente4 | 47.563 | (106.64, 2.04, 124.13) | (106.64, -0.33, 125.63) | A_o |
-| Componente5_Espelhar_1 | 4.572 | (104.96, -0.62, 120.64) | (139.81, -29.72, 112.14) | A_o |
-| Componente5_Espelhar_Espelhar | 4.572 | (95.95, -0.62, 124.97) | (130.80, -29.72, 133.47) | A_o |
-| Componente5_Espelhar | 4.572 | (95.95, 4.71, 124.97) | (130.80, -24.39, 116.47) | A_o |
-| Componente5 | 4.572 | (104.96, 4.71, 120.64) | (139.81, -24.39, 129.14) | A_o |
-| Componente6_Espelhar | 39.125 | (104.96, -0.62, 120.64) | (135.47, -59.63, 114.03) | A_o |
-| Componente6 | 39.125 | (104.96, 4.71, 120.64) | (135.47, -54.30, 127.24) | A_o |
-| Healical_Gear_20R_0_00_m_1_0_1 | 13.454 | (102.14, -11.96, 126.30) | (106.94, -15.84, 126.30) | A_o |
-| Healical_Gear_20R_0_00_m_1_0 | 13.454 | (102.14, 16.04, 126.30) | (97.33, 19.92, 126.30) | A_o |
-| Healical_Gear_8R_0_00_m_1_0 | 1.261 | (102.14, 2.04, 126.30) | (102.14, 2.04, 126.30) | A_o |
+| Caixa_motor_pequeno | 51.342 | (-99.36, 50.63, 65.78) | (31.73, 2.04, 206.59) | A_o |
+| MOTOR_1_1 | 89.211 | (-91.23, 1.68, 70.12) | (25.25, 1.94, 243.96) | Alum_nio_prata_anodizada |
+| MOTOR_1 | 89.211 | (24.22, 4.86, 14.67) | (78.14, -28.38, 180.69) | Alum_nio_prata_anodizada |
+| M_dulo_1 | 96.143 | (22.63, 5.50, 10.09) | (41.05, -28.47, 139.62) | Laminado_vermelho_fosco |
+| M_dulo_2 | 56.531 | (-94.50, 1.67, 67.24) | (6.82, 2.13, 245.21) | Laminado_vermelho_fosco |
+| Componente4_Espelhar | 26.701 | (98.47, 2.04, 125.90) | (98.47, 6.90, 124.40) | A_o |
+| Componente4 | 47.563 | (107.39, 2.04, 121.39) | (107.39, -0.33, 122.89) | A_o |
+| Componente5_Espelhar_1 | 4.572 | (105.64, -0.62, 117.92) | (140.49, -29.72, 109.42) | A_o |
+| Componente5_Espelhar_Espelhar | 4.572 | (96.72, -0.62, 122.44) | (131.57, -29.72, 130.94) | A_o |
+| Componente5_Espelhar | 4.572 | (96.72, 4.71, 122.44) | (131.57, -24.39, 113.94) | A_o |
+| Componente5 | 4.572 | (105.64, 4.71, 117.92) | (140.49, -24.39, 126.42) | A_o |
+| Componente6_Espelhar | 39.125 | (105.64, -0.62, 117.92) | (136.15, -59.63, 111.32) | A_o |
+| Componente6 | 39.125 | (105.64, 4.71, 117.92) | (136.15, -54.30, 124.53) | A_o |
+| Healical_Gear_20R_0_00_m_1_0_1 | 13.454 | (102.93, -11.96, 123.64) | (107.74, -15.84, 123.64) | A_o |
+| Healical_Gear_20R_0_00_m_1_0 | 13.454 | (102.93, 16.04, 123.64) | (98.13, 19.92, 123.64) | A_o |
+| Healical_Gear_8R_0_00_m_1_0 | 1.261 | (102.93, 2.04, 123.64) | (102.93, 2.04, 123.64) | A_o |
 | base_link | 122.493 | (0.00, 0.00, 0.00) | (0.33, 0.00, 41.54) | Laminado_vermelho_fosco |
-| motor_pequeno | 55.658 | (197.99, 59.54, -14.31) | (117.91, 228.89, -71.81) | A_o |
+| motor_pequeno | 55.658 | (195.85, 59.54, -18.93) | (115.77, 228.89, -76.43) | A_o |
 | shoulder_motor | 89.211 | (-2.40, 0.64, 0.26) | (-19.16, -0.12, 80.26) | Alum_nio_prata_anodizada |
-| showder_servo_horn | 7.175 | (-110.80, -21.50, 71.80) | (-133.42, 69.15, 73.30) | A_o |
-| showder_servo_horn | 7.175 | (4.35, -4.00, 277.18) | (-18.27, 86.65, 278.68) | A_o |
+| showder_servo_horn | 7.175 | (-111.09, -21.50, 73.58) | (-133.71, 69.15, 75.08) | A_o |
+| showder_servo_horn | 7.175 | (8.30, -4.00, 276.52) | (-14.31, 86.65, 278.02) | A_o |
 
 ## Joint Origins Comparison
 
@@ -1328,22 +1330,22 @@ All origins shown in multiple coordinate systems for debugging.
 | Joint | Source | Origin (cm, raw) | Origin (m, picked) | Motion | Axis |
 |-------|--------|------------------|-------------------|--------|------|
 | R_gido | geometryOrOriginOne | goo1(-0.30, 0.00, 6.74) | (-0.0030, 0.0000, 0.0674) | rigid | (0.0, 0.0, 1.0) |
-| R_gido_46 | geometryOrOriginOne | goo1(-2.52, -2.45, 8.66) | (-0.0252, -0.0245, 0.0866) | rigid | (0.0, 0.0, 1.0) |
 | R_gido_47 | geometryOrOriginOne | goo1(-2.52, -2.45, 8.66) | (-0.0252, -0.0245, 0.0866) | rigid | (0.0, 0.0, 1.0) |
-| R_gido_48 | geometryOrOriginOne | goo1(2.78, -2.85, 19.42) | (0.0278, -0.0285, 0.1942) | rigid | (0.0, 0.0, 1.0) |
-| R_gido_49 | geometryOrOriginOne | goo1(4.08, -0.40, 19.84) | (0.0408, -0.0040, 0.1984) | rigid | (0.0, 0.0, 1.0) |
-| R_gido_50 | geometryOrOriginOne | goo1(4.08, -0.40, 19.84) | (0.0408, -0.0040, 0.1984) | rigid | (0.0, 0.0, 1.0) |
-| R_gido_51 | geometryOrOriginOne | goo1(7.14, 0.19, 18.38) | (0.0714, 0.0019, 0.1838) | rigid | (0.0, 0.0, 1.0) |
-| R_gido_52 | geometryOrOriginOne | goo1(8.72, 0.20, 14.90) | (0.0872, 0.0020, 0.1490) | rigid | (0.0, 0.0, 1.0) |
-| R_gido_53 | geometryOrOriginOne | goo1(7.38, 0.20, 12.10) | (0.0738, 0.0020, 0.1210) | rigid | (0.0, 0.0, 1.0) |
-| R_gido_54 | geometryOrOriginOne | goo1(9.76, 0.20, 12.85) | (0.0976, 0.0020, 0.1285) | rigid | (0.0, 0.0, 1.0) |
-| R_gido_55 | geometryOrOriginOne | goo1(10.03, 1.60, 12.72) | (0.1003, 0.0160, 0.1272) | rigid | (0.0, 0.0, 1.0) |
-| R_gido_56 | geometryOrOriginOne | goo1(10.03, -1.20, 12.72) | (0.1003, -0.0120, 0.1272) | rigid | (0.0, 0.0, 1.0) |
-| R_gido_57 | geometryOrOriginOne | goo1(9.22, -3.53, 11.01) | (0.0922, -0.0353, 0.1101) | rigid | (0.0, 0.0, 1.0) |
-| R_gido_58 | geometryOrOriginOne | goo1(9.58, -3.53, 10.84) | (0.0958, -0.0353, 0.1084) | rigid | (0.0, 0.0, 1.0) |
-| R_gido_59 | geometryOrOriginOne | goo1(9.22, 3.94, 11.01) | (0.0922, 0.0394, 0.1101) | rigid | (0.0, 0.0, 1.0) |
-| R_gido_60 | geometryOrOriginOne | goo1(9.58, 3.94, 10.84) | (0.0958, 0.0394, 0.1084) | rigid | (0.0, 0.0, 1.0) |
-| R_gido_61 | geometryOrOriginOne | goo1(8.36, 2.91, 8.30) | (0.0836, 0.0291, 0.0830) | rigid | (0.0, 0.0, 1.0) |
-| R_gido_62 | geometryOrOriginOne | goo1(7.99, -2.50, 8.47) | (0.0799, -0.0250, 0.0847) | rigid | (0.0, 0.0, 1.0) |
-| R_gido_63 | geometryOrOriginOne | goo1(10.03, 0.20, 12.72) | (0.1003, 0.0020, 0.1272) | rigid | (0.0, 0.0, 1.0) |
-| R_gido_64 | geometryOrOriginOne | goo1(10.39, -1.20, 12.54) | (0.1039, -0.0120, 0.1254) | rigid | (0.0, 0.0, 1.0) |
+| R_gido_48 | geometryOrOriginOne | goo1(3.00, -2.85, 19.31) | (0.0300, -0.0285, 0.1931) | rigid | (0.0, 0.0, 1.0) |
+| R_gido_50 | geometryOrOriginOne | goo1(4.31, -0.40, 19.70) | (0.0431, -0.0040, 0.1970) | rigid | (0.0, 0.0, 1.0) |
+| R_gido_51 | geometryOrOriginOne | goo1(7.34, 0.19, 18.18) | (0.0734, 0.0019, 0.1818) | rigid | (0.0, 0.0, 1.0) |
+| R_gido_53 | geometryOrOriginOne | goo1(7.45, 0.20, 11.90) | (0.0745, 0.0020, 0.1190) | rigid | (0.0, 0.0, 1.0) |
+| R_gido_54 | geometryOrOriginOne | goo1(9.85, 0.20, 12.59) | (0.0985, 0.0020, 0.1259) | rigid | (0.0, 0.0, 1.0) |
+| R_gido_55 | geometryOrOriginOne | goo1(10.11, 1.60, 12.45) | (0.1011, 0.0160, 0.1245) | rigid | (0.0, 0.0, 1.0) |
+| R_gido_56 | geometryOrOriginOne | goo1(10.11, -1.20, 12.45) | (0.1011, -0.0120, 0.1245) | rigid | (0.0, 0.0, 1.0) |
+| R_gido_57 | geometryOrOriginOne | goo1(9.26, -3.53, 10.77) | (0.0926, -0.0353, 0.1077) | rigid | (0.0, 0.0, 1.0) |
+| R_gido_58 | geometryOrOriginOne | goo1(9.62, -3.53, 10.59) | (0.0962, -0.0353, 0.1059) | rigid | (0.0, 0.0, 1.0) |
+| R_gido_59 | geometryOrOriginOne | goo1(9.26, 3.94, 10.77) | (0.0926, 0.0394, 0.1077) | rigid | (0.0, 0.0, 1.0) |
+| R_gido_60 | geometryOrOriginOne | goo1(9.62, 3.94, 10.59) | (0.0962, 0.0394, 0.1059) | rigid | (0.0, 0.0, 1.0) |
+| R_gido_61 | geometryOrOriginOne | goo1(8.35, 2.91, 8.07) | (0.0835, 0.0291, 0.0807) | rigid | (0.0, 0.0, 1.0) |
+| R_gido_62 | geometryOrOriginOne | goo1(7.99, -2.50, 8.26) | (0.0799, -0.0250, 0.0826) | rigid | (0.0, 0.0, 1.0) |
+| R_gido_63 | geometryOrOriginOne | goo1(10.11, 0.20, 12.45) | (0.1011, 0.0020, 0.1245) | rigid | (0.0, 0.0, 1.0) |
+| R_gido_64 | geometryOrOriginOne | goo1(10.47, -1.20, 12.27) | (0.1047, -0.0120, 0.1227) | rigid | (0.0, 0.0, 1.0) |
+| Revolucionar_46 | geometryOrOriginOne | goo1(-2.52, -2.45, 8.66) | (-0.0252, -0.0245, 0.0866) | revolute | (0.0, -1.0, 0.0) |
+| Revolucionar_49 | geometryOrOriginOne | goo1(4.31, -0.40, 19.70) | (0.0431, -0.0040, 0.1970) | revolute | (-0.0, 1.0, -0.0) |
+| Revolucionar_52 | geometryOrOriginOne | goo1(8.85, 0.20, 14.66) | (0.0885, 0.0020, 0.1466) | revolute | (-0.5, -0.0, -0.9) |

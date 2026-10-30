@@ -29,7 +29,7 @@
   <joint name="R_gido_54" type="fixed">
     <parent link="motor_pequeno"/>
     <child link="Componente4_Espelhar"/>
-    <origin xyz="-0.085228 0.152296 -0.057500" rpy="-1.034691 1.570796 -0.222876"/>
+    <origin xyz="-0.085228 0.152296 -0.057500" rpy="-1.570796 1.570796 0.000000"/>
   </joint>
 
 </robot>

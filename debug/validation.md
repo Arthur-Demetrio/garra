@@ -1,6 +1,6 @@
 # Validation Report: garra_final
 
-## Status: PASS (with warnings)
+## Status: PASS
 
 ## Summary
 
@@ -11,12 +11,7 @@
 | Assemblies | 2 |
 | Root | `base_link` |
 | Errors | 0 |
-| Warnings | 2 |
-
-## Warnings
-
-- Link 'base_link': visual mesh export failed — exception: 2 : InternalValidationError : Xl::Utils::findObjectPath(this, objPath)
-- Link 'Caixa_motor_pequeno': visual mesh export failed — exception: 2 : InternalValidationError : Xl::Utils::findObjectPath(this, objPath)
+| Warnings | 0 |
 
 ## Kinematic Tree
 
@@ -24,20 +19,20 @@
 base_link [primitive]
   └─ R_gido [fixed]
     shoulder_motor [primitive]
-      └─ R_gido_46 [fixed]
-        garra_final_showder_servo_horn [primitive]
+      └─ Revolucionar_46 [continuous]
+        garra_final_showder_servo_horn [BAKE] [primitive]
           └─ R_gido_47 [fixed]
             M_dulo_1 [primitive]
               └─ R_gido_48 [fixed]
                 MOTOR_1 [primitive]
-                  └─ R_gido_49 [fixed]
-                    garra_final_showder_servo_horn_2 [primitive]
+                  └─ Revolucionar_49 [continuous]
+                    garra_final_showder_servo_horn_2 [BAKE] [primitive]
                       └─ R_gido_50 [fixed]
                         M_dulo_2 [primitive]
                           └─ R_gido_51 [fixed]
                             MOTOR_1_1 [primitive]
-                              └─ R_gido_52 [fixed]
-                                Caixa_motor_pequeno [primitive]
+                              └─ Revolucionar_52 [continuous]
+                                Caixa_motor_pequeno [BAKE] [primitive]
                                   └─ R_gido_53 [fixed]
                                     motor_pequeno [primitive]
                                       └─ R_gido_54 [fixed]
@@ -68,7 +63,7 @@ base_link [primitive]
 
 | Link | Source | Shape/File |
 |------|--------|------------|
-| `Caixa_motor_pequeno` | primitive STL | box |
+| `Caixa_motor_pequeno` | primitive STL | cylinder |
 | `Componente4` | primitive STL | box |
 | `Componente4_Espelhar` | primitive STL | box |
 | `Componente5` | primitive STL | box |
@@ -89,3 +84,13 @@ base_link [primitive]
 | `garra_final_showder_servo_horn_2` | primitive STL | box |
 | `motor_pequeno` | primitive STL | box |
 | `shoulder_motor` | primitive STL | cylinder |
+
+## Mesh Bake Offsets
+
+Links where joint frame ≠ component origin. Visual/inertial/collision origins shifted.
+
+| Link | Offset (mm) |
+|------|-------------|
+| `garra_final_showder_servo_horn` | (15.8, -85.4, -3.0) |
+| `Caixa_motor_pequeno` | (-131.1, 48.6, -157.0) |
+| `garra_final_showder_servo_horn_2` | (15.8, -85.4, 0.0) |

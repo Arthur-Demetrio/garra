@@ -8,7 +8,7 @@
 |----------|-------|
 | Total mass | 0.863 kg |
 | Links | 21 |
-| Joints | 20 (0 movable) |
+| Joints | 20 (3 movable) |
 | Assemblies | 2 |
 | Root link | `base_link` |
 
@@ -27,20 +27,20 @@
 base_link
   └─ R_gido [fixed]
     shoulder_motor
-      └─ R_gido_46 [fixed]
-        garra_final_showder_servo_horn
+      └─ Revolucionar_46 [continuous]
+        garra_final_showder_servo_horn [BAKE]
           └─ R_gido_47 [fixed]
             M_dulo_1
               └─ R_gido_48 [fixed]
                 MOTOR_1
-                  └─ R_gido_49 [fixed]
-                    garra_final_showder_servo_horn_2
+                  └─ Revolucionar_49 [continuous]
+                    garra_final_showder_servo_horn_2 [BAKE]
                       └─ R_gido_50 [fixed]
                         M_dulo_2
                           └─ R_gido_51 [fixed]
                             MOTOR_1_1
-                              └─ R_gido_52 [fixed]
-                                Caixa_motor_pequeno
+                              └─ Revolucionar_52 [continuous]
+                                Caixa_motor_pequeno [BAKE]
                                   └─ R_gido_53 [fixed]
                                     motor_pequeno
                                       └─ R_gido_54 [fixed]
@@ -71,7 +71,7 @@ base_link
 
 | Link | Mass (kg) | Material | Collision | Bodies |
 |------|-----------|----------|-----------|--------|
-| `Caixa_motor_pequeno` | 0.0513 | A_o | box | 1 |
+| `Caixa_motor_pequeno` | 0.0513 | A_o | cylinder | 1 |
 | `Componente4` | 0.0476 | A_o | box | 1 |
 | `Componente4_Espelhar` | 0.0267 | A_o | box | 1 |
 | `Componente5` | 0.0046 | A_o | box | 1 |
@@ -98,13 +98,10 @@ base_link
 | Joint | Type | Parent → Child | Axis | Limits |
 |-------|------|---------------|------|--------|
 | `R_gido` | fixed | `base_link` → `shoulder_motor` | (0,0,1) | — |
-| `R_gido_46` | fixed | `shoulder_motor` → `garra_final_showder_servo_horn` | (0,0,1) | — |
 | `R_gido_47` | fixed | `garra_final_showder_servo_horn` → `M_dulo_1` | (0,0,1) | — |
 | `R_gido_48` | fixed | `M_dulo_1` → `MOTOR_1` | (0,0,1) | — |
-| `R_gido_49` | fixed | `MOTOR_1` → `garra_final_showder_servo_horn_2` | (0,0,1) | — |
 | `R_gido_50` | fixed | `garra_final_showder_servo_horn_2` → `M_dulo_2` | (0,0,1) | — |
 | `R_gido_51` | fixed | `M_dulo_2` → `MOTOR_1_1` | (0,0,1) | — |
-| `R_gido_52` | fixed | `MOTOR_1_1` → `Caixa_motor_pequeno` | (0,0,1) | — |
 | `R_gido_53` | fixed | `Caixa_motor_pequeno` → `motor_pequeno` | (0,0,1) | — |
 | `R_gido_54` | fixed | `motor_pequeno` → `Componente4_Espelhar` | (0,0,1) | — |
 | `R_gido_55` | fixed | `Componente4_Espelhar` → `Healical_Gear_20R_0_00_m_1_0` | (0,0,1) | — |
@@ -117,6 +114,9 @@ base_link
 | `R_gido_62` | fixed | `Componente5` → `Componente6` | (0,0,1) | — |
 | `R_gido_63` | fixed | `Componente4_Espelhar` → `Healical_Gear_8R_0_00_m_1_0` | (0,0,1) | — |
 | `R_gido_64` | fixed | `Healical_Gear_20R_0_00_m_1_0_1` → `Componente4` | (0,0,1) | — |
+| `Revolucionar_46` | continuous | `shoulder_motor` → `garra_final_showder_servo_horn` | (0,0,1) | — |
+| `Revolucionar_49` | continuous | `MOTOR_1` → `garra_final_showder_servo_horn_2` | (0,0,-1) | — |
+| `Revolucionar_52` | continuous | `MOTOR_1_1` → `Caixa_motor_pequeno` | (0,0,-1) | — |
 
 ## Assembly Breakdown
 
@@ -173,6 +173,7 @@ ros2 param get /robot_state_publisher robot_description
 | `meshes/` | Visual (OBJ) and collision (STL) meshes |
 | `launch/display.launch.py` | Launch robot_state_publisher, RViz, and generated controllers |
 | `config/joint_state.yaml` | Joint state publisher config |
+| `config/ros2_controllers.yaml` | Generated ros2_control controller manager config |
 | `robot_data.yaml` | Supplementary data (beyond URDF) |
 | `docs/transforms.md` | Transformation matrices (KaTeX) |
 
