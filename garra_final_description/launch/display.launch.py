@@ -12,6 +12,7 @@ from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, GroupAction
 from launch.substitutions import Command, LaunchConfiguration
 from launch_ros.actions import Node, PushRosNamespace
+from launch_ros.parameter_descriptions import ParameterValue
 
 
 def generate_launch_description():
@@ -24,9 +25,12 @@ def generate_launch_description():
     ns = LaunchConfiguration('namespace')
     prefix = LaunchConfiguration('prefix')
 
-    robot_description = Command([
+    robot_description = ParameterValue(
+    Command([
         'xacro ', xacro_file, ' prefix:=', prefix,
-    ])
+    ]),
+    value_type=str
+    )
 
     return LaunchDescription([
         DeclareLaunchArgument(
@@ -49,6 +53,14 @@ def generate_launch_description():
                 parameters=[{'robot_description': robot_description}],
                 output='screen',
             ),
+            # Interface gráfica para movimentar as juntas manualmente
+            Node(
+                package='joint_state_publisher_gui',
+                executable='joint_state_publisher_gui',
+                name='joint_state_publisher_gui',
+                parameters=[{'robot_description': robot_description}],
+                output='screen',
+            ),
 
             # ros2_control controller manager using generated mock hardware
             Node(
@@ -59,13 +71,7 @@ def generate_launch_description():
                 output='screen',
             ),
 
-            Node(
-                package='controller_manager',
-                executable='spawner',
-                name='spawn_joint_state_broadcaster',
-                arguments=['joint_state_broadcaster', '--controller-manager', 'controller_manager'],
-                output='screen',
-            ),
+   
 
             Node(
                 package='controller_manager',

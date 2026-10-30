@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="garra_final">
+
+    <!-- Importa a descrição original do robô -->
+    <xacro:include filename="$(find garra_final_description)/urdf/garra_final.urdf" />
+
+</robot>

@@ -1,0 +1,6 @@
+# Default initial positions for garra_final's ros2_control fake system
+
+initial_positions:
+  Revolucionar_46: 0
+  Revolucionar_49: 0
+  Revolucionar_52: 0
