@@ -599,7 +599,15 @@
     <child link="Componente6"/>
     <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
   </joint>
+  <!-- Referencia da ferramenta para o MoveIt -->
+  <link name="tool0"/>
 
+  <joint name="tool0_fixed" type="fixed">
+      <parent link="motor_pequeno"/>
+      <child link="tool0"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+  
   <!-- ROS 2 control: generated generic system -->
   <ros2_control name="garra_final_system" type="system">
     <hardware>
