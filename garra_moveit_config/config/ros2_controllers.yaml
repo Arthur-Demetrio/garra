@@ -21,4 +21,10 @@ joint_trajectory_controller:
     state_interfaces:
       - position
       - velocity
-    allow_nonzero_velocity_at_trajectory_end: true
+    allow_nonzero_velocity_at_trajectory_end: false
+    constraints:
+      stopped_velocity_tolerance: 0.05
+      goal_time: 1.0
+      Revolucionar_46: {trajectory: 0.1, goal: 0.03}
+      Revolucionar_49: {trajectory: 0.1, goal: 0.03}
+      Revolucionar_52: {trajectory: 0.1, goal: 0.03}

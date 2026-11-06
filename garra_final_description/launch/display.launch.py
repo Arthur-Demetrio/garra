@@ -20,7 +20,6 @@ def generate_launch_description():
 
     xacro_file = os.path.join(pkg_dir, 'urdf', 'garra_final.urdf.xacro')
     rviz_file = os.path.join(pkg_dir, 'rviz', 'display.rviz')
-    controllers_file = os.path.join(pkg_dir, 'config', 'ros2_controllers.yaml')
 
     ns = LaunchConfiguration('namespace')
     prefix = LaunchConfiguration('prefix')
@@ -59,33 +58,6 @@ def generate_launch_description():
                 executable='joint_state_publisher_gui',
                 name='joint_state_publisher_gui',
                 parameters=[{'robot_description': robot_description}],
-                output='screen',
-            ),
-
-            # ros2_control controller manager using generated mock hardware
-            Node(
-                package='controller_manager',
-                executable='ros2_control_node',
-                name='controller_manager',
-                parameters=[{'robot_description': robot_description}, controllers_file],
-                output='screen',
-            ),
-
-   
-
-            Node(
-                package='controller_manager',
-                executable='spawner',
-                name='spawn_position_controller',
-                arguments=['position_controller', '--controller-manager', 'controller_manager'],
-                output='screen',
-            ),
-
-            Node(
-                package='controller_manager',
-                executable='spawner',
-                name='spawn_velocity_controller',
-                arguments=['velocity_controller', '--controller-manager', 'controller_manager'],
                 output='screen',
             ),
 

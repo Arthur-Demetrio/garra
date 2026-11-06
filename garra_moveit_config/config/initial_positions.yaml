@@ -1,6 +1,7 @@
-# Default initial positions for garra_final's ros2_control fake system
+# Posicao inicial assumida pelo ros2_control. O DS3218MG nao informa a posicao real: ele vai
+# direto a esta pose ao receber o primeiro comando. q=0 e o comando de 90 graus nos tres servos.
 
 initial_positions:
-  Revolucionar_46: 0
-  Revolucionar_49: 0
-  Revolucionar_52: 0
+  Revolucionar_46: 0.0
+  Revolucionar_49: 0.0
+  Revolucionar_52: 0.0

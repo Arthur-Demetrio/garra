@@ -1,0 +1,7 @@
+<library path="garra_hardware">
+  <class name="garra_hardware/GarraServoSystem"
+         type="garra_hardware::GarraServoSystem"
+         base_class_type="hardware_interface::SystemInterface">
+    <description>Servos da garra acionados por Arduino Mega via serial USB.</description>
+  </class>
+</library>

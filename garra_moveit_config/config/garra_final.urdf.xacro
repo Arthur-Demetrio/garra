@@ -1,7 +1,62 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="garra_final">
 
+    <xacro:arg name="initial_positions_file" default="$(find garra_moveit_config)/config/initial_positions.yaml"/>
+    <!-- Por padrao, hardware simulado. A garra fisica usa launch/garra_real.launch.py. -->
+    <xacro:arg name="hardware_plugin" default="mock_components/GenericSystem"/>
+    <xacro:arg name="calibracao_file" default="$(find garra_moveit_config)/config/calibracao_servos.yaml"/>
+    <xacro:arg name="porta_serial" default="/dev/ttyACM0"/>
+
     <!-- Importa a descrição original do robô -->
     <xacro:include filename="$(find garra_final_description)/urdf/garra_final.urdf" />
+
+    <!-- Ambiente de montagem, so para o MoveIt. Fica aqui, e nao na URDF exportada, para
+         sobreviver a uma nova exportacao do CAD. A frente do robo e a borda da placa, -X da base (estimado pelas fotos).
+         Superficie: plano com o topo folga_montagem acima da base da garra, maior que o alcance.
+         Corpo do robo: volume provisorio atras da base; ajuste com as medidas reais.
+         A folga absorve tremor da montagem; a base e o unico link liberado contra este link. -->
+    <xacro:property name="folga_montagem" value="0.010"/>
+    <xacro:property name="z_apoio" value="0.003"/>
+    <xacro:property name="x_corpo_robo" value="0.070"/>
+    <xacro:property name="topo" value="${z_apoio + folga_montagem}"/>
+
+    <material name="ambiente_montagem">
+        <color rgba="0.5 0.6 0.7 0.35"/>
+    </material>
+
+    <link name="ambiente_montagem">
+        <visual>
+            <origin xyz="0 0 ${topo - 0.01}"/>
+            <geometry><box size="1.0 1.0 0.02"/></geometry>
+            <material name="ambiente_montagem"/>
+        </visual>
+        <visual>
+            <origin xyz="${x_corpo_robo + 0.25} 0 ${topo + 0.3}"/>
+            <geometry><box size="0.5 1.0 0.6"/></geometry>
+            <material name="ambiente_montagem"/>
+        </visual>
+        <collision>
+            <origin xyz="0 0 ${topo - 0.01}"/>
+            <geometry><box size="1.0 1.0 0.02"/></geometry>
+        </collision>
+        <collision>
+            <origin xyz="${x_corpo_robo + 0.25} 0 ${topo + 0.3}"/>
+            <geometry><box size="0.5 1.0 0.6"/></geometry>
+        </collision>
+    </link>
+
+    <joint name="ambiente_montagem_fixo" type="fixed">
+        <parent link="base_link"/>
+        <child link="ambiente_montagem"/>
+    </joint>
+
+    <!-- Interface ros2_control (unica definicao do sistema) -->
+    <xacro:include filename="$(find garra_moveit_config)/config/garra_final.ros2_control.xacro" />
+    <xacro:garra_final_ros2_control
+        name="garra_final_system"
+        initial_positions_file="$(arg initial_positions_file)"
+        hardware_plugin="$(arg hardware_plugin)"
+        calibracao_file="$(arg calibracao_file)"
+        porta_serial="$(arg porta_serial)"/>
 
 </robot>

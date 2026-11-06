@@ -1,35 +1,31 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
-    <xacro:macro name="garra_final_ros2_control" params="name initial_positions_file">
-        <xacro:property name="initial_positions" value="${xacro.load_yaml(initial_positions_file)['initial_positions']}"/>
+    <xacro:macro name="garra_final_junta" params="nome inicial calibracao">
+        <joint name="${nome}">
+            <param name="zero_us">${calibracao[nome]['zero_us']}</param>
+            <param name="us_por_rad">${calibracao[nome]['us_por_rad']}</param>
+            <param name="min_us">${calibracao[nome]['min_us']}</param>
+            <param name="max_us">${calibracao[nome]['max_us']}</param>
+            <command_interface name="position"/>
+            <state_interface name="position">
+              <param name="initial_value">${inicial[nome]}</param>
+            </state_interface>
+            <state_interface name="velocity"/>
+        </joint>
+    </xacro:macro>
+
+    <xacro:macro name="garra_final_ros2_control" params="name initial_positions_file hardware_plugin calibracao_file porta_serial">
+        <xacro:property name="inicial" value="${xacro.load_yaml(initial_positions_file)['initial_positions']}"/>
+        <xacro:property name="calibracao" value="${xacro.load_yaml(calibracao_file)['juntas']}"/>
 
         <ros2_control name="${name}" type="system">
             <hardware>
-                <!-- By default, set up controllers for simulation. This won't work on real hardware -->
-                <plugin>mock_components/GenericSystem</plugin>
+                <plugin>${hardware_plugin}</plugin>
+                <param name="porta">${porta_serial}</param>
             </hardware>
-            <joint name="Revolucionar_46">
-                <command_interface name="position"/>
-                <state_interface name="position">
-                  <param name="initial_value">${initial_positions['Revolucionar_46']}</param>
-                </state_interface>
-                <state_interface name="velocity"/>
-            </joint>
-            <joint name="Revolucionar_49">
-                <command_interface name="position"/>
-                <state_interface name="position">
-                  <param name="initial_value">${initial_positions['Revolucionar_49']}</param>
-                </state_interface>
-                <state_interface name="velocity"/>
-            </joint>
-            <joint name="Revolucionar_52">
-                <command_interface name="position"/>
-                <state_interface name="position">
-                  <param name="initial_value">${initial_positions['Revolucionar_52']}</param>
-                </state_interface>
-                <state_interface name="velocity"/>
-            </joint>
-
+            <xacro:garra_final_junta nome="Revolucionar_46" inicial="${inicial}" calibracao="${calibracao}"/>
+            <xacro:garra_final_junta nome="Revolucionar_49" inicial="${inicial}" calibracao="${calibracao}"/>
+            <xacro:garra_final_junta nome="Revolucionar_52" inicial="${inicial}" calibracao="${calibracao}"/>
         </ros2_control>
     </xacro:macro>
 </robot>

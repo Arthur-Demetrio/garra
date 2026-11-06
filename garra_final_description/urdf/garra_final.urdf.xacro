@@ -32,4 +32,15 @@
     <origin xyz="-0.085228 0.152296 -0.057500" rpy="-1.570796 1.570796 0.000000"/>
   </joint>
 
-</robot>
+  <!-- TCP: centro da regiao de pega, entre as pontas dos dedos.
+       Z aponta na direcao de aproximacao (saindo da garra, paralelo a J3);
+       X fica na direcao de fechamento dos dedos. -->
+  <link name="tool0"/>
+
+  <joint name="tool0_fixed" type="fixed">
+      <parent link="Componente4_Espelhar"/>
+      <child link="tool0"/>
+      <origin xyz="0 -0.070 -0.003" rpy="1.570796 0 0"/>
+  </joint>
+
+</robot>
