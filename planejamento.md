@@ -11,7 +11,7 @@ este arquivo é só um guia e não necessáriamente será seguido 100%
 **Plataforma de controle:** Arduino Mega  
 **Planejamento de movimentos:** MoveIt 2  
 **Controle de hardware:** ros2_control  
-**Status:** Planejamento em desenvolvimento
+**Status:** em desenvolvimento
 
 ---
 
@@ -19,7 +19,7 @@ este arquivo é só um guia e não necessáriamente será seguido 100%
 
 Desenvolver uma garra robótica capaz de executar movimentos de maneira independente, incluindo calibração, acionamento dos servomotores, planejamento de trajetórias e validação mecânica.
 
-Após a validação individual, a garra deverá ser integrada ao robô completo da equipe RoboCup@Work.
+Após a validação individual, a garra deverá ser integrada ao robô completo da equipe.
 
 A integração deverá permitir que o computador central do robô solicite operações de manipulação por meio do ROS 2, sem precisar conhecer os detalhes internos do acionamento dos servos.
 
