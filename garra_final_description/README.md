@@ -6,9 +6,9 @@
 
 | Property | Value |
 |----------|-------|
-| Total mass | 0.863 kg |
-| Links | 21 |
-| Joints | 20 (3 movable) |
+| Total mass | 1.026 kg |
+| Links | 19 |
+| Joints | 18 (11 movable) |
 | Assemblies | 2 |
 | Root link | `base_link` |
 
@@ -37,60 +37,54 @@ base_link
                     garra_final_showder_servo_horn_2 [BAKE]
                       └─ R_gido_50 [fixed]
                         M_dulo_2
-                          └─ R_gido_51 [fixed]
+                          └─ R_gido_65 [fixed]
                             MOTOR_1_1
-                              └─ Revolucionar_52 [continuous]
-                                Caixa_motor_pequeno [BAKE]
-                                  └─ R_gido_53 [fixed]
-                                    motor_pequeno
-                                      └─ R_gido_54 [fixed]
-                                        Componente4_Espelhar
-                                          └─ R_gido_55 [fixed]
-                                            Healical_Gear_20R_0_00_m_1_0
-                                              └─ R_gido_59 [fixed]
-                                                Componente5_Espelhar_1
-                                              └─ R_gido_60 [fixed]
-                                                Componente5_Espelhar_Espelhar
-                                                  └─ R_gido_61 [fixed]
-                                                    Componente6_Espelhar
-                                          └─ R_gido_56 [fixed]
-                                            Healical_Gear_20R_0_00_m_1_0_1
-                                              └─ R_gido_57 [fixed]
-                                                Componente5
-                                                  └─ R_gido_62 [fixed]
-                                                    Componente6
-                                              └─ R_gido_58 [fixed]
-                                                Componente5_Espelhar
-                                              └─ R_gido_64 [fixed]
-                                                Componente4
-                                          └─ R_gido_63 [fixed]
-                                            Healical_Gear_8R_0_00_m_1_0
+                              └─ Revolucionar_72 [continuous]
+                                garra_final_showder_servo_horn_3 [BAKE]
+                                  └─ R_gido_73 [fixed]
+                                    Base
+                                      └─ R_gido_77 [fixed]
+                                        Motor
+                                      └─ Revolucionar_85 [continuous]
+                                        Engr_2 [BAKE]
+                                          └─ Revolucionar_86 [continuous]
+                                            P_1 [BAKE]
+                                      └─ Revolucionar_87 [continuous]
+                                        Junta_1 [BAKE]
+                                      └─ Revolucionar_89 [continuous]
+                                        Junta_1_1 [BAKE]
+                                      └─ Revolucionar_91 [continuous]
+                                        Engr_1 [BAKE]
+                                          └─ Revolucionar_92 [continuous]
+                                            P_1_1 [BAKE]
+                                      └─ Revolucionar_93 [continuous]
+                                        Junta_2 [BAKE]
+                                      └─ Revolucionar_95 [continuous]
+                                        Junta [BAKE]
 ```
 
 ## Link Properties
 
 | Link | Mass (kg) | Material | Collision | Bodies |
 |------|-----------|----------|-----------|--------|
-| `Caixa_motor_pequeno` | 0.0513 | A_o | cylinder | 1 |
-| `Componente4` | 0.0476 | A_o | box | 1 |
-| `Componente4_Espelhar` | 0.0267 | A_o | box | 1 |
-| `Componente5` | 0.0046 | A_o | box | 1 |
-| `Componente5_Espelhar` | 0.0046 | A_o | box | 1 |
-| `Componente5_Espelhar_1` | 0.0046 | A_o | box | 1 |
-| `Componente5_Espelhar_Espelhar` | 0.0046 | A_o | box | 1 |
-| `Componente6` | 0.0391 | A_o | box | 1 |
-| `Componente6_Espelhar` | 0.0391 | A_o | box | 1 |
-| `Healical_Gear_20R_0_00_m_1_0` | 0.0135 | A_o | box | 1 |
-| `Healical_Gear_20R_0_00_m_1_0_1` | 0.0135 | A_o | box | 1 |
-| `Healical_Gear_8R_0_00_m_1_0` | 0.0013 | A_o | cylinder | 1 |
+| `Base` | 0.1915 | A_o | box | 1 |
+| `Engr_1` | 0.0231 | A_o | box | 1 |
+| `Engr_2` | 0.0202 | A_o | box | 1 |
+| `Junta` | 0.0068 | A_o | cylinder | 1 |
+| `Junta_1` | 0.0068 | A_o | cylinder | 1 |
+| `Junta_1_1` | 0.0068 | A_o | cylinder | 1 |
+| `Junta_2` | 0.0068 | A_o | cylinder | 1 |
 | `MOTOR_1` | 0.0892 | Alum_nio_prata_anodizada | cylinder | 1 |
 | `MOTOR_1_1` | 0.0892 | Alum_nio_prata_anodizada | cylinder | 1 |
 | `M_dulo_1` | 0.0961 | Laminado_vermelho_fosco | box | 1 |
-| `M_dulo_2` | 0.0565 | Laminado_vermelho_fosco | box | 1 |
+| `M_dulo_2` | 0.0707 | Laminado_vermelho_fosco | box | 1 |
+| `Motor` | 0.0509 | A_o | box | 1 |
+| `P_1` | 0.0674 | A_o | box | 1 |
+| `P_1_1` | 0.0674 | A_o | box | 1 |
 | `base_link` | 0.1225 | Laminado_vermelho_fosco | cylinder | 1 |
 | `garra_final_showder_servo_horn` | 0.0072 | A_o | box | 1 |
 | `garra_final_showder_servo_horn_2` | 0.0072 | A_o | box | 1 |
-| `motor_pequeno` | 0.0557 | A_o | box | 1 |
+| `garra_final_showder_servo_horn_3` | 0.0072 | A_o | box | 1 |
 | `shoulder_motor` | 0.0892 | Alum_nio_prata_anodizada | cylinder | 1 |
 
 ## Joint Properties
@@ -101,34 +95,32 @@ base_link
 | `R_gido_47` | fixed | `garra_final_showder_servo_horn` → `M_dulo_1` | (0,0,1) | — |
 | `R_gido_48` | fixed | `M_dulo_1` → `MOTOR_1` | (0,0,1) | — |
 | `R_gido_50` | fixed | `garra_final_showder_servo_horn_2` → `M_dulo_2` | (0,0,1) | — |
-| `R_gido_51` | fixed | `M_dulo_2` → `MOTOR_1_1` | (0,0,1) | — |
-| `R_gido_53` | fixed | `Caixa_motor_pequeno` → `motor_pequeno` | (0,0,1) | — |
-| `R_gido_54` | fixed | `motor_pequeno` → `Componente4_Espelhar` | (0,0,1) | — |
-| `R_gido_55` | fixed | `Componente4_Espelhar` → `Healical_Gear_20R_0_00_m_1_0` | (0,0,1) | — |
-| `R_gido_56` | fixed | `Componente4_Espelhar` → `Healical_Gear_20R_0_00_m_1_0_1` | (0,0,1) | — |
-| `R_gido_57` | fixed | `Healical_Gear_20R_0_00_m_1_0_1` → `Componente5` | (0,0,1) | — |
-| `R_gido_58` | fixed | `Healical_Gear_20R_0_00_m_1_0_1` → `Componente5_Espelhar` | (0,0,1) | — |
-| `R_gido_59` | fixed | `Healical_Gear_20R_0_00_m_1_0` → `Componente5_Espelhar_1` | (0,0,1) | — |
-| `R_gido_60` | fixed | `Healical_Gear_20R_0_00_m_1_0` → `Componente5_Espelhar_Espelhar` | (0,0,1) | — |
-| `R_gido_61` | fixed | `Componente5_Espelhar_Espelhar` → `Componente6_Espelhar` | (0,0,1) | — |
-| `R_gido_62` | fixed | `Componente5` → `Componente6` | (0,0,1) | — |
-| `R_gido_63` | fixed | `Componente4_Espelhar` → `Healical_Gear_8R_0_00_m_1_0` | (0,0,1) | — |
-| `R_gido_64` | fixed | `Healical_Gear_20R_0_00_m_1_0_1` → `Componente4` | (0,0,1) | — |
+| `R_gido_65` | fixed | `M_dulo_2` → `MOTOR_1_1` | (0,0,1) | — |
+| `R_gido_73` | fixed | `garra_final_showder_servo_horn_3` → `Base` | (0,0,1) | — |
+| `R_gido_77` | fixed | `Base` → `Motor` | (0,0,1) | — |
 | `Revolucionar_46` | continuous | `shoulder_motor` → `garra_final_showder_servo_horn` | (0,0,1) | — |
 | `Revolucionar_49` | continuous | `MOTOR_1` → `garra_final_showder_servo_horn_2` | (0,0,-1) | — |
-| `Revolucionar_52` | continuous | `MOTOR_1_1` → `Caixa_motor_pequeno` | (0,0,-1) | — |
+| `Revolucionar_72` | continuous | `MOTOR_1_1` → `garra_final_showder_servo_horn_3` | (0,0,1) | — |
+| `Revolucionar_85` | continuous | `Base` → `Engr_2` | (0,0,1) | — |
+| `Revolucionar_86` | continuous | `Engr_2` → `P_1` | (0,0,1) | — |
+| `Revolucionar_87` | continuous | `Base` → `Junta_1` | (0,0,1) | — |
+| `Revolucionar_89` | continuous | `Base` → `Junta_1_1` | (0,0,1) | — |
+| `Revolucionar_91` | continuous | `Base` → `Engr_1` | (0,0,1) | — |
+| `Revolucionar_92` | continuous | `Engr_1` → `P_1_1` | (0,0,1) | — |
+| `Revolucionar_93` | continuous | `Base` → `Junta_2` | (0,0,1) | — |
+| `Revolucionar_95` | continuous | `Base` → `Junta` | (0,0,1) | — |
 
 ## Assembly Breakdown
 
-### Nova_Pin_a
+### Configura_o_1
 
-- **Links**: Healical_Gear_20R_0_00_m_1_0, Healical_Gear_20R_0_00_m_1_0_1, Healical_Gear_8R_0_00_m_1_0, Componente4, Componente5, Componente6, Componente5_Espelhar, Componente5_Espelhar_1, Componente6_Espelhar, Componente5_Espelhar_Espelhar, Componente4_Espelhar
-- **Total mass**: 0.199 kg
+- **Links**: Engr_1, Motor, Engr_2, Base, P_1, Junta, P_1_1, Junta_1, Junta_1_1, Junta_2
+- **Total mass**: 0.448 kg
 
 ### garra_final
 
-- **Links**: motor_pequeno, M_dulo_1, MOTOR_1, M_dulo_2, MOTOR_1_1, garra_final_showder_servo_horn, base_link, Caixa_motor_pequeno, shoulder_motor, garra_final_showder_servo_horn_2
-- **Total mass**: 0.664 kg
+- **Links**: base_link, shoulder_motor, M_dulo_1, MOTOR_1, M_dulo_2, MOTOR_1_1, garra_final_showder_servo_horn, garra_final_showder_servo_horn_2, garra_final_showder_servo_horn_3
+- **Total mass**: 0.579 kg
 
 ## Quick Start (ROS 2)
 

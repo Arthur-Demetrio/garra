@@ -2,22 +2,22 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="garra_final">
 
   <!-- Materials (shared across all assemblies) -->
-  <material name="A_o">
-    <color rgba="0.627 0.627 0.627 1.0"/>
-  </material>
   <material name="Laminado_vermelho_fosco">
     <color rgba="0.769 0.208 0.153 1.0"/>
   </material>
   <material name="Alum_nio_prata_anodizada">
     <color rgba="0.537 0.537 0.537 1.0"/>
   </material>
+  <material name="A_o">
+    <color rgba="0.627 0.627 0.627 1.0"/>
+  </material>
 
   <!-- Assembly includes -->
-  <xacro:include filename="$(find garra_final_description)/urdf/assemblies/Nova_Pin_a.urdf.xacro"/>
+  <xacro:include filename="$(find garra_final_description)/urdf/assemblies/Configura_o_1.urdf.xacro"/>
   <xacro:include filename="$(find garra_final_description)/urdf/assemblies/garra_final.urdf.xacro"/>
 
   <!-- Instantiate assemblies -->
-  <xacro:Nova_Pin_a prefix=""/>
+  <xacro:Configura_o_1 prefix=""/>
   <xacro:garra_final prefix=""/>
 
   <!-- Mount joints (cross-assembly connections) -->
@@ -26,21 +26,10 @@
   <!-- update the include + macro call above, and adjust -->
   <!-- parent/child link names in the mount joint below. -->
 
-  <joint name="R_gido_54" type="fixed">
-    <parent link="motor_pequeno"/>
-    <child link="Componente4_Espelhar"/>
-    <origin xyz="-0.085228 0.152296 -0.057500" rpy="-1.570796 1.570796 0.000000"/>
+  <joint name="R_gido_73" type="fixed">
+    <parent link="garra_final_showder_servo_horn_3"/>
+    <child link="Base"/>
+    <origin xyz="0.004924 0.001353 0.062500" rpy="1.550770 -1.570796 0.000000"/>
   </joint>
 
-  <!-- TCP: centro da regiao de pega, entre as pontas dos dedos.
-       Z aponta na direcao de aproximacao (saindo da garra, paralelo a J3);
-       X fica na direcao de fechamento dos dedos. -->
-  <link name="tool0"/>
-
-  <joint name="tool0_fixed" type="fixed">
-      <parent link="Componente4_Espelhar"/>
-      <child link="tool0"/>
-      <origin xyz="0 -0.070 -0.003" rpy="1.570796 0 0"/>
-  </joint>
-
-</robot>
+</robot>

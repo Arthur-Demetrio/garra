@@ -19,11 +19,11 @@
   # Command topic: /position_controller/commands
   position_controller:
     ros__parameters:
-      joints: [Revolucionar_46, Revolucionar_49, Revolucionar_52]
+      joints: [Revolucionar_46, Revolucionar_49, Revolucionar_72, Revolucionar_85, Revolucionar_86, Revolucionar_87, Revolucionar_89, Revolucionar_91, Revolucionar_92, Revolucionar_93, Revolucionar_95]
       interface_name: position
 
   # Command topic: /velocity_controller/commands
   velocity_controller:
     ros__parameters:
-      joints: [Revolucionar_46, Revolucionar_49, Revolucionar_52]
+      joints: [Revolucionar_46, Revolucionar_49, Revolucionar_72, Revolucionar_85, Revolucionar_86, Revolucionar_87, Revolucionar_89, Revolucionar_91, Revolucionar_92, Revolucionar_93, Revolucionar_95]
       interface_name: velocity

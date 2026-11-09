@@ -17,19 +17,17 @@ Convention: URDF RPY (XYZ extrinsic / ZYX intrinsic).
 | $L_{5}$ | garra_final_showder_servo_horn_2 |
 | $L_{6}$ | M_dulo_2 |
 | $L_{7}$ | MOTOR_1_1 |
-| $L_{8}$ | Caixa_motor_pequeno |
-| $L_{9}$ | motor_pequeno |
-| $L_{10}$ | Componente4_Espelhar |
-| $L_{11}$ | Healical_Gear_20R_0_00_m_1_0 |
-| $L_{12}$ | Healical_Gear_20R_0_00_m_1_0_1 |
-| $L_{13}$ | Healical_Gear_8R_0_00_m_1_0 |
-| $L_{14}$ | Componente5_Espelhar_1 |
-| $L_{15}$ | Componente5_Espelhar_Espelhar |
-| $L_{16}$ | Componente5 |
-| $L_{17}$ | Componente5_Espelhar |
-| $L_{18}$ | Componente4 |
-| $L_{19}$ | Componente6_Espelhar |
-| $L_{20}$ | Componente6 |
+| $L_{8}$ | garra_final_showder_servo_horn_3 |
+| $L_{9}$ | Base |
+| $L_{10}$ | Motor |
+| $L_{11}$ | Engr_2 |
+| $L_{12}$ | Junta_1 |
+| $L_{13}$ | Junta_1_1 |
+| $L_{14}$ | Engr_1 |
+| $L_{15}$ | Junta_2 |
+| $L_{16}$ | Junta |
+| $L_{17}$ | P_1 |
+| $L_{18}$ | P_1_1 |
 
 ### Joint Variables
 
@@ -37,7 +35,15 @@ Convention: URDF RPY (XYZ extrinsic / ZYX intrinsic).
 |----------|-------|------|------|----|
 | $q_{1}$ | Revolucionar_46 | continuous (rad) | $L_{1}$ | $L_{2}$ |
 | $q_{2}$ | Revolucionar_49 | continuous (rad) | $L_{4}$ | $L_{5}$ |
-| $q_{3}$ | Revolucionar_52 | continuous (rad) | $L_{7}$ | $L_{8}$ |
+| $q_{3}$ | Revolucionar_72 | continuous (rad) | $L_{7}$ | $L_{8}$ |
+| $q_{4}$ | Revolucionar_85 | continuous (rad) | $L_{9}$ | $L_{11}$ |
+| $q_{5}$ | Revolucionar_87 | continuous (rad) | $L_{9}$ | $L_{12}$ |
+| $q_{6}$ | Revolucionar_89 | continuous (rad) | $L_{9}$ | $L_{13}$ |
+| $q_{7}$ | Revolucionar_91 | continuous (rad) | $L_{9}$ | $L_{14}$ |
+| $q_{8}$ | Revolucionar_93 | continuous (rad) | $L_{9}$ | $L_{15}$ |
+| $q_{9}$ | Revolucionar_95 | continuous (rad) | $L_{9}$ | $L_{16}$ |
+| $q_{10}$ | Revolucionar_86 | continuous (rad) | $L_{11}$ | $L_{17}$ |
+| $q_{11}$ | Revolucionar_92 | continuous (rad) | $L_{14}$ | $L_{18}$ |
 
 Shorthand: $c_i = \cos(q_i)$, $s_i = \sin(q_i)$
 
@@ -57,34 +63,30 @@ L0: base_link
                               L5: garra_final_showder_servo_horn_2
                                 +-- [fixed] R_gido_50
                                     L6: M_dulo_2
-                                      +-- [fixed] R_gido_51
+                                      +-- [fixed] R_gido_65
                                           L7: MOTOR_1_1
-                                            +-- [continuous] Revolucionar_52 (q3)
-                                                L8: Caixa_motor_pequeno
-                                                  +-- [fixed] R_gido_53
-                                                      L9: motor_pequeno
-                                                        +-- [fixed] R_gido_54
-                                                            L10: Componente4_Espelhar
-                                                              |-- [fixed] R_gido_55
-                                                              |   L11: Healical_Gear_20R_0_00_m_1_0
-                                                              |     |-- [fixed] R_gido_59
-                                                              |     |   L14: Componente5_Espelhar_1
-                                                              |     +-- [fixed] R_gido_60
-                                                              |         L15: Componente5_Espelhar_Espelhar
-                                                              |           +-- [fixed] R_gido_61
-                                                              |               L19: Componente6_Espelhar
-                                                              |-- [fixed] R_gido_56
-                                                              |   L12: Healical_Gear_20R_0_00_m_1_0_1
-                                                              |     |-- [fixed] R_gido_57
-                                                              |     |   L16: Componente5
-                                                              |     |     +-- [fixed] R_gido_62
-                                                              |     |         L20: Componente6
-                                                              |     |-- [fixed] R_gido_58
-                                                              |     |   L17: Componente5_Espelhar
-                                                              |     +-- [fixed] R_gido_64
-                                                              |         L18: Componente4
-                                                              +-- [fixed] R_gido_63
-                                                                  L13: Healical_Gear_8R_0_00_m_1_0
+                                            +-- [continuous] Revolucionar_72 (q3)
+                                                L8: garra_final_showder_servo_horn_3
+                                                  +-- [fixed] R_gido_73
+                                                      L9: Base
+                                                        |-- [fixed] R_gido_77
+                                                        |   L10: Motor
+                                                        |-- [continuous] Revolucionar_85 (q4)
+                                                        |   L11: Engr_2
+                                                        |     +-- [continuous] Revolucionar_86 (q10)
+                                                        |         L17: P_1
+                                                        |-- [continuous] Revolucionar_87 (q5)
+                                                        |   L12: Junta_1
+                                                        |-- [continuous] Revolucionar_89 (q6)
+                                                        |   L13: Junta_1_1
+                                                        |-- [continuous] Revolucionar_91 (q7)
+                                                        |   L14: Engr_1
+                                                        |     +-- [continuous] Revolucionar_92 (q11)
+                                                        |         L18: P_1_1
+                                                        |-- [continuous] Revolucionar_93 (q8)
+                                                        |   L15: Junta_2
+                                                        +-- [continuous] Revolucionar_95 (q9)
+                                                            L16: Junta
 ```
 
 ## Transforms
@@ -115,7 +117,7 @@ $L_{1}$ **shoulder_motor** -> $L_{2}$ **garra_final_showder_servo_horn** (contin
   Variable: $q_{1}$
 
 - **origin xyz**: (-0.023838, -0.025144, 0.086064) m
-- **origin rpy**: (-1.570796, 1.550014, 3.141593) rad
+- **origin rpy**: (1.570796, 1.197477, 0) rad
 - **axis**: (0, 0, 1)
 
 ### Local Transform
@@ -124,9 +126,9 @@ $T^{1}_{2}(q_{1}) = T_{fixed} \cdot R_{axis}(q_{1})$ where:
 
 $$
 T_{fixed} = \begin{bmatrix}
--0.020781 & 0.999784 & 0 & -0.023838 \\
+0.364708 & 0.931122 & 0 & -0.023838 \\
 0 & 0 & -1 & -0.025144 \\
--0.999784 & -0.020781 & 0 & 0.086064 \\
+-0.931122 & 0.364708 & 0 & 0.086064 \\
 0 & 0 & 0 & 1 \\
 \end{bmatrix}
 $$
@@ -188,7 +190,7 @@ $L_{4}$ **MOTOR_1** -> $L_{5}$ **garra_final_showder_servo_horn_2** (continuous)
   Variable: $q_{2}$
 
 - **origin xyz**: (0.059838, -0.008856, 0.173222) m
-- **origin rpy**: (-1.570796, 0, 3.141593) rad
+- **origin rpy**: (-1.570796, 1.475992, 3.141593) rad
 - **axis**: (0, 0, -1)
 
 ### Local Transform
@@ -197,9 +199,9 @@ $T^{4}_{5}(q_{2}) = T_{fixed} \cdot R_{axis}(q_{2})$ where:
 
 $$
 T_{fixed} = \begin{bmatrix}
--1 & 0 & 0 & 0.059838 \\
+-0.094662 & 0.995509 & 0 & 0.059838 \\
 0 & 0 & -1 & -0.008856 \\
-0 & -1 & 0 & 0.173222 \\
+-0.995509 & -0.094662 & 0 & 0.173222 \\
 0 & 0 & 0 & 1 \\
 \end{bmatrix}
 $$
@@ -219,297 +221,350 @@ $$
 
 $L_{5}$ **garra_final_showder_servo_horn_2** -> $L_{6}$ **M_dulo_2** (fixed)
 
-- **origin xyz**: (0.163486, 0.09503, -0.005666) m
+- **origin xyz**: (0.160854, 0.091479, -0.006666) m
 - **origin rpy**: (-1.570796, 0, 2.443461) rad
 
 ### Local Transform
 
 $$
 T^{5}_{6} = \begin{bmatrix}
--0.766044 & 0 & -0.642788 & 0.163486 \\
-0.642788 & 0 & -0.766044 & 0.09503 \\
-0 & -1 & 0 & -0.005666 \\
+-0.766044 & 0 & -0.642788 & 0.160854 \\
+0.642788 & 0 & -0.766044 & 0.091479 \\
+0 & -1 & 0 & -0.006666 \\
 0 & 0 & 0 & 1 \\
 \end{bmatrix}
 $$
 
 ---
 
-## R_gido_51
+## R_gido_65
 
 $L_{6}$ **M_dulo_2** -> $L_{7}$ **MOTOR_1_1** (fixed)
 
-- **origin xyz**: (0.001615, 0.000015, 0.004041) m
+- **origin xyz**: (-0.0003, -0.000428, 0.000662) m
 - **origin rpy**: (0, 0, 0) rad
 
 ### Local Transform
 
 $$
 T^{6}_{7} = \begin{bmatrix}
-1 & 0 & 0 & 0.001615 \\
-0 & 1 & 0 & 0.000015 \\
-0 & 0 & 1 & 0.004041 \\
+1 & 0 & 0 & -0.0003 \\
+0 & 1 & 0 & -0.000428 \\
+0 & 0 & 1 & 0.000662 \\
 0 & 0 & 0 & 1 \\
 \end{bmatrix}
 $$
 
 ---
 
-## Revolucionar_52
+## Revolucionar_72
 
-$L_{7}$ **MOTOR_1_1** -> $L_{8}$ **Caixa_motor_pequeno** (continuous)
+$L_{7}$ **MOTOR_1_1** -> $L_{8}$ **garra_final_showder_servo_horn_3** (continuous)
   Variable: $q_{3}$
 
-- **origin xyz**: (0.125796, 0.000362, 0.149459) m
-- **origin rpy**: (0, 0, 0) rad
-- **axis**: (0, 0, -1)
+- **origin xyz**: (0.146796, 0.022261, 0.173559) m
+- **origin rpy**: (-1.570796, 1.4014, 0) rad
+- **axis**: (0, 0, 1)
 
 ### Local Transform
 
+$T^{7}_{8}(q_{3}) = T_{fixed} \cdot R_{axis}(q_{3})$ where:
+
 $$
-T^{7}_{8}(q_{3}) = \begin{bmatrix}
-c_{3} & s_{3} & 0 & 0.125796 \\
--s_{3} & c_{3} & 0 & 0.000362 \\
-0 & 0 & 1 & 0.149459 \\
+T_{fixed} = \begin{bmatrix}
+0.168587 & -0.985687 & 0 & 0.146796 \\
+0 & 0 & 1 & 0.022261 \\
+-0.985687 & -0.168587 & 0 & 0.173559 \\
+0 & 0 & 0 & 1 \\
+\end{bmatrix}
+$$
+
+$$
+R_{axis}(q_{3}) = \begin{bmatrix}
+c_{3} & -s_{3} & 0 & 0 \\
+s_{3} & c_{3} & 0 & 0 \\
+0 & 0 & 1 & 0 \\
 0 & 0 & 0 & 1 \\
 \end{bmatrix}
 $$
 
 ---
 
-## R_gido_53
+## R_gido_73
 
-$L_{8}$ **Caixa_motor_pequeno** -> $L_{9}$ **motor_pequeno** (fixed)
+$L_{8}$ **garra_final_showder_servo_horn_3** -> $L_{9}$ **Base** (fixed)
 
-- **origin xyz**: (0.170546, 0.0575, -0.099228) m
-- **origin rpy**: (-1.623428, 1.570796, -0.174046) rad
+- **origin xyz**: (0.004924, 0.001353, 0.0625) m
+- **origin rpy**: (1.55077, -1.570796, 0) rad
 
 ### Local Transform
 
 $$
 T^{8}_{9} = \begin{bmatrix}
-0 & -0.992638 & 0.121117 & 0.170546 \\
-0 & 0.121117 & 0.992638 & 0.0575 \\
--1 & 0 & 0 & -0.099228 \\
+0 & -0.999799 & -0.020025 & 0.004924 \\
+0 & 0.020025 & -0.999799 & 0.001353 \\
+1 & 0 & 0 & 0.0625 \\
 0 & 0 & 0 & 1 \\
 \end{bmatrix}
 $$
 
 ---
 
-## R_gido_54
+## R_gido_77
 
-$L_{9}$ **motor_pequeno** -> $L_{10}$ **Componente4_Espelhar** (fixed)
+$L_{9}$ **Base** -> $L_{10}$ **Motor** (fixed)
 
-- **origin xyz**: (-0.085228, 0.152296, -0.0575) m
-- **origin rpy**: (-1.570796, 1.570796, 0) rad
+- **origin xyz**: (-0.113471, -0.081721, -0.0235) m
+- **origin rpy**: (0, 0, 0) rad
 
 ### Local Transform
 
 $$
 T^{9}_{10} = \begin{bmatrix}
-0 & -1 & 0 & -0.085228 \\
-0 & 0 & 1 & 0.152296 \\
--1 & 0 & 0 & -0.0575 \\
+1 & 0 & 0 & -0.113471 \\
+0 & 1 & 0 & -0.081721 \\
+0 & 0 & 1 & -0.0235 \\
 0 & 0 & 0 & 1 \\
 \end{bmatrix}
 $$
 
 ---
 
-## R_gido_55
+## Revolucionar_85
 
-$L_{10}$ **Componente4_Espelhar** -> $L_{11}$ **Healical_Gear_20R_0_00_m_1_0** (fixed)
+$L_{9}$ **Base** -> $L_{11}$ **Engr_2** (continuous)
+  Variable: $q_{4}$
 
-- **origin xyz**: (-0.014, 0, -0.005) m
-- **origin rpy**: (-3.141593, 0, 0) rad
+- **origin xyz**: (-0.06925, -0.055, 0.004) m
+- **origin rpy**: (3.141593, 0, -1.570796) rad
+- **axis**: (0, 0, 1)
 
 ### Local Transform
 
+$T^{9}_{11}(q_{4}) = T_{fixed} \cdot R_{axis}(q_{4})$ where:
+
 $$
-T^{10}_{11} = \begin{bmatrix}
-1 & 0 & 0 & -0.014 \\
-0 & -1 & 0 & 0 \\
-0 & 0 & -1 & -0.005 \\
+T_{fixed} = \begin{bmatrix}
+0 & -1 & 0 & -0.06925 \\
+-1 & 0 & 0 & -0.055 \\
+0 & 0 & -1 & 0.004 \\
+0 & 0 & 0 & 1 \\
+\end{bmatrix}
+$$
+
+$$
+R_{axis}(q_{4}) = \begin{bmatrix}
+c_{4} & -s_{4} & 0 & 0 \\
+s_{4} & c_{4} & 0 & 0 \\
+0 & 0 & 1 & 0 \\
 0 & 0 & 0 & 1 \\
 \end{bmatrix}
 $$
 
 ---
 
-## R_gido_56
+## Revolucionar_87
 
-$L_{10}$ **Componente4_Espelhar** -> $L_{12}$ **Healical_Gear_20R_0_00_m_1_0_1** (fixed)
+$L_{9}$ **Base** -> $L_{12}$ **Junta_1** (continuous)
+  Variable: $q_{5}$
 
-- **origin xyz**: (0.014, 0, -0.005) m
+- **origin xyz**: (-0.06714, -0.079, 0.004) m
+- **origin rpy**: (3.141593, 0, -1.570796) rad
+- **axis**: (0, 0, 1)
+
+### Local Transform
+
+$T^{9}_{12}(q_{5}) = T_{fixed} \cdot R_{axis}(q_{5})$ where:
+
+$$
+T_{fixed} = \begin{bmatrix}
+0 & -1 & 0 & -0.06714 \\
+-1 & 0 & 0 & -0.079 \\
+0 & 0 & -1 & 0.004 \\
+0 & 0 & 0 & 1 \\
+\end{bmatrix}
+$$
+
+$$
+R_{axis}(q_{5}) = \begin{bmatrix}
+c_{5} & -s_{5} & 0 & 0 \\
+s_{5} & c_{5} & 0 & 0 \\
+0 & 0 & 1 & 0 \\
+0 & 0 & 0 & 1 \\
+\end{bmatrix}
+$$
+
+---
+
+## Revolucionar_89
+
+$L_{9}$ **Base** -> $L_{13}$ **Junta_1_1** (continuous)
+  Variable: $q_{6}$
+
+- **origin xyz**: (-0.06714, -0.079, 0) m
+- **origin rpy**: (3.141593, 0, -1.570796) rad
+- **axis**: (0, 0, 1)
+
+### Local Transform
+
+$T^{9}_{13}(q_{6}) = T_{fixed} \cdot R_{axis}(q_{6})$ where:
+
+$$
+T_{fixed} = \begin{bmatrix}
+0 & -1 & 0 & -0.06714 \\
+-1 & 0 & 0 & -0.079 \\
+0 & 0 & -1 & 0 \\
+0 & 0 & 0 & 1 \\
+\end{bmatrix}
+$$
+
+$$
+R_{axis}(q_{6}) = \begin{bmatrix}
+c_{6} & -s_{6} & 0 & 0 \\
+s_{6} & c_{6} & 0 & 0 \\
+0 & 0 & 1 & 0 \\
+0 & 0 & 0 & 1 \\
+\end{bmatrix}
+$$
+
+---
+
+## Revolucionar_91
+
+$L_{9}$ **Base** -> $L_{14}$ **Engr_1** (continuous)
+  Variable: $q_{7}$
+
+- **origin xyz**: (-0.04675, -0.055, 0.004) m
+- **origin rpy**: (3.141593, 0, -1.570796) rad
+- **axis**: (0, 0, 1)
+
+### Local Transform
+
+$T^{9}_{14}(q_{7}) = T_{fixed} \cdot R_{axis}(q_{7})$ where:
+
+$$
+T_{fixed} = \begin{bmatrix}
+0 & -1 & 0 & -0.04675 \\
+-1 & 0 & 0 & -0.055 \\
+0 & 0 & -1 & 0.004 \\
+0 & 0 & 0 & 1 \\
+\end{bmatrix}
+$$
+
+$$
+R_{axis}(q_{7}) = \begin{bmatrix}
+c_{7} & -s_{7} & 0 & 0 \\
+s_{7} & c_{7} & 0 & 0 \\
+0 & 0 & 1 & 0 \\
+0 & 0 & 0 & 1 \\
+\end{bmatrix}
+$$
+
+---
+
+## Revolucionar_93
+
+$L_{9}$ **Base** -> $L_{15}$ **Junta_2** (continuous)
+  Variable: $q_{8}$
+
+- **origin xyz**: (-0.04886, -0.079, 0.004) m
+- **origin rpy**: (3.141593, 0, -1.570796) rad
+- **axis**: (0, 0, 1)
+
+### Local Transform
+
+$T^{9}_{15}(q_{8}) = T_{fixed} \cdot R_{axis}(q_{8})$ where:
+
+$$
+T_{fixed} = \begin{bmatrix}
+0 & -1 & 0 & -0.04886 \\
+-1 & 0 & 0 & -0.079 \\
+0 & 0 & -1 & 0.004 \\
+0 & 0 & 0 & 1 \\
+\end{bmatrix}
+$$
+
+$$
+R_{axis}(q_{8}) = \begin{bmatrix}
+c_{8} & -s_{8} & 0 & 0 \\
+s_{8} & c_{8} & 0 & 0 \\
+0 & 0 & 1 & 0 \\
+0 & 0 & 0 & 1 \\
+\end{bmatrix}
+$$
+
+---
+
+## Revolucionar_95
+
+$L_{9}$ **Base** -> $L_{16}$ **Junta** (continuous)
+  Variable: $q_{9}$
+
+- **origin xyz**: (-0.04886, -0.079, 0) m
+- **origin rpy**: (3.141593, 0, -1.570796) rad
+- **axis**: (0, 0, 1)
+
+### Local Transform
+
+$T^{9}_{16}(q_{9}) = T_{fixed} \cdot R_{axis}(q_{9})$ where:
+
+$$
+T_{fixed} = \begin{bmatrix}
+0 & -1 & 0 & -0.04886 \\
+-1 & 0 & 0 & -0.079 \\
+0 & 0 & -1 & 0 \\
+0 & 0 & 0 & 1 \\
+\end{bmatrix}
+$$
+
+$$
+R_{axis}(q_{9}) = \begin{bmatrix}
+c_{9} & -s_{9} & 0 & 0 \\
+s_{9} & c_{9} & 0 & 0 \\
+0 & 0 & 1 & 0 \\
+0 & 0 & 0 & 1 \\
+\end{bmatrix}
+$$
+
+---
+
+## Revolucionar_86
+
+$L_{11}$ **Engr_2** -> $L_{17}$ **P_1** (continuous)
+  Variable: $q_{10}$
+
+- **origin xyz**: (0.034279, 0.029154, 0) m
 - **origin rpy**: (0, 0, 0) rad
+- **axis**: (0, 0, 1)
 
 ### Local Transform
 
 $$
-T^{10}_{12} = \begin{bmatrix}
-1 & 0 & 0 & 0.014 \\
-0 & 1 & 0 & 0 \\
-0 & 0 & 1 & -0.005 \\
+T^{11}_{17}(q_{10}) = \begin{bmatrix}
+c_{10} & -s_{10} & 0 & 0.034279 \\
+s_{10} & c_{10} & 0 & 0.029154 \\
+0 & 0 & 1 & 0 \\
 0 & 0 & 0 & 1 \\
 \end{bmatrix}
 $$
 
 ---
 
-## R_gido_63
+## Revolucionar_92
 
-$L_{10}$ **Componente4_Espelhar** -> $L_{13}$ **Healical_Gear_8R_0_00_m_1_0** (fixed)
+$L_{14}$ **Engr_1** -> $L_{18}$ **P_1_1** (continuous)
+  Variable: $q_{11}$
 
-- **origin xyz**: (0, 0, -0.005) m
-- **origin rpy**: (3.141593, 0, 0.401426) rad
-
-### Local Transform
-
-$$
-T^{10}_{13} = \begin{bmatrix}
-0.920505 & 0.390731 & 0 & 0 \\
-0.390731 & -0.920505 & 0 & 0 \\
-0 & 0 & -1 & -0.005 \\
-0 & 0 & 0 & 1 \\
-\end{bmatrix}
-$$
-
----
-
-## R_gido_59
-
-$L_{11}$ **Healical_Gear_20R_0_00_m_1_0** -> $L_{14}$ **Componente5_Espelhar_1** (fixed)
-
-- **origin xyz**: (0.016666, 0.00388, 0.005) m
-- **origin rpy**: (0, 0, -3.141593) rad
-
-### Local Transform
-
-$$
-T^{11}_{14} = \begin{bmatrix}
--1 & 0 & 0 & 0.016666 \\
-0 & -1 & 0 & 0.00388 \\
-0 & 0 & 1 & 0.005 \\
-0 & 0 & 0 & 1 \\
-\end{bmatrix}
-$$
-
----
-
-## R_gido_60
-
-$L_{11}$ **Healical_Gear_20R_0_00_m_1_0** -> $L_{15}$ **Componente5_Espelhar_Espelhar** (fixed)
-
-- **origin xyz**: (0.016666, 0.00388, -0.005) m
-- **origin rpy**: (0, 0, -3.141593) rad
-
-### Local Transform
-
-$$
-T^{11}_{15} = \begin{bmatrix}
--1 & 0 & 0 & 0.016666 \\
-0 & -1 & 0 & 0.00388 \\
-0 & 0 & 1 & -0.005 \\
-0 & 0 & 0 & 1 \\
-\end{bmatrix}
-$$
-
----
-
-## R_gido_57
-
-$L_{12}$ **Healical_Gear_20R_0_00_m_1_0_1** -> $L_{16}$ **Componente5** (fixed)
-
-- **origin xyz**: (-0.016666, -0.00388, -0.005) m
+- **origin xyz**: (0.000359, -0.044999, 0) m
 - **origin rpy**: (0, 0, 0) rad
+- **axis**: (0, 0, 1)
 
 ### Local Transform
 
 $$
-T^{12}_{16} = \begin{bmatrix}
-1 & 0 & 0 & -0.016666 \\
-0 & 1 & 0 & -0.00388 \\
-0 & 0 & 1 & -0.005 \\
-0 & 0 & 0 & 1 \\
-\end{bmatrix}
-$$
-
----
-
-## R_gido_58
-
-$L_{12}$ **Healical_Gear_20R_0_00_m_1_0_1** -> $L_{17}$ **Componente5_Espelhar** (fixed)
-
-- **origin xyz**: (-0.016666, -0.00388, 0.005) m
-- **origin rpy**: (0, 0, 0) rad
-
-### Local Transform
-
-$$
-T^{12}_{17} = \begin{bmatrix}
-1 & 0 & 0 & -0.016666 \\
-0 & 1 & 0 & -0.00388 \\
-0 & 0 & 1 & 0.005 \\
-0 & 0 & 0 & 1 \\
-\end{bmatrix}
-$$
-
----
-
-## R_gido_64
-
-$L_{12}$ **Healical_Gear_20R_0_00_m_1_0_1** -> $L_{18}$ **Componente4** (fixed)
-
-- **origin xyz**: (-0.014, 0, -0.005) m
-- **origin rpy**: (0, 0, 0) rad
-
-### Local Transform
-
-$$
-T^{12}_{18} = \begin{bmatrix}
-1 & 0 & 0 & -0.014 \\
-0 & 1 & 0 & 0 \\
-0 & 0 & 1 & -0.005 \\
-0 & 0 & 0 & 1 \\
-\end{bmatrix}
-$$
-
----
-
-## R_gido_61
-
-$L_{15}$ **Componente5_Espelhar_Espelhar** -> $L_{19}$ **Componente6_Espelhar** (fixed)
-
-- **origin xyz**: (0, 0, 0.01) m
-- **origin rpy**: (0, 0, 0) rad
-
-### Local Transform
-
-$$
-T^{15}_{19} = \begin{bmatrix}
-1 & 0 & 0 & 0 \\
-0 & 1 & 0 & 0 \\
-0 & 0 & 1 & 0.01 \\
-0 & 0 & 0 & 1 \\
-\end{bmatrix}
-$$
-
----
-
-## R_gido_62
-
-$L_{16}$ **Componente5** -> $L_{20}$ **Componente6** (fixed)
-
-- **origin xyz**: (0, 0, 0) m
-- **origin rpy**: (0, 0, 0) rad
-
-### Local Transform
-
-$$
-T^{16}_{20} = \begin{bmatrix}
-1 & 0 & 0 & 0 \\
-0 & 1 & 0 & 0 \\
+T^{14}_{18}(q_{11}) = \begin{bmatrix}
+c_{11} & -s_{11} & 0 & 0.000359 \\
+s_{11} & c_{11} & 0 & -0.044999 \\
 0 & 0 & 1 & 0 \\
 0 & 0 & 0 & 1 \\
 \end{bmatrix}
@@ -533,29 +588,25 @@ $$T^{0}_{6} = T^{0}_{1} \cdot T^{1}_{2}(q_{1}) \cdot T^{2}_{3} \cdot T^{3}_{4} \
 
 $$T^{0}_{7} = T^{0}_{1} \cdot T^{1}_{2}(q_{1}) \cdot T^{2}_{3} \cdot T^{3}_{4} \cdot T^{4}_{5}(q_{2}) \cdot T^{5}_{6} \cdot T^{6}_{7}\quad (L_0 \to L_{7}: \text{MOTOR_1_1})$$
 
-$$T^{0}_{8} = T^{0}_{1} \cdot T^{1}_{2}(q_{1}) \cdot T^{2}_{3} \cdot T^{3}_{4} \cdot T^{4}_{5}(q_{2}) \cdot T^{5}_{6} \cdot T^{6}_{7} \cdot T^{7}_{8}(q_{3})\quad (L_0 \to L_{8}: \text{Caixa_motor_pequeno})$$
+$$T^{0}_{8} = T^{0}_{1} \cdot T^{1}_{2}(q_{1}) \cdot T^{2}_{3} \cdot T^{3}_{4} \cdot T^{4}_{5}(q_{2}) \cdot T^{5}_{6} \cdot T^{6}_{7} \cdot T^{7}_{8}(q_{3})\quad (L_0 \to L_{8}: \text{garra_final_showder_servo_horn_3})$$
 
-$$T^{0}_{9} = T^{0}_{1} \cdot T^{1}_{2}(q_{1}) \cdot T^{2}_{3} \cdot T^{3}_{4} \cdot T^{4}_{5}(q_{2}) \cdot T^{5}_{6} \cdot T^{6}_{7} \cdot T^{7}_{8}(q_{3}) \cdot T^{8}_{9}\quad (L_0 \to L_{9}: \text{motor_pequeno})$$
+$$T^{0}_{9} = T^{0}_{1} \cdot T^{1}_{2}(q_{1}) \cdot T^{2}_{3} \cdot T^{3}_{4} \cdot T^{4}_{5}(q_{2}) \cdot T^{5}_{6} \cdot T^{6}_{7} \cdot T^{7}_{8}(q_{3}) \cdot T^{8}_{9}\quad (L_0 \to L_{9}: \text{Base})$$
 
-$$T^{0}_{10} = T^{0}_{1} \cdot T^{1}_{2}(q_{1}) \cdot T^{2}_{3} \cdot T^{3}_{4} \cdot T^{4}_{5}(q_{2}) \cdot T^{5}_{6} \cdot T^{6}_{7} \cdot T^{7}_{8}(q_{3}) \cdot T^{8}_{9} \cdot T^{9}_{10}\quad (L_0 \to L_{10}: \text{Componente4_Espelhar})$$
+$$T^{0}_{10} = T^{0}_{1} \cdot T^{1}_{2}(q_{1}) \cdot T^{2}_{3} \cdot T^{3}_{4} \cdot T^{4}_{5}(q_{2}) \cdot T^{5}_{6} \cdot T^{6}_{7} \cdot T^{7}_{8}(q_{3}) \cdot T^{8}_{9} \cdot T^{9}_{10}\quad (L_0 \to L_{10}: \text{Motor})$$
 
-$$T^{0}_{11} = T^{0}_{1} \cdot T^{1}_{2}(q_{1}) \cdot T^{2}_{3} \cdot T^{3}_{4} \cdot T^{4}_{5}(q_{2}) \cdot T^{5}_{6} \cdot T^{6}_{7} \cdot T^{7}_{8}(q_{3}) \cdot T^{8}_{9} \cdot T^{9}_{10} \cdot T^{10}_{11}\quad (L_0 \to L_{11}: \text{Healical_Gear_20R_0_00_m_1_0})$$
+$$T^{0}_{11} = T^{0}_{1} \cdot T^{1}_{2}(q_{1}) \cdot T^{2}_{3} \cdot T^{3}_{4} \cdot T^{4}_{5}(q_{2}) \cdot T^{5}_{6} \cdot T^{6}_{7} \cdot T^{7}_{8}(q_{3}) \cdot T^{8}_{9} \cdot T^{9}_{11}(q_{4})\quad (L_0 \to L_{11}: \text{Engr_2})$$
 
-$$T^{0}_{12} = T^{0}_{1} \cdot T^{1}_{2}(q_{1}) \cdot T^{2}_{3} \cdot T^{3}_{4} \cdot T^{4}_{5}(q_{2}) \cdot T^{5}_{6} \cdot T^{6}_{7} \cdot T^{7}_{8}(q_{3}) \cdot T^{8}_{9} \cdot T^{9}_{10} \cdot T^{10}_{12}\quad (L_0 \to L_{12}: \text{Healical_Gear_20R_0_00_m_1_0_1})$$
+$$T^{0}_{12} = T^{0}_{1} \cdot T^{1}_{2}(q_{1}) \cdot T^{2}_{3} \cdot T^{3}_{4} \cdot T^{4}_{5}(q_{2}) \cdot T^{5}_{6} \cdot T^{6}_{7} \cdot T^{7}_{8}(q_{3}) \cdot T^{8}_{9} \cdot T^{9}_{12}(q_{5})\quad (L_0 \to L_{12}: \text{Junta_1})$$
 
-$$T^{0}_{13} = T^{0}_{1} \cdot T^{1}_{2}(q_{1}) \cdot T^{2}_{3} \cdot T^{3}_{4} \cdot T^{4}_{5}(q_{2}) \cdot T^{5}_{6} \cdot T^{6}_{7} \cdot T^{7}_{8}(q_{3}) \cdot T^{8}_{9} \cdot T^{9}_{10} \cdot T^{10}_{13}\quad (L_0 \to L_{13}: \text{Healical_Gear_8R_0_00_m_1_0})$$
+$$T^{0}_{13} = T^{0}_{1} \cdot T^{1}_{2}(q_{1}) \cdot T^{2}_{3} \cdot T^{3}_{4} \cdot T^{4}_{5}(q_{2}) \cdot T^{5}_{6} \cdot T^{6}_{7} \cdot T^{7}_{8}(q_{3}) \cdot T^{8}_{9} \cdot T^{9}_{13}(q_{6})\quad (L_0 \to L_{13}: \text{Junta_1_1})$$
 
-$$T^{0}_{14} = T^{0}_{1} \cdot T^{1}_{2}(q_{1}) \cdot T^{2}_{3} \cdot T^{3}_{4} \cdot T^{4}_{5}(q_{2}) \cdot T^{5}_{6} \cdot T^{6}_{7} \cdot T^{7}_{8}(q_{3}) \cdot T^{8}_{9} \cdot T^{9}_{10} \cdot T^{10}_{11} \cdot T^{11}_{14}\quad (L_0 \to L_{14}: \text{Componente5_Espelhar_1})$$
+$$T^{0}_{14} = T^{0}_{1} \cdot T^{1}_{2}(q_{1}) \cdot T^{2}_{3} \cdot T^{3}_{4} \cdot T^{4}_{5}(q_{2}) \cdot T^{5}_{6} \cdot T^{6}_{7} \cdot T^{7}_{8}(q_{3}) \cdot T^{8}_{9} \cdot T^{9}_{14}(q_{7})\quad (L_0 \to L_{14}: \text{Engr_1})$$
 
-$$T^{0}_{15} = T^{0}_{1} \cdot T^{1}_{2}(q_{1}) \cdot T^{2}_{3} \cdot T^{3}_{4} \cdot T^{4}_{5}(q_{2}) \cdot T^{5}_{6} \cdot T^{6}_{7} \cdot T^{7}_{8}(q_{3}) \cdot T^{8}_{9} \cdot T^{9}_{10} \cdot T^{10}_{11} \cdot T^{11}_{15}\quad (L_0 \to L_{15}: \text{Componente5_Espelhar_Espelhar})$$
+$$T^{0}_{15} = T^{0}_{1} \cdot T^{1}_{2}(q_{1}) \cdot T^{2}_{3} \cdot T^{3}_{4} \cdot T^{4}_{5}(q_{2}) \cdot T^{5}_{6} \cdot T^{6}_{7} \cdot T^{7}_{8}(q_{3}) \cdot T^{8}_{9} \cdot T^{9}_{15}(q_{8})\quad (L_0 \to L_{15}: \text{Junta_2})$$
 
-$$T^{0}_{16} = T^{0}_{1} \cdot T^{1}_{2}(q_{1}) \cdot T^{2}_{3} \cdot T^{3}_{4} \cdot T^{4}_{5}(q_{2}) \cdot T^{5}_{6} \cdot T^{6}_{7} \cdot T^{7}_{8}(q_{3}) \cdot T^{8}_{9} \cdot T^{9}_{10} \cdot T^{10}_{12} \cdot T^{12}_{16}\quad (L_0 \to L_{16}: \text{Componente5})$$
+$$T^{0}_{16} = T^{0}_{1} \cdot T^{1}_{2}(q_{1}) \cdot T^{2}_{3} \cdot T^{3}_{4} \cdot T^{4}_{5}(q_{2}) \cdot T^{5}_{6} \cdot T^{6}_{7} \cdot T^{7}_{8}(q_{3}) \cdot T^{8}_{9} \cdot T^{9}_{16}(q_{9})\quad (L_0 \to L_{16}: \text{Junta})$$
 
-$$T^{0}_{17} = T^{0}_{1} \cdot T^{1}_{2}(q_{1}) \cdot T^{2}_{3} \cdot T^{3}_{4} \cdot T^{4}_{5}(q_{2}) \cdot T^{5}_{6} \cdot T^{6}_{7} \cdot T^{7}_{8}(q_{3}) \cdot T^{8}_{9} \cdot T^{9}_{10} \cdot T^{10}_{12} \cdot T^{12}_{17}\quad (L_0 \to L_{17}: \text{Componente5_Espelhar})$$
+$$T^{0}_{17} = T^{0}_{1} \cdot T^{1}_{2}(q_{1}) \cdot T^{2}_{3} \cdot T^{3}_{4} \cdot T^{4}_{5}(q_{2}) \cdot T^{5}_{6} \cdot T^{6}_{7} \cdot T^{7}_{8}(q_{3}) \cdot T^{8}_{9} \cdot T^{9}_{11}(q_{4}) \cdot T^{11}_{17}(q_{10})\quad (L_0 \to L_{17}: \text{P_1})$$
 
-$$T^{0}_{18} = T^{0}_{1} \cdot T^{1}_{2}(q_{1}) \cdot T^{2}_{3} \cdot T^{3}_{4} \cdot T^{4}_{5}(q_{2}) \cdot T^{5}_{6} \cdot T^{6}_{7} \cdot T^{7}_{8}(q_{3}) \cdot T^{8}_{9} \cdot T^{9}_{10} \cdot T^{10}_{12} \cdot T^{12}_{18}\quad (L_0 \to L_{18}: \text{Componente4})$$
-
-$$T^{0}_{19} = T^{0}_{1} \cdot T^{1}_{2}(q_{1}) \cdot T^{2}_{3} \cdot T^{3}_{4} \cdot T^{4}_{5}(q_{2}) \cdot T^{5}_{6} \cdot T^{6}_{7} \cdot T^{7}_{8}(q_{3}) \cdot T^{8}_{9} \cdot T^{9}_{10} \cdot T^{10}_{11} \cdot T^{11}_{15} \cdot T^{15}_{19}\quad (L_0 \to L_{19}: \text{Componente6_Espelhar})$$
-
-$$T^{0}_{20} = T^{0}_{1} \cdot T^{1}_{2}(q_{1}) \cdot T^{2}_{3} \cdot T^{3}_{4} \cdot T^{4}_{5}(q_{2}) \cdot T^{5}_{6} \cdot T^{6}_{7} \cdot T^{7}_{8}(q_{3}) \cdot T^{8}_{9} \cdot T^{9}_{10} \cdot T^{10}_{12} \cdot T^{12}_{16} \cdot T^{16}_{20}\quad (L_0 \to L_{20}: \text{Componente6})$$
+$$T^{0}_{18} = T^{0}_{1} \cdot T^{1}_{2}(q_{1}) \cdot T^{2}_{3} \cdot T^{3}_{4} \cdot T^{4}_{5}(q_{2}) \cdot T^{5}_{6} \cdot T^{6}_{7} \cdot T^{7}_{8}(q_{3}) \cdot T^{8}_{9} \cdot T^{9}_{14}(q_{7}) \cdot T^{14}_{18}(q_{11})\quad (L_0 \to L_{18}: \text{P_1_1})$$
 

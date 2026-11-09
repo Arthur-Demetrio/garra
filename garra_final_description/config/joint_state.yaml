@@ -6,10 +6,26 @@ joint_state_publisher:
     zeros:
       Revolucionar_46: 0.0
       Revolucionar_49: 0.0
-      Revolucionar_52: 0.0
+      Revolucionar_72: 0.0
+      Revolucionar_85: 0.0
+      Revolucionar_86: 0.0
+      Revolucionar_87: 0.0
+      Revolucionar_89: 0.0
+      Revolucionar_91: 0.0
+      Revolucionar_92: 0.0
+      Revolucionar_93: 0.0
+      Revolucionar_95: 0.0
 
     # Joints to publish
     source_list:
       - Revolucionar_46
       - Revolucionar_49
-      - Revolucionar_52
+      - Revolucionar_72
+      - Revolucionar_85
+      - Revolucionar_86
+      - Revolucionar_87
+      - Revolucionar_89
+      - Revolucionar_91
+      - Revolucionar_92
+      - Revolucionar_93
+      - Revolucionar_95

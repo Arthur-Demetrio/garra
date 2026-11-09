@@ -5,250 +5,177 @@ metadata:
   design_name: garra_final
   package_name: garra_final_description
   exporter_version: '3.1.1'
-  total_mass_kg: 0.8631
-  link_count: 21
-  joint_count: 20
+  total_mass_kg: 1.0262
+  link_count: 19
+  joint_count: 18
   root_link: base_link
 
 assemblies:
-  Nova_Pin_a:
-    links: [Healical_Gear_20R_0_00_m_1_0, Healical_Gear_20R_0_00_m_1_0_1, Healical_Gear_8R_0_00_m_1_0, Componente4, Componente5, Componente6, Componente5_Espelhar, Componente5_Espelhar_1, Componente6_Espelhar, Componente5_Espelhar_Espelhar, Componente4_Espelhar]
-    total_mass_kg: 0.1990
+  Configura_o_1:
+    links: [Engr_1, Motor, Engr_2, Base, P_1, Junta, P_1_1, Junta_1, Junta_1_1, Junta_2]
+    total_mass_kg: 0.4477
   garra_final:
-    links: [motor_pequeno, M_dulo_1, MOTOR_1, M_dulo_2, MOTOR_1_1, garra_final_showder_servo_horn, base_link, Caixa_motor_pequeno, shoulder_motor, garra_final_showder_servo_horn_2]
-    total_mass_kg: 0.6641
+    links: [base_link, shoulder_motor, M_dulo_1, MOTOR_1, M_dulo_2, MOTOR_1_1, garra_final_showder_servo_horn, garra_final_showder_servo_horn_2, garra_final_showder_servo_horn_3]
+    total_mass_kg: 0.5785
 
 links:
-  Caixa_motor_pequeno:
-    assembly: garra_final
-    mass_kg: 0.051342
-    volume_m3: 0.00000654
-    bbox_size_m: [0.025000, 0.025000, 0.039200]
-    com_local_m: [0.000000, 0.000000, -0.016197]
+  Base:
+    assembly: Configura_o_1
+    mass_kg: 0.191532
+    volume_m3: 0.00002440
+    bbox_size_m: [0.043807, 0.105000, 0.024000]
+    com_local_m: [-0.057386, -0.026808, 0.002045]
     inertia_at_com:
-      ixx: 1.159693e-05
-      ixy: 0.000000e+00
-      ixz: 0.000000e+00
-      iyy: 1.110664e-05
-      iyz: 0.000000e+00
-      izz: 3.500649e-06
-    material: 'A_o'
-    color_rgba: [0.769, 0.208, 0.153, 1.0]
-    body_count: 1
-    is_empty: false
-    collision_source: primitive
-    collision_shape: cylinder
-    bake_offset_m: [-0.131091, 0.048591, -0.157000]
-    mesh_origin_rpy_rad: [0.000000, 0.000000, 0.000000]
-  Componente4:
-    assembly: Nova_Pin_a
-    mass_kg: 0.047563
-    volume_m3: 0.00000606
-    bbox_size_m: [0.060000, 0.038000, 0.003000]
-    com_local_m: [0.000000, -0.002370, 0.001500]
-    inertia_at_com:
-      ixx: 5.172054e-06
-      ixy: 0.000000e+00
-      ixz: 0.000000e+00
-      iyy: 1.263494e-05
-      iyz: 0.000000e+00
-      izz: 1.773565e-05
+      ixx: 1.578035e-04
+      ixy: -3.919167e-07
+      ixz: 4.397693e-08
+      iyy: 1.697283e-05
+      iyz: -2.047143e-07
+      izz: 1.622377e-04
     material: 'A_o'
     color_rgba: [0.769, 0.208, 0.153, 1.0]
     body_count: 1
     is_empty: false
     collision_source: primitive
     collision_shape: box
-  Componente4_Espelhar:
-    assembly: Nova_Pin_a
-    mass_kg: 0.026701
-    volume_m3: 0.00000340
-    bbox_size_m: [0.060000, 0.023000, 0.003000]
-    com_local_m: [0.000000, 0.004855, -0.001500]
+  Engr_1:
+    assembly: Configura_o_1
+    mass_kg: 0.023094
+    volume_m3: 0.00000294
+    bbox_size_m: [0.048820, 0.048820, 0.004000]
+    com_local_m: [0.000121, -0.015122, -0.002000]
     inertia_at_com:
-      ixx: 1.107134e-06
-      ixy: 0.000000e+00
+      ixx: 6.797929e-06
+      ixy: 5.055261e-08
       ixz: 0.000000e+00
-      iyy: 6.326237e-06
+      iyy: 4.680897e-07
       iyz: 0.000000e+00
-      izz: 7.393320e-06
+      izz: 7.204434e-06
     material: 'A_o'
     color_rgba: [0.769, 0.208, 0.153, 1.0]
     body_count: 1
     is_empty: false
     collision_source: primitive
     collision_shape: box
-  Componente5:
-    assembly: Nova_Pin_a
-    mass_kg: 0.004572
-    volume_m3: 0.00000058
-    bbox_size_m: [0.016261, 0.034191, 0.003000]
-    com_local_m: [0.034851, -0.029094, 0.008500]
+    bake_offset_m: [-0.071992, 0.005259, 0.004000]
+    mesh_origin_rpy_rad: [-3.141593, 0.000000, -2.348209]
+    frame_rule: auto
+    frame_rebase_rpy_rad: [-3.141593, 0.000000, -2.348209]
+  Engr_2:
+    assembly: Configura_o_1
+    mass_kg: 0.020209
+    volume_m3: 0.00000257
+    bbox_size_m: [0.048719, 0.048719, 0.004000]
+    com_local_m: [0.012302, 0.010477, -0.001895]
     inertia_at_com:
-      ixx: 3.754861e-07
-      ixy: -1.303296e-07
-      ixz: 0.000000e+00
-      iyy: 6.489528e-08
-      iyz: 0.000000e+00
-      izz: 4.335241e-07
-    material: 'A_o'
-    color_rgba: [0.627, 0.627, 0.627, 1.0]
-    body_count: 1
-    is_empty: false
-    collision_source: primitive
-    collision_shape: box
-  Componente5_Espelhar:
-    assembly: Nova_Pin_a
-    mass_kg: 0.004572
-    volume_m3: 0.00000058
-    bbox_size_m: [0.016261, 0.034191, 0.003000]
-    com_local_m: [0.034851, -0.029094, -0.008500]
-    inertia_at_com:
-      ixx: 3.754861e-07
-      ixy: -1.303296e-07
-      ixz: 0.000000e+00
-      iyy: 6.489528e-08
-      iyz: 0.000000e+00
-      izz: 4.335241e-07
-    material: 'A_o'
-    color_rgba: [0.627, 0.627, 0.627, 1.0]
-    body_count: 1
-    is_empty: false
-    collision_source: primitive
-    collision_shape: box
-  Componente5_Espelhar_1:
-    assembly: Nova_Pin_a
-    mass_kg: 0.004572
-    volume_m3: 0.00000058
-    bbox_size_m: [0.016261, 0.034191, 0.003000]
-    com_local_m: [0.034851, -0.029094, -0.008500]
-    inertia_at_com:
-      ixx: 3.754861e-07
-      ixy: -1.303296e-07
-      ixz: 0.000000e+00
-      iyy: 6.489528e-08
-      iyz: 0.000000e+00
-      izz: 4.335241e-07
-    material: 'A_o'
-    color_rgba: [0.627, 0.627, 0.627, 1.0]
-    body_count: 1
-    is_empty: false
-    collision_source: primitive
-    collision_shape: box
-  Componente5_Espelhar_Espelhar:
-    assembly: Nova_Pin_a
-    mass_kg: 0.004572
-    volume_m3: 0.00000058
-    bbox_size_m: [0.016261, 0.034191, 0.003000]
-    com_local_m: [0.034851, -0.029094, 0.008500]
-    inertia_at_com:
-      ixx: 3.754861e-07
-      ixy: -1.303296e-07
-      ixz: 0.000000e+00
-      iyy: 6.489528e-08
-      iyz: 0.000000e+00
-      izz: 4.335241e-07
-    material: 'A_o'
-    color_rgba: [0.627, 0.627, 0.627, 1.0]
-    body_count: 1
-    is_empty: false
-    collision_source: primitive
-    collision_shape: box
-  Componente6:
-    assembly: Nova_Pin_a
-    mass_kg: 0.039125
-    volume_m3: 0.00000498
-    bbox_size_m: [0.030720, 0.059191, 0.020000]
-    com_local_m: [0.030510, -0.059008, 0.006605]
-    inertia_at_com:
-      ixx: 7.773665e-06
-      ixy: 1.619710e-06
-      ixz: -1.021471e-07
-      iyy: 2.146320e-06
-      iyz: 3.463814e-07
-      izz: 7.756453e-06
+      ixx: 2.980671e-06
+      ixy: -2.974360e-06
+      ixz: 1.310687e-08
+      iyy: 3.949671e-06
+      iyz: 1.139934e-08
+      izz: 6.875480e-06
     material: 'A_o'
     color_rgba: [0.769, 0.208, 0.153, 1.0]
     body_count: 1
     is_empty: false
     collision_source: primitive
     collision_shape: box
-  Componente6_Espelhar:
-    assembly: Nova_Pin_a
-    mass_kg: 0.039125
-    volume_m3: 0.00000498
-    bbox_size_m: [0.030720, 0.059191, 0.020000]
-    com_local_m: [0.030510, -0.059008, -0.006605]
+    bake_offset_m: [-0.060399, -0.064595, 0.004000]
+    mesh_origin_rpy_rad: [-3.141593, 0.000000, -1.651422]
+    frame_rule: auto
+    frame_rebase_rpy_rad: [3.141593, 0.000000, -1.651422]
+  Junta:
+    assembly: Configura_o_1
+    mass_kg: 0.006788
+    volume_m3: 0.00000086
+    bbox_size_m: [0.027556, 0.034164, 0.004000]
+    com_local_m: [-0.007594, -0.012859, 0.002000]
     inertia_at_com:
-      ixx: 7.773665e-06
-      ixy: 1.619710e-06
-      ixz: 1.021471e-07
-      iyy: 2.146320e-06
-      iyz: -3.463814e-07
-      izz: 7.756453e-06
-    material: 'A_o'
-    color_rgba: [0.769, 0.208, 0.153, 1.0]
-    body_count: 1
-    is_empty: false
-    collision_source: primitive
-    collision_shape: box
-  Healical_Gear_20R_0_00_m_1_0:
-    assembly: Nova_Pin_a
-    mass_kg: 0.013454
-    volume_m3: 0.00000171
-    bbox_size_m: [0.037314, 0.032880, 0.004000]
-    com_local_m: [-0.004805, 0.003882, 0.000000]
-    inertia_at_com:
-      ixx: 8.064778e-07
-      ixy: 6.582117e-07
+      ixx: 8.566469e-07
+      ixy: -4.804180e-07
       ixz: 0.000000e+00
-      iyy: 1.086953e-06
+      iyy: 3.268136e-07
       iyz: 0.000000e+00
-      izz: 1.857553e-06
-    material: 'A_o'
-    color_rgba: [0.627, 0.627, 0.627, 1.0]
-    body_count: 1
-    is_empty: false
-    collision_source: primitive
-    collision_shape: box
-  Healical_Gear_20R_0_00_m_1_0_1:
-    assembly: Nova_Pin_a
-    mass_kg: 0.013454
-    volume_m3: 0.00000171
-    bbox_size_m: [0.037314, 0.032880, 0.004000]
-    com_local_m: [0.004805, -0.003882, 0.000000]
-    inertia_at_com:
-      ixx: 8.064778e-07
-      ixy: 6.582117e-07
-      ixz: 0.000000e+00
-      iyy: 1.086953e-06
-      iyz: 0.000000e+00
-      izz: 1.857553e-06
-    material: 'A_o'
-    color_rgba: [0.627, 0.627, 0.627, 1.0]
-    body_count: 1
-    is_empty: false
-    collision_source: primitive
-    collision_shape: box
-  Healical_Gear_8R_0_00_m_1_0:
-    assembly: Nova_Pin_a
-    mass_kg: 0.001261
-    volume_m3: 0.00000016
-    bbox_size_m: [0.010000, 0.010000, 0.004000]
-    com_local_m: [0.000000, 0.000000, 0.000000]
-    inertia_at_com:
-      ixx: 8.455303e-09
-      ixy: 0.000000e+00
-      ixz: 0.000000e+00
-      iyy: 8.455303e-09
-      iyz: 0.000000e+00
-      izz: 1.354753e-08
+      izz: 1.165360e-06
     material: 'A_o'
     color_rgba: [0.627, 0.627, 0.627, 1.0]
     body_count: 1
     is_empty: false
     collision_source: primitive
     collision_shape: cylinder
+    bake_offset_m: [0.091913, -0.013442, -0.004000]
+    mesh_origin_rpy_rad: [0.000000, 0.000000, -1.161747]
+    frame_rule: auto
+    frame_rebase_rpy_rad: [0.000000, 0.000000, 1.161747]
+  Junta_1:
+    assembly: Configura_o_1
+    mass_kg: 0.006788
+    volume_m3: 0.00000086
+    bbox_size_m: [0.027556, 0.034164, 0.004000]
+    com_local_m: [0.013041, 0.007277, -0.002000]
+    inertia_at_com:
+      ixx: 3.036069e-07
+      ixy: -4.668696e-07
+      ixz: 0.000000e+00
+      iyy: 8.798537e-07
+      iyz: 0.000000e+00
+      izz: 1.165360e-06
+    material: 'A_o'
+    color_rgba: [0.627, 0.627, 0.627, 1.0]
+    body_count: 1
+    is_empty: false
+    collision_source: primitive
+    collision_shape: cylinder
+    bake_offset_m: [-0.094335, -0.043366, -0.008000]
+    mesh_origin_rpy_rad: [0.000000, 0.000000, 2.708050]
+    frame_rule: auto
+    frame_rebase_rpy_rad: [0.000000, 0.000000, -2.708050]
+  Junta_1_1:
+    assembly: Configura_o_1
+    mass_kg: 0.006788
+    volume_m3: 0.00000086
+    bbox_size_m: [0.027556, 0.034164, 0.004000]
+    com_local_m: [0.013041, 0.007277, 0.002000]
+    inertia_at_com:
+      ixx: 3.036069e-07
+      ixy: -4.668696e-07
+      ixz: 0.000000e+00
+      iyy: 8.798537e-07
+      iyz: 0.000000e+00
+      izz: 1.165360e-06
+    material: 'A_o'
+    color_rgba: [0.627, 0.627, 0.627, 1.0]
+    body_count: 1
+    is_empty: false
+    collision_source: primitive
+    collision_shape: cylinder
+    bake_offset_m: [-0.040397, -0.032449, -0.004000]
+    mesh_origin_rpy_rad: [0.000000, 0.000000, 1.451413]
+    frame_rule: auto
+    frame_rebase_rpy_rad: [0.000000, 0.000000, -1.451413]
+  Junta_2:
+    assembly: Configura_o_1
+    mass_kg: 0.006788
+    volume_m3: 0.00000086
+    bbox_size_m: [0.027556, 0.034164, 0.004000]
+    com_local_m: [-0.007594, -0.012859, -0.002000]
+    inertia_at_com:
+      ixx: 8.566469e-07
+      ixy: -4.804180e-07
+      ixz: 0.000000e+00
+      iyy: 3.268136e-07
+      iyz: 0.000000e+00
+      izz: 1.165360e-06
+    material: 'A_o'
+    color_rgba: [0.627, 0.627, 0.627, 1.0]
+    body_count: 1
+    is_empty: false
+    collision_source: primitive
+    collision_shape: cylinder
+    bake_offset_m: [0.087436, 0.069572, -0.008000]
+    mesh_origin_rpy_rad: [0.000000, 0.000000, -1.161747]
+    frame_rule: auto
+    frame_rebase_rpy_rad: [0.000000, 0.000000, 1.161747]
   MOTOR_1:
     assembly: garra_final
     mass_kg: 0.089211
@@ -272,15 +199,15 @@ links:
     assembly: garra_final
     mass_kg: 0.089211
     volume_m3: 0.00003304
-    bbox_size_m: [0.047290, 0.020000, 0.045000]
-    com_local_m: [0.116478, 0.000261, 0.173840]
+    bbox_size_m: [0.047290, 0.045000, 0.020000]
+    com_local_m: [0.137478, 0.000880, 0.173458]
     inertia_at_com:
       ixx: 1.556066e-05
-      ixy: -2.821326e-10
-      ixz: 6.268823e-08
-      iyy: 2.459598e-05
-      iyz: 2.536528e-10
-      izz: 1.495797e-05
+      ixy: -6.268823e-08
+      ixz: -2.821390e-10
+      iyy: 1.495797e-05
+      iyz: -2.536528e-10
+      izz: 2.459598e-05
     material: 'Alum_nio_prata_anodizada'
     color_rgba: [0.537, 0.537, 0.537, 1.0]
     body_count: 1
@@ -308,23 +235,88 @@ links:
     collision_shape: box
   M_dulo_2:
     assembly: garra_final
-    mass_kg: 0.056531
-    volume_m3: 0.00004096
-    bbox_size_m: [0.104000, 0.030000, 0.030000]
-    com_local_m: [0.101319, 0.000462, 0.177963]
+    mass_kg: 0.070749
+    volume_m3: 0.00005127
+    bbox_size_m: [0.126000, 0.020000, 0.036000]
+    com_local_m: [0.104698, 0.000412, 0.173614]
     inertia_at_com:
-      ixx: 8.692480e-06
-      ixy: 1.198636e-07
-      ixz: -1.712444e-08
-      iyy: 5.600839e-05
-      iyz: 3.692865e-10
-      izz: 5.685421e-05
+      ixx: 1.156834e-05
+      ixy: 1.910002e-07
+      ixz: -1.551575e-08
+      iyy: 9.825746e-05
+      iyz: 7.836475e-10
+      izz: 9.164356e-05
     material: 'Laminado_vermelho_fosco'
     color_rgba: [0.769, 0.208, 0.153, 1.0]
     body_count: 1
     is_empty: false
     collision_source: primitive
     collision_shape: box
+  Motor:
+    assembly: Configura_o_1
+    mass_kg: 0.050915
+    volume_m3: 0.00000649
+    bbox_size_m: [0.012000, 0.023000, 0.023500]
+    com_local_m: [0.044221, 0.026721, 0.011750]
+    inertia_at_com:
+      ixx: 4.587663e-06
+      ixy: 0.000000e+00
+      ixz: 0.000000e+00
+      iyy: 2.954137e-06
+      iyz: 0.000000e+00
+      izz: 2.855489e-06
+    material: 'A_o'
+    color_rgba: [0.627, 0.627, 0.627, 1.0]
+    body_count: 1
+    is_empty: false
+    collision_source: primitive
+    collision_shape: box
+  P_1:
+    assembly: Configura_o_1
+    mass_kg: 0.067383
+    volume_m3: 0.00000858
+    bbox_size_m: [0.026263, 0.075573, 0.024000]
+    com_local_m: [0.044056, -0.016580, 0.002000]
+    inertia_at_com:
+      ixx: 4.175649e-06
+      ixy: 3.884766e-06
+      ixz: 0.000000e+00
+      iyy: 2.338659e-05
+      iyz: 0.000000e+00
+      izz: 2.249340e-05
+    material: 'A_o'
+    color_rgba: [0.769, 0.208, 0.153, 1.0]
+    body_count: 1
+    is_empty: false
+    collision_source: primitive
+    collision_shape: box
+    bake_offset_m: [-0.089605, -0.098609, 0.004000]
+    mesh_origin_rpy_rad: [3.141593, 0.000000, -1.598693]
+    frame_rule: auto
+    frame_rebase_rpy_rad: [-3.141593, 0.000000, -1.598693]
+  P_1_1:
+    assembly: Configura_o_1
+    mass_kg: 0.067383
+    volume_m3: 0.00000858
+    bbox_size_m: [0.026263, 0.075573, 0.024000]
+    com_local_m: [0.034727, 0.031779, 0.002000]
+    inertia_at_com:
+      ixx: 9.516798e-06
+      ixy: -9.443093e-06
+      ixz: 0.000000e+00
+      iyy: 1.804544e-05
+      iyz: 0.000000e+00
+      izz: 2.249340e-05
+    material: 'A_o'
+    color_rgba: [0.769, 0.208, 0.153, 1.0]
+    body_count: 1
+    is_empty: false
+    collision_source: primitive
+    collision_shape: box
+    bake_offset_m: [-0.073719, -0.048230, 0.004000]
+    mesh_origin_rpy_rad: [-3.141593, 0.000000, -1.161747]
+    frame_rule: auto
+    frame_rebase_rpy_rad: [3.141593, 0.000000, -1.161747]
   base_link:
     assembly: garra_final
     mass_kg: 0.122493
@@ -388,25 +380,29 @@ links:
     collision_shape: box
     bake_offset_m: [0.015787, -0.085385, 0.000000]
     mesh_origin_rpy_rad: [0.000000, 0.000000, 0.000000]
-  motor_pequeno:
+  garra_final_showder_servo_horn_3:
     assembly: garra_final
-    mass_kg: 0.055658
-    volume_m3: 0.00000709
-    bbox_size_m: [0.023000, 0.030000, 0.012000]
-    com_local_m: [-0.080077, 0.169352, -0.057500]
+    mass_kg: 0.007175
+    volume_m3: 0.00000091
+    bbox_size_m: [0.030387, 0.026013, 0.003000]
+    com_local_m: [0.008621, -0.000154, 0.001500]
     inertia_at_com:
-      ixx: 3.850480e-06
-      ixy: -2.509034e-07
+      ixx: 8.136522e-08
+      ixy: 1.104621e-08
       ixz: 0.000000e+00
-      iyy: 3.042389e-06
+      iyy: 7.011265e-07
       iyz: 0.000000e+00
-      izz: 5.601907e-06
+      izz: 7.717288e-07
     material: 'A_o'
     color_rgba: [0.627, 0.627, 0.627, 1.0]
     body_count: 1
     is_empty: false
     collision_source: primitive
     collision_shape: box
+    bake_offset_m: [-0.065655, -0.056827, 0.003000]
+    mesh_origin_rpy_rad: [-3.141593, 0.000000, 2.467068]
+    frame_rule: auto
+    frame_rebase_rpy_rad: [3.141593, 0.000000, 2.467068]
   shoulder_motor:
     assembly: garra_final
     mass_kg: 0.089211
@@ -459,124 +455,34 @@ joints:
     type: fixed
     parent: garra_final_showder_servo_horn_2
     child: M_dulo_2
-    origin_xyz_m: [0.163486, 0.095030, -0.005666]
+    origin_xyz_m: [0.160854, 0.091479, -0.006666]
     origin_rpy_rad: [-1.570796, 0.000000, 2.443461]
     axis: [0.0000, 0.0000, 1.0000]
     is_mount: false
     passive: false
-  R_gido_51:
+  R_gido_65:
     type: fixed
     parent: M_dulo_2
     child: MOTOR_1_1
-    origin_xyz_m: [0.001615, 0.000015, 0.004041]
+    origin_xyz_m: [-0.000300, -0.000428, 0.000662]
     origin_rpy_rad: [0.000000, 0.000000, 0.000000]
     axis: [0.0000, 0.0000, 1.0000]
     is_mount: false
     passive: false
-  R_gido_53:
+  R_gido_73:
     type: fixed
-    parent: Caixa_motor_pequeno
-    child: motor_pequeno
-    origin_xyz_m: [0.170546, 0.057500, -0.099228]
-    origin_rpy_rad: [-1.623428, 1.570796, -0.174046]
-    axis: [0.0000, 0.0000, 1.0000]
-    is_mount: false
-    passive: false
-  R_gido_54:
-    type: fixed
-    parent: motor_pequeno
-    child: Componente4_Espelhar
-    origin_xyz_m: [-0.085228, 0.152296, -0.057500]
-    origin_rpy_rad: [-1.570796, 1.570796, 0.000000]
+    parent: garra_final_showder_servo_horn_3
+    child: Base
+    origin_xyz_m: [0.004924, 0.001353, 0.062500]
+    origin_rpy_rad: [1.550770, -1.570796, 0.000000]
     axis: [0.0000, 0.0000, 1.0000]
     is_mount: true
     passive: false
-  R_gido_55:
+  R_gido_77:
     type: fixed
-    parent: Componente4_Espelhar
-    child: Healical_Gear_20R_0_00_m_1_0
-    origin_xyz_m: [-0.014000, 0.000000, -0.005000]
-    origin_rpy_rad: [-3.141593, 0.000000, 0.000000]
-    axis: [0.0000, 0.0000, 1.0000]
-    is_mount: false
-    passive: false
-  R_gido_56:
-    type: fixed
-    parent: Componente4_Espelhar
-    child: Healical_Gear_20R_0_00_m_1_0_1
-    origin_xyz_m: [0.014000, 0.000000, -0.005000]
-    origin_rpy_rad: [0.000000, 0.000000, 0.000000]
-    axis: [0.0000, 0.0000, 1.0000]
-    is_mount: false
-    passive: false
-  R_gido_57:
-    type: fixed
-    parent: Healical_Gear_20R_0_00_m_1_0_1
-    child: Componente5
-    origin_xyz_m: [-0.016666, -0.003880, -0.005000]
-    origin_rpy_rad: [0.000000, 0.000000, 0.000000]
-    axis: [0.0000, 0.0000, 1.0000]
-    is_mount: false
-    passive: false
-  R_gido_58:
-    type: fixed
-    parent: Healical_Gear_20R_0_00_m_1_0_1
-    child: Componente5_Espelhar
-    origin_xyz_m: [-0.016666, -0.003880, 0.005000]
-    origin_rpy_rad: [0.000000, 0.000000, 0.000000]
-    axis: [0.0000, 0.0000, 1.0000]
-    is_mount: false
-    passive: false
-  R_gido_59:
-    type: fixed
-    parent: Healical_Gear_20R_0_00_m_1_0
-    child: Componente5_Espelhar_1
-    origin_xyz_m: [0.016666, 0.003880, 0.005000]
-    origin_rpy_rad: [0.000000, 0.000000, -3.141593]
-    axis: [0.0000, 0.0000, 1.0000]
-    is_mount: false
-    passive: false
-  R_gido_60:
-    type: fixed
-    parent: Healical_Gear_20R_0_00_m_1_0
-    child: Componente5_Espelhar_Espelhar
-    origin_xyz_m: [0.016666, 0.003880, -0.005000]
-    origin_rpy_rad: [0.000000, 0.000000, -3.141593]
-    axis: [0.0000, 0.0000, 1.0000]
-    is_mount: false
-    passive: false
-  R_gido_61:
-    type: fixed
-    parent: Componente5_Espelhar_Espelhar
-    child: Componente6_Espelhar
-    origin_xyz_m: [0.000000, 0.000000, 0.010000]
-    origin_rpy_rad: [0.000000, 0.000000, 0.000000]
-    axis: [0.0000, 0.0000, 1.0000]
-    is_mount: false
-    passive: false
-  R_gido_62:
-    type: fixed
-    parent: Componente5
-    child: Componente6
-    origin_xyz_m: [0.000000, 0.000000, 0.000000]
-    origin_rpy_rad: [0.000000, 0.000000, 0.000000]
-    axis: [0.0000, 0.0000, 1.0000]
-    is_mount: false
-    passive: false
-  R_gido_63:
-    type: fixed
-    parent: Componente4_Espelhar
-    child: Healical_Gear_8R_0_00_m_1_0
-    origin_xyz_m: [0.000000, 0.000000, -0.005000]
-    origin_rpy_rad: [3.141593, 0.000000, 0.401426]
-    axis: [0.0000, 0.0000, 1.0000]
-    is_mount: false
-    passive: false
-  R_gido_64:
-    type: fixed
-    parent: Healical_Gear_20R_0_00_m_1_0_1
-    child: Componente4
-    origin_xyz_m: [-0.014000, 0.000000, -0.005000]
+    parent: Base
+    child: Motor
+    origin_xyz_m: [-0.113471, -0.081721, -0.023500]
     origin_rpy_rad: [0.000000, 0.000000, 0.000000]
     axis: [0.0000, 0.0000, 1.0000]
     is_mount: false
@@ -586,7 +492,7 @@ joints:
     parent: shoulder_motor
     child: garra_final_showder_servo_horn
     origin_xyz_m: [-0.023838, -0.025144, 0.086064]
-    origin_rpy_rad: [-1.570796, 1.550014, 3.141593]
+    origin_rpy_rad: [1.570796, 1.197477, 0.000000]
     axis: [0.0000, 0.0000, 1.0000]
     is_mount: false
     passive: false
@@ -595,19 +501,123 @@ joints:
     parent: MOTOR_1
     child: garra_final_showder_servo_horn_2
     origin_xyz_m: [0.059838, -0.008856, 0.173222]
-    origin_rpy_rad: [-1.570796, 0.000000, 3.141593]
+    origin_rpy_rad: [-1.570796, 1.475992, 3.141593]
     axis: [0.0000, 0.0000, -1.0000]
     is_mount: false
     passive: false
-  Revolucionar_52:
+  Revolucionar_72:
     type: continuous
     parent: MOTOR_1_1
-    child: Caixa_motor_pequeno
-    origin_xyz_m: [0.125796, 0.000362, 0.149459]
+    child: garra_final_showder_servo_horn_3
+    origin_xyz_m: [0.146796, 0.022261, 0.173559]
+    origin_rpy_rad: [-1.570796, 1.401400, 0.000000]
+    axis: [0.0000, 0.0000, 1.0000]
+    is_mount: false
+    passive: false
+  Revolucionar_85:
+    type: continuous
+    parent: Base
+    child: Engr_2
+    origin_xyz_m: [-0.069250, -0.055000, 0.004000]
+    origin_rpy_rad: [3.141593, 0.000000, -1.570796]
+    axis: [0.0000, 0.0000, 1.0000]
+    is_mount: false
+    passive: false
+  Revolucionar_86:
+    type: continuous
+    parent: Engr_2
+    child: P_1
+    origin_xyz_m: [0.034279, 0.029154, 0.000000]
     origin_rpy_rad: [0.000000, 0.000000, 0.000000]
-    axis: [0.0000, 0.0000, -1.0000]
+    axis: [0.0000, 0.0000, 1.0000]
+    is_mount: false
+    passive: false
+  Revolucionar_87:
+    type: continuous
+    parent: Base
+    child: Junta_1
+    origin_xyz_m: [-0.067140, -0.079000, 0.004000]
+    origin_rpy_rad: [3.141593, 0.000000, -1.570796]
+    axis: [0.0000, 0.0000, 1.0000]
+    is_mount: false
+    passive: false
+  Revolucionar_89:
+    type: continuous
+    parent: Base
+    child: Junta_1_1
+    origin_xyz_m: [-0.067140, -0.079000, 0.000000]
+    origin_rpy_rad: [3.141593, 0.000000, -1.570796]
+    axis: [0.0000, 0.0000, 1.0000]
+    is_mount: false
+    passive: false
+  Revolucionar_91:
+    type: continuous
+    parent: Base
+    child: Engr_1
+    origin_xyz_m: [-0.046750, -0.055000, 0.004000]
+    origin_rpy_rad: [3.141593, 0.000000, -1.570796]
+    axis: [0.0000, 0.0000, 1.0000]
+    is_mount: false
+    passive: false
+  Revolucionar_92:
+    type: continuous
+    parent: Engr_1
+    child: P_1_1
+    origin_xyz_m: [0.000359, -0.044999, 0.000000]
+    origin_rpy_rad: [0.000000, 0.000000, 0.000000]
+    axis: [0.0000, 0.0000, 1.0000]
+    is_mount: false
+    passive: false
+  Revolucionar_93:
+    type: continuous
+    parent: Base
+    child: Junta_2
+    origin_xyz_m: [-0.048860, -0.079000, 0.004000]
+    origin_rpy_rad: [3.141593, 0.000000, -1.570796]
+    axis: [0.0000, 0.0000, 1.0000]
+    is_mount: false
+    passive: false
+  Revolucionar_95:
+    type: continuous
+    parent: Base
+    child: Junta
+    origin_xyz_m: [-0.048860, -0.079000, 0.000000]
+    origin_rpy_rad: [3.141593, 0.000000, -1.570796]
+    axis: [0.0000, 0.0000, 1.0000]
     is_mount: false
     passive: false
 
-closing_joints: []
+closing_joints:
+  - name: Revolucionar_88
+    source: auto_detected
+    type: continuous
+    parent: P_1
+    child: Junta_1
+    origin_xyz_m: [0.015803, -0.016711, 0.000000]
+    origin_rpy_rad: [0.000000, 0.000000, 0.000000]
+    axis: [0.0000, 0.0000, 1.0000]
+  - name: Revolucionar_90
+    source: auto_detected
+    type: continuous
+    parent: P_1
+    child: Junta_1_1
+    origin_xyz_m: [0.015803, -0.016711, 0.004000]
+    origin_rpy_rad: [0.000000, 0.000000, 0.000000]
+    axis: [0.0000, 0.0000, 1.0000]
+  - name: Revolucionar_94
+    source: auto_detected
+    type: continuous
+    parent: P_1_1
+    child: Junta_2
+    origin_xyz_m: [0.008453, 0.021390, 0.000000]
+    origin_rpy_rad: [0.000000, 0.000000, 0.000000]
+    axis: [0.0000, 0.0000, -1.0000]
+  - name: Revolucionar_96
+    source: auto_detected
+    type: continuous
+    parent: P_1_1
+    child: Junta
+    origin_xyz_m: [0.008453, 0.021390, 0.004000]
+    origin_rpy_rad: [0.000000, 0.000000, 0.000000]
+    axis: [0.0000, 0.0000, -1.0000]
 

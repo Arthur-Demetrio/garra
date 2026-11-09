@@ -2,14 +2,14 @@
 <robot name="garra_final">
 
   <!-- Materials -->
-  <material name="A_o">
-    <color rgba="0.627 0.627 0.627 1.0"/>
-  </material>
   <material name="Laminado_vermelho_fosco">
     <color rgba="0.769 0.208 0.153 1.0"/>
   </material>
   <material name="Alum_nio_prata_anodizada">
     <color rgba="0.537 0.537 0.537 1.0"/>
+  </material>
+  <material name="A_o">
+    <color rgba="0.627 0.627 0.627 1.0"/>
   </material>
 
   <link name="base_link">
@@ -29,7 +29,7 @@
     <collision>
       <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
       <geometry>
-        <mesh filename="package://garra_final_description/meshes/garra_final/base_link.dae" scale="1 1 1"/>
+        <mesh filename="package://garra_final_description/meshes/garra_final/base_link_collision.stl" scale="0.01 0.01 0.01"/>
       </geometry>
     </collision>
   </link>
@@ -51,7 +51,7 @@
     <collision>
       <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
       <geometry>
-        <mesh filename="package://garra_final_description/meshes/garra_final/shoulder_motor.dae" scale="1 1 1"/>
+        <mesh filename="package://garra_final_description/meshes/garra_final/shoulder_motor_collision.stl" scale="0.01 0.01 0.01"/>
       </geometry>
     </collision>
   </link>
@@ -73,7 +73,7 @@
     <collision>
       <origin xyz="0.015787 -0.085385 -0.003000" rpy="0.000000 0.000000 0.000000"/>
       <geometry>
-        <mesh filename="package://garra_final_description/meshes/garra_final/garra_final_showder_servo_horn.dae" scale="1 1 1"/>
+        <mesh filename="package://garra_final_description/meshes/garra_final/garra_final_showder_servo_horn_collision.stl" scale="0.01 0.01 0.01"/>
       </geometry>
     </collision>
   </link>
@@ -95,7 +95,7 @@
     <collision>
       <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
       <geometry>
-        <mesh filename="package://garra_final_description/meshes/garra_final/M_dulo_1.dae" scale="1 1 1"/>
+        <mesh filename="package://garra_final_description/meshes/garra_final/M_dulo_1_collision.stl" scale="0.01 0.01 0.01"/>
       </geometry>
     </collision>
   </link>
@@ -117,7 +117,7 @@
     <collision>
       <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
       <geometry>
-        <mesh filename="package://garra_final_description/meshes/garra_final/MOTOR_1.dae" scale="1 1 1"/>
+        <mesh filename="package://garra_final_description/meshes/garra_final/MOTOR_1_collision.stl" scale="0.01 0.01 0.01"/>
       </geometry>
     </collision>
   </link>
@@ -139,17 +139,17 @@
     <collision>
       <origin xyz="0.015787 -0.085385 0.000000" rpy="0.000000 0.000000 0.000000"/>
       <geometry>
-        <mesh filename="package://garra_final_description/meshes/garra_final/garra_final_showder_servo_horn_2.dae" scale="1 1 1"/>
+        <mesh filename="package://garra_final_description/meshes/garra_final/garra_final_showder_servo_horn_2_collision.stl" scale="0.01 0.01 0.01"/>
       </geometry>
     </collision>
   </link>
 
   <link name="M_dulo_2">
     <inertial>
-      <origin xyz="0.101319 0.000462 0.177963" rpy="0 0 0"/>
-      <mass value="0.056531"/>
-      <inertia ixx="8.692480e-06" ixy="1.198636e-07" ixz="-1.712444e-08"
-               iyy="5.600839e-05" iyz="3.692865e-10" izz="5.685421e-05"/>
+      <origin xyz="0.104698 0.000412 0.173614" rpy="0 0 0"/>
+      <mass value="0.070749"/>
+      <inertia ixx="1.156834e-05" ixy="1.910002e-07" ixz="-1.551575e-08"
+               iyy="9.825746e-05" iyz="7.836475e-10" izz="9.164356e-05"/>
     </inertial>
     <visual>
       <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
@@ -161,17 +161,17 @@
     <collision>
       <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
       <geometry>
-        <mesh filename="package://garra_final_description/meshes/garra_final/M_dulo_2.dae" scale="1 1 1"/>
+        <mesh filename="package://garra_final_description/meshes/garra_final/M_dulo_2_collision.stl" scale="0.01 0.01 0.01"/>
       </geometry>
     </collision>
   </link>
 
   <link name="MOTOR_1_1">
     <inertial>
-      <origin xyz="0.116478 0.000261 0.173840" rpy="0 0 0"/>
+      <origin xyz="0.137478 0.000880 0.173458" rpy="0 0 0"/>
       <mass value="0.089211"/>
-      <inertia ixx="1.556066e-05" ixy="-2.821326e-10" ixz="6.268823e-08"
-               iyy="2.459598e-05" iyz="2.536528e-10" izz="1.495797e-05"/>
+      <inertia ixx="1.556066e-05" ixy="-6.268823e-08" ixz="-2.821390e-10"
+               iyy="1.495797e-05" iyz="-2.536528e-10" izz="2.459598e-05"/>
     </inertial>
     <visual>
       <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
@@ -183,293 +183,249 @@
     <collision>
       <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
       <geometry>
-        <mesh filename="package://garra_final_description/meshes/garra_final/MOTOR_1_1.dae" scale="1 1 1"/>
+        <mesh filename="package://garra_final_description/meshes/garra_final/MOTOR_1_1_collision.stl" scale="0.01 0.01 0.01"/>
       </geometry>
     </collision>
   </link>
 
-  <link name="Caixa_motor_pequeno">
+  <link name="garra_final_showder_servo_horn_3">
     <inertial>
-      <origin xyz="0.000000 0.000000 -0.016197" rpy="0 0 0"/>
-      <mass value="0.051342"/>
-      <inertia ixx="1.159693e-05" ixy="0.000000e+00" ixz="0.000000e+00"
-               iyy="1.110664e-05" iyz="0.000000e+00" izz="3.500649e-06"/>
-    </inertial>
-    <visual>
-      <origin xyz="-0.131091 0.048591 -0.157000" rpy="0.000000 0.000000 0.000000"/>
-      <geometry>
-        <mesh filename="package://garra_final_description/meshes/garra_final/Caixa_motor_pequeno.dae" scale="1 1 1"/>
-      </geometry>
-      <material name="A_o"/>
-    </visual>
-    <collision>
-      <origin xyz="-0.131091 0.048591 -0.157000" rpy="0.000000 0.000000 0.000000"/>
-      <geometry>
-        <mesh filename="package://garra_final_description/meshes/garra_final/Caixa_motor_pequeno.dae" scale="1 1 1"/>
-      </geometry>
-    </collision>
-  </link>
-
-  <link name="motor_pequeno">
-    <inertial>
-      <origin xyz="-0.080077 0.169352 -0.057500" rpy="0 0 0"/>
-      <mass value="0.055658"/>
-      <inertia ixx="3.850480e-06" ixy="-2.509034e-07" ixz="0.000000e+00"
-               iyy="3.042389e-06" iyz="0.000000e+00" izz="5.601907e-06"/>
-    </inertial>
-    <visual>
-      <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
-      <geometry>
-        <mesh filename="package://garra_final_description/meshes/garra_final/motor_pequeno.dae" scale="1 1 1"/>
-      </geometry>
-      <material name="A_o"/>
-    </visual>
-    <collision>
-      <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
-      <geometry>
-        <mesh filename="package://garra_final_description/meshes/garra_final/motor_pequeno.dae" scale="1 1 1"/>
-      </geometry>
-    </collision>
-  </link>
-
-  <link name="Componente4_Espelhar">
-    <inertial>
-      <origin xyz="0.000000 0.004855 -0.001500" rpy="0 0 0"/>
-      <mass value="0.026701"/>
-      <inertia ixx="1.107134e-06" ixy="0.000000e+00" ixz="0.000000e+00"
-               iyy="6.326237e-06" iyz="0.000000e+00" izz="7.393320e-06"/>
-    </inertial>
-    <visual>
-      <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
-      <geometry>
-        <mesh filename="package://garra_final_description/meshes/Nova_Pin_a/Componente4_Espelhar.dae" scale="1 1 1"/>
-      </geometry>
-      <material name="A_o"/>
-    </visual>
-    <collision>
-      <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
-      <geometry>
-        <mesh filename="package://garra_final_description/meshes/Nova_Pin_a/Componente4_Espelhar.dae" scale="1 1 1"/>
-      </geometry>
-    </collision>
-  </link>
-
-  <link name="Healical_Gear_20R_0_00_m_1_0">
-    <inertial>
-      <origin xyz="-0.004805 0.003882 0.000000" rpy="0 0 0"/>
-      <mass value="0.013454"/>
-      <inertia ixx="1.000000e-06" ixy="6.582117e-07" ixz="0.000000e+00"
-               iyy="1.086953e-06" iyz="0.000000e+00" izz="1.857553e-06"/>
-    </inertial>
-    <visual>
-      <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
-      <geometry>
-        <mesh filename="package://garra_final_description/meshes/Nova_Pin_a/Healical_Gear_20R_0_00_m_1_0.dae" scale="1 1 1"/>
-      </geometry>
-      <material name="A_o"/>
-    </visual>
-    <collision>
-      <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
-      <geometry>
-        <mesh filename="package://garra_final_description/meshes/Nova_Pin_a/Healical_Gear_20R_0_00_m_1_0.dae" scale="1 1 1"/>
-      </geometry>
-    </collision>
-  </link>
-
-  <link name="Healical_Gear_20R_0_00_m_1_0_1">
-    <inertial>
-      <origin xyz="0.004805 -0.003882 0.000000" rpy="0 0 0"/>
-      <mass value="0.013454"/>
-      <inertia ixx="1.000000e-06" ixy="6.582117e-07" ixz="0.000000e+00"
-               iyy="1.086953e-06" iyz="0.000000e+00" izz="1.857553e-06"/>
-    </inertial>
-    <visual>
-      <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
-      <geometry>
-        <mesh filename="package://garra_final_description/meshes/Nova_Pin_a/Healical_Gear_20R_0_00_m_1_0_1.dae" scale="1 1 1"/>
-      </geometry>
-      <material name="A_o"/>
-    </visual>
-    <collision>
-      <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
-      <geometry>
-        <mesh filename="package://garra_final_description/meshes/Nova_Pin_a/Healical_Gear_20R_0_00_m_1_0_1.dae" scale="1 1 1"/>
-      </geometry>
-    </collision>
-  </link>
-
-  <link name="Healical_Gear_8R_0_00_m_1_0">
-    <inertial>
-      <origin xyz="0.000000 0.000000 0.000000" rpy="0 0 0"/>
-      <mass value="0.001261"/>
-      <inertia ixx="1.000000e-06" ixy="0.000000e+00" ixz="0.000000e+00"
+      <origin xyz="0.008621 -0.000154 0.001500" rpy="0 0 0"/>
+      <mass value="0.007175"/>
+      <inertia ixx="1.000000e-06" ixy="1.104621e-08" ixz="0.000000e+00"
                iyy="1.000000e-06" iyz="0.000000e+00" izz="1.000000e-06"/>
     </inertial>
     <visual>
-      <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+      <origin xyz="-0.065655 -0.056827 0.003000" rpy="-3.141593 0.000000 2.467068"/>
       <geometry>
-        <mesh filename="package://garra_final_description/meshes/Nova_Pin_a/Healical_Gear_8R_0_00_m_1_0.dae" scale="1 1 1"/>
+        <mesh filename="package://garra_final_description/meshes/garra_final/garra_final_showder_servo_horn_3.dae" scale="1 1 1"/>
       </geometry>
       <material name="A_o"/>
     </visual>
     <collision>
-      <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+      <origin xyz="-0.065655 -0.056827 0.003000" rpy="-3.141593 0.000000 2.467068"/>
       <geometry>
-        <mesh filename="package://garra_final_description/meshes/Nova_Pin_a/Healical_Gear_8R_0_00_m_1_0.dae" scale="1 1 1"/>
+        <mesh filename="package://garra_final_description/meshes/garra_final/garra_final_showder_servo_horn_3_collision.stl" scale="0.01 0.01 0.01"/>
       </geometry>
     </collision>
   </link>
 
-  <link name="Componente5_Espelhar_1">
+  <link name="Base">
     <inertial>
-      <origin xyz="0.034851 -0.029094 -0.008500" rpy="0 0 0"/>
-      <mass value="0.004572"/>
-      <inertia ixx="1.000000e-06" ixy="-1.303296e-07" ixz="0.000000e+00"
-               iyy="1.000000e-06" iyz="0.000000e+00" izz="1.000000e-06"/>
+      <origin xyz="-0.057386 -0.026808 0.002045" rpy="0 0 0"/>
+      <mass value="0.191532"/>
+      <inertia ixx="1.578035e-04" ixy="-3.919167e-07" ixz="4.397693e-08"
+               iyy="1.697283e-05" iyz="-2.047143e-07" izz="1.622377e-04"/>
     </inertial>
     <visual>
       <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
       <geometry>
-        <mesh filename="package://garra_final_description/meshes/Nova_Pin_a/Componente5_Espelhar_1.dae" scale="1 1 1"/>
+        <mesh filename="package://garra_final_description/meshes/Configura_o_1/Base.dae" scale="1 1 1"/>
       </geometry>
       <material name="A_o"/>
     </visual>
     <collision>
       <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
       <geometry>
-        <mesh filename="package://garra_final_description/meshes/Nova_Pin_a/Componente5_Espelhar_1.dae" scale="1 1 1"/>
+        <mesh filename="package://garra_final_description/meshes/Configura_o_1/Base_collision.stl" scale="0.01 0.01 0.01"/>
       </geometry>
     </collision>
   </link>
 
-  <link name="Componente5_Espelhar_Espelhar">
+  <link name="Motor">
     <inertial>
-      <origin xyz="0.034851 -0.029094 0.008500" rpy="0 0 0"/>
-      <mass value="0.004572"/>
-      <inertia ixx="1.000000e-06" ixy="-1.303296e-07" ixz="0.000000e+00"
-               iyy="1.000000e-06" iyz="0.000000e+00" izz="1.000000e-06"/>
+      <origin xyz="0.044221 0.026721 0.011750" rpy="0 0 0"/>
+      <mass value="0.050915"/>
+      <inertia ixx="4.587663e-06" ixy="0.000000e+00" ixz="0.000000e+00"
+               iyy="2.954137e-06" iyz="0.000000e+00" izz="2.855489e-06"/>
     </inertial>
     <visual>
       <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
       <geometry>
-        <mesh filename="package://garra_final_description/meshes/Nova_Pin_a/Componente5_Espelhar_Espelhar.dae" scale="1 1 1"/>
+        <mesh filename="package://garra_final_description/meshes/Configura_o_1/Motor.dae" scale="1 1 1"/>
       </geometry>
       <material name="A_o"/>
     </visual>
     <collision>
       <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
       <geometry>
-        <mesh filename="package://garra_final_description/meshes/Nova_Pin_a/Componente5_Espelhar_Espelhar.dae" scale="1 1 1"/>
+        <mesh filename="package://garra_final_description/meshes/Configura_o_1/Motor_collision.stl" scale="0.01 0.01 0.01"/>
       </geometry>
     </collision>
   </link>
 
-  <link name="Componente5">
+  <link name="Engr_2">
     <inertial>
-      <origin xyz="0.034851 -0.029094 0.008500" rpy="0 0 0"/>
-      <mass value="0.004572"/>
-      <inertia ixx="1.000000e-06" ixy="-1.303296e-07" ixz="0.000000e+00"
-               iyy="1.000000e-06" iyz="0.000000e+00" izz="1.000000e-06"/>
+      <origin xyz="0.012302 0.010477 -0.001895" rpy="0 0 0"/>
+      <mass value="0.020209"/>
+      <inertia ixx="2.980671e-06" ixy="-2.974360e-06" ixz="1.310687e-08"
+               iyy="3.949671e-06" iyz="1.139934e-08" izz="6.875480e-06"/>
     </inertial>
     <visual>
-      <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+      <origin xyz="-0.060399 -0.064595 0.004000" rpy="-3.141593 0.000000 -1.651422"/>
       <geometry>
-        <mesh filename="package://garra_final_description/meshes/Nova_Pin_a/Componente5.dae" scale="1 1 1"/>
+        <mesh filename="package://garra_final_description/meshes/Configura_o_1/Engr_2.dae" scale="1 1 1"/>
       </geometry>
       <material name="A_o"/>
     </visual>
     <collision>
-      <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+      <origin xyz="-0.060399 -0.064595 0.004000" rpy="-3.141593 0.000000 -1.651422"/>
       <geometry>
-        <mesh filename="package://garra_final_description/meshes/Nova_Pin_a/Componente5.dae" scale="1 1 1"/>
+        <mesh filename="package://garra_final_description/meshes/Configura_o_1/Engr_2_collision.stl" scale="0.01 0.01 0.01"/>
       </geometry>
     </collision>
   </link>
 
-  <link name="Componente5_Espelhar">
+  <link name="Junta_1">
     <inertial>
-      <origin xyz="0.034851 -0.029094 -0.008500" rpy="0 0 0"/>
-      <mass value="0.004572"/>
-      <inertia ixx="1.000000e-06" ixy="-1.303296e-07" ixz="0.000000e+00"
-               iyy="1.000000e-06" iyz="0.000000e+00" izz="1.000000e-06"/>
+      <origin xyz="0.013041 0.007277 -0.002000" rpy="0 0 0"/>
+      <mass value="0.006788"/>
+      <inertia ixx="1.000000e-06" ixy="-4.668696e-07" ixz="0.000000e+00"
+               iyy="1.000000e-06" iyz="0.000000e+00" izz="1.165360e-06"/>
     </inertial>
     <visual>
-      <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+      <origin xyz="-0.094335 -0.043366 -0.008000" rpy="0.000000 0.000000 2.708050"/>
       <geometry>
-        <mesh filename="package://garra_final_description/meshes/Nova_Pin_a/Componente5_Espelhar.dae" scale="1 1 1"/>
+        <mesh filename="package://garra_final_description/meshes/Configura_o_1/Junta_1.dae" scale="1 1 1"/>
       </geometry>
       <material name="A_o"/>
     </visual>
     <collision>
-      <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+      <origin xyz="-0.094335 -0.043366 -0.008000" rpy="0.000000 0.000000 2.708050"/>
       <geometry>
-        <mesh filename="package://garra_final_description/meshes/Nova_Pin_a/Componente5_Espelhar.dae" scale="1 1 1"/>
+        <mesh filename="package://garra_final_description/meshes/Configura_o_1/Junta_1_collision.stl" scale="0.01 0.01 0.01"/>
       </geometry>
     </collision>
   </link>
 
-  <link name="Componente4">
+  <link name="Junta_1_1">
     <inertial>
-      <origin xyz="0.000000 -0.002370 0.001500" rpy="0 0 0"/>
-      <mass value="0.047563"/>
-      <inertia ixx="5.172054e-06" ixy="0.000000e+00" ixz="0.000000e+00"
-               iyy="1.263494e-05" iyz="0.000000e+00" izz="1.773565e-05"/>
+      <origin xyz="0.013041 0.007277 0.002000" rpy="0 0 0"/>
+      <mass value="0.006788"/>
+      <inertia ixx="1.000000e-06" ixy="-4.668696e-07" ixz="0.000000e+00"
+               iyy="1.000000e-06" iyz="0.000000e+00" izz="1.165360e-06"/>
     </inertial>
     <visual>
-      <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+      <origin xyz="-0.040397 -0.032449 -0.004000" rpy="0.000000 0.000000 1.451413"/>
       <geometry>
-        <mesh filename="package://garra_final_description/meshes/Nova_Pin_a/Componente4.dae" scale="1 1 1"/>
+        <mesh filename="package://garra_final_description/meshes/Configura_o_1/Junta_1_1.dae" scale="1 1 1"/>
       </geometry>
       <material name="A_o"/>
     </visual>
     <collision>
-      <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+      <origin xyz="-0.040397 -0.032449 -0.004000" rpy="0.000000 0.000000 1.451413"/>
       <geometry>
-        <mesh filename="package://garra_final_description/meshes/Nova_Pin_a/Componente4.dae" scale="1 1 1"/>
+        <mesh filename="package://garra_final_description/meshes/Configura_o_1/Junta_1_1_collision.stl" scale="0.01 0.01 0.01"/>
       </geometry>
     </collision>
   </link>
 
-  <link name="Componente6_Espelhar">
+  <link name="Engr_1">
     <inertial>
-      <origin xyz="0.030510 -0.059008 -0.006605" rpy="0 0 0"/>
-      <mass value="0.039125"/>
-      <inertia ixx="7.773665e-06" ixy="1.619710e-06" ixz="1.021471e-07"
-               iyy="2.146320e-06" iyz="-3.463814e-07" izz="7.756453e-06"/>
+      <origin xyz="0.000121 -0.015122 -0.002000" rpy="0 0 0"/>
+      <mass value="0.023094"/>
+      <inertia ixx="6.797929e-06" ixy="5.055261e-08" ixz="0.000000e+00"
+               iyy="1.000000e-06" iyz="0.000000e+00" izz="7.204434e-06"/>
     </inertial>
     <visual>
-      <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+      <origin xyz="-0.071992 0.005259 0.004000" rpy="-3.141593 0.000000 -2.348209"/>
       <geometry>
-        <mesh filename="package://garra_final_description/meshes/Nova_Pin_a/Componente6_Espelhar.dae" scale="1 1 1"/>
+        <mesh filename="package://garra_final_description/meshes/Configura_o_1/Engr_1.dae" scale="1 1 1"/>
       </geometry>
       <material name="A_o"/>
     </visual>
     <collision>
-      <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+      <origin xyz="-0.071992 0.005259 0.004000" rpy="-3.141593 0.000000 -2.348209"/>
       <geometry>
-        <mesh filename="package://garra_final_description/meshes/Nova_Pin_a/Componente6_Espelhar.dae" scale="1 1 1"/>
+        <mesh filename="package://garra_final_description/meshes/Configura_o_1/Engr_1_collision.stl" scale="0.01 0.01 0.01"/>
       </geometry>
     </collision>
   </link>
 
-  <link name="Componente6">
+  <link name="Junta_2">
     <inertial>
-      <origin xyz="0.030510 -0.059008 0.006605" rpy="0 0 0"/>
-      <mass value="0.039125"/>
-      <inertia ixx="7.773665e-06" ixy="1.619710e-06" ixz="-1.021471e-07"
-               iyy="2.146320e-06" iyz="3.463814e-07" izz="7.756453e-06"/>
+      <origin xyz="-0.007594 -0.012859 -0.002000" rpy="0 0 0"/>
+      <mass value="0.006788"/>
+      <inertia ixx="1.000000e-06" ixy="-4.804180e-07" ixz="0.000000e+00"
+               iyy="1.000000e-06" iyz="0.000000e+00" izz="1.165360e-06"/>
     </inertial>
     <visual>
-      <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+      <origin xyz="0.087436 0.069572 -0.008000" rpy="0.000000 0.000000 -1.161747"/>
       <geometry>
-        <mesh filename="package://garra_final_description/meshes/Nova_Pin_a/Componente6.dae" scale="1 1 1"/>
+        <mesh filename="package://garra_final_description/meshes/Configura_o_1/Junta_2.dae" scale="1 1 1"/>
       </geometry>
       <material name="A_o"/>
     </visual>
     <collision>
-      <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+      <origin xyz="0.087436 0.069572 -0.008000" rpy="0.000000 0.000000 -1.161747"/>
       <geometry>
-        <mesh filename="package://garra_final_description/meshes/Nova_Pin_a/Componente6.dae" scale="1 1 1"/>
+        <mesh filename="package://garra_final_description/meshes/Configura_o_1/Junta_2_collision.stl" scale="0.01 0.01 0.01"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <link name="Junta">
+    <inertial>
+      <origin xyz="-0.007594 -0.012859 0.002000" rpy="0 0 0"/>
+      <mass value="0.006788"/>
+      <inertia ixx="1.000000e-06" ixy="-4.804180e-07" ixz="0.000000e+00"
+               iyy="1.000000e-06" iyz="0.000000e+00" izz="1.165360e-06"/>
+    </inertial>
+    <visual>
+      <origin xyz="0.091913 -0.013442 -0.004000" rpy="0.000000 0.000000 -1.161747"/>
+      <geometry>
+        <mesh filename="package://garra_final_description/meshes/Configura_o_1/Junta.dae" scale="1 1 1"/>
+      </geometry>
+      <material name="A_o"/>
+    </visual>
+    <collision>
+      <origin xyz="0.091913 -0.013442 -0.004000" rpy="0.000000 0.000000 -1.161747"/>
+      <geometry>
+        <mesh filename="package://garra_final_description/meshes/Configura_o_1/Junta_collision.stl" scale="0.01 0.01 0.01"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <link name="P_1">
+    <inertial>
+      <origin xyz="0.044056 -0.016580 0.002000" rpy="0 0 0"/>
+      <mass value="0.067383"/>
+      <inertia ixx="4.175649e-06" ixy="3.884766e-06" ixz="0.000000e+00"
+               iyy="2.338659e-05" iyz="0.000000e+00" izz="2.249340e-05"/>
+    </inertial>
+    <visual>
+      <origin xyz="-0.089605 -0.098609 0.004000" rpy="3.141593 0.000000 -1.598693"/>
+      <geometry>
+        <mesh filename="package://garra_final_description/meshes/Configura_o_1/P_1.dae" scale="1 1 1"/>
+      </geometry>
+      <material name="A_o"/>
+    </visual>
+    <collision>
+      <origin xyz="-0.089605 -0.098609 0.004000" rpy="3.141593 0.000000 -1.598693"/>
+      <geometry>
+        <mesh filename="package://garra_final_description/meshes/Configura_o_1/P_1_collision.stl" scale="0.01 0.01 0.01"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <link name="P_1_1">
+    <inertial>
+      <origin xyz="0.034727 0.031779 0.002000" rpy="0 0 0"/>
+      <mass value="0.067383"/>
+      <inertia ixx="9.516798e-06" ixy="-9.443093e-06" ixz="0.000000e+00"
+               iyy="1.804544e-05" iyz="0.000000e+00" izz="2.249340e-05"/>
+    </inertial>
+    <visual>
+      <origin xyz="-0.073719 -0.048230 0.004000" rpy="-3.141593 0.000000 -1.161747"/>
+      <geometry>
+        <mesh filename="package://garra_final_description/meshes/Configura_o_1/P_1_1.dae" scale="1 1 1"/>
+      </geometry>
+      <material name="A_o"/>
+    </visual>
+    <collision>
+      <origin xyz="-0.073719 -0.048230 0.004000" rpy="-3.141593 0.000000 -1.161747"/>
+      <geometry>
+        <mesh filename="package://garra_final_description/meshes/Configura_o_1/P_1_1_collision.stl" scale="0.01 0.01 0.01"/>
       </geometry>
     </collision>
   </link>
@@ -480,12 +436,12 @@
     <origin xyz="-0.002399 0.000644 0.000258" rpy="0.000000 0.011578 0.000000"/>
   </joint>
 
-  <joint name="Revolucionar_46" type="revolute">
+  <joint name="Revolucionar_46" type="continuous">
     <parent link="shoulder_motor"/>
     <child link="garra_final_showder_servo_horn"/>
-    <origin xyz="-0.023838000 -0.025144000 0.086064000" rpy="1.570796295 1.037239412 -0.000000014"/>
+    <origin xyz="-0.023838 -0.025144 0.086064" rpy="1.570796 1.197477 0.000000"/>
     <axis xyz="0.000000 0.000000 1.000000"/>
-    <limit lower="-1.5708" upper="1.5708" effort="1.86" velocity="1.00"/>
+    <limit effort="100.0" velocity="1.00"/>
   </joint>
 
   <joint name="R_gido_47" type="fixed">
@@ -500,127 +456,217 @@
     <origin xyz="0.002592 -0.000644 0.004103" rpy="0.000000 0.000000 0.000000"/>
   </joint>
 
-  <joint name="Revolucionar_49" type="revolute">
+  <joint name="Revolucionar_49" type="continuous">
     <parent link="MOTOR_1"/>
     <child link="garra_final_showder_servo_horn_2"/>
-    <origin xyz="0.057851706 -0.008856001 0.171229262" rpy="-1.570788397 1.483586490 -3.141584744"/>
+    <origin xyz="0.059838 -0.008856 0.173222" rpy="-1.570796 1.475992 3.141593"/>
     <axis xyz="0.000000 0.000000 -1.000000"/>
-    <limit lower="-1.5708" upper="1.5708" effort="1.86" velocity="1.00"/>
+    <limit effort="100.0" velocity="1.00"/>
   </joint>
 
   <joint name="R_gido_50" type="fixed">
     <parent link="garra_final_showder_servo_horn_2"/>
     <child link="M_dulo_2"/>
-    <origin xyz="0.163486 0.095030 -0.005666" rpy="-1.570796 0.000000 2.443461"/>
+    <origin xyz="0.160854 0.091479 -0.006666" rpy="-1.570796 0.000000 2.443461"/>
   </joint>
 
-  <joint name="R_gido_51" type="fixed">
+  <joint name="R_gido_65" type="fixed">
     <parent link="M_dulo_2"/>
     <child link="MOTOR_1_1"/>
-    <origin xyz="0.001615 0.000015 0.004041" rpy="0.000000 0.000000 0.000000"/>
+    <origin xyz="-0.000300 -0.000428 0.000662" rpy="0.000000 0.000000 0.000000"/>
   </joint>
 
-  <!-- Corrigido com medidas da montagem real: J3 e paralela a J1 e J2. L1=127 mm, L2=75 mm, J3-ponta=160 mm. -->
-  <link name="pulso_j3">
-  <!-- Suporte aproximado entre punho e garra: existe na montagem, nao no CAD. -->
-  <visual><origin xyz="0 0.0317 0" rpy="0 0 0"/><geometry><box size="0.04 0.0634 0.03"/></geometry><material name="A_o"/></visual>
-  <collision><origin xyz="0 0.0317 0" rpy="0 0 0"/><geometry><box size="0.04 0.0634 0.03"/></geometry></collision>
-</link>
-
-  <joint name="Revolucionar_52" type="revolute">
+  <joint name="Revolucionar_72" type="continuous">
     <parent link="MOTOR_1_1"/>
-    <child link="pulso_j3"/>
-    <origin xyz="0.137538354 0.000361999 0.173960195" rpy="1.570739169 1.569233425 -0.000057438"/>
-    <axis xyz="0 0 1"/>
-    <limit lower="-1.5708" upper="1.5708" effort="1.86" velocity="1.00"/>
+    <child link="garra_final_showder_servo_horn_3"/>
+    <origin xyz="0.146796 0.022261 0.173559" rpy="-1.570796 1.401400 0.000000"/>
+    <axis xyz="0.000000 0.000000 1.000000"/>
+    <limit effort="100.0" velocity="1.00"/>
   </joint>
 
-  <joint name="pulso_j3_caixa" type="fixed">
-    <parent link="pulso_j3"/>
-    <child link="Caixa_motor_pequeno"/>
-    <origin xyz="0.013030276 0.065999938 0.001727093" rpy="-1.570796639 0.121414327 3.141591963"/>
+  <joint name="R_gido_73" type="fixed">
+    <parent link="garra_final_showder_servo_horn_3"/>
+    <child link="Base"/>
+    <origin xyz="0.004924 0.001353 0.062500" rpy="1.550770 -1.570796 0.000000"/>
   </joint>
 
-  <joint name="R_gido_53" type="fixed">
-    <parent link="Caixa_motor_pequeno"/>
-    <child link="motor_pequeno"/>
-    <origin xyz="0.170546 0.057500 -0.099228" rpy="-1.623428 1.570796 -0.174046"/>
+  <joint name="R_gido_77" type="fixed">
+    <parent link="Base"/>
+    <child link="Motor"/>
+    <origin xyz="-0.113471 -0.081721 -0.023500" rpy="0.000000 0.000000 0.000000"/>
   </joint>
 
-  <joint name="R_gido_54" type="fixed">
-    <parent link="motor_pequeno"/>
-    <child link="Componente4_Espelhar"/>
-    <origin xyz="-0.085228 0.152296 -0.057500" rpy="-1.570796 1.570796 0.000000"/>
+  <joint name="Revolucionar_85" type="continuous">
+    <parent link="Base"/>
+    <child link="Engr_2"/>
+    <origin xyz="-0.069250 -0.055000 0.004000" rpy="3.141593 0.000000 -1.570796"/>
+    <axis xyz="0.000000 0.000000 1.000000"/>
+    <limit effort="100.0" velocity="1.00"/>
   </joint>
 
-  <joint name="R_gido_55" type="fixed">
-    <parent link="Componente4_Espelhar"/>
-    <child link="Healical_Gear_20R_0_00_m_1_0"/>
-    <origin xyz="-0.014000 0.000000 -0.005000" rpy="-3.141593 0.000000 0.000000"/>
+  <joint name="Revolucionar_87" type="continuous">
+    <parent link="Base"/>
+    <child link="Junta_1"/>
+    <origin xyz="-0.067140 -0.079000 0.004000" rpy="3.141593 0.000000 -1.570796"/>
+    <axis xyz="0.000000 0.000000 1.000000"/>
+    <limit effort="100.0" velocity="1.00"/>
   </joint>
 
-  <joint name="R_gido_56" type="fixed">
-    <parent link="Componente4_Espelhar"/>
-    <child link="Healical_Gear_20R_0_00_m_1_0_1"/>
-    <origin xyz="0.014000 0.000000 -0.005000" rpy="0.000000 0.000000 0.000000"/>
+  <joint name="Revolucionar_89" type="continuous">
+    <parent link="Base"/>
+    <child link="Junta_1_1"/>
+    <origin xyz="-0.067140 -0.079000 0.000000" rpy="3.141593 0.000000 -1.570796"/>
+    <axis xyz="0.000000 0.000000 1.000000"/>
+    <limit effort="100.0" velocity="1.00"/>
   </joint>
 
-  <joint name="R_gido_63" type="fixed">
-    <parent link="Componente4_Espelhar"/>
-    <child link="Healical_Gear_8R_0_00_m_1_0"/>
-    <origin xyz="0.000000 0.000000 -0.005000" rpy="3.141593 0.000000 0.401426"/>
+  <joint name="Revolucionar_91" type="continuous">
+    <parent link="Base"/>
+    <child link="Engr_1"/>
+    <origin xyz="-0.046750 -0.055000 0.004000" rpy="3.141593 0.000000 -1.570796"/>
+    <axis xyz="0.000000 0.000000 1.000000"/>
+    <limit effort="100.0" velocity="1.00"/>
   </joint>
 
-  <joint name="R_gido_59" type="fixed">
-    <parent link="Healical_Gear_20R_0_00_m_1_0"/>
-    <child link="Componente5_Espelhar_1"/>
-    <origin xyz="0.016666 0.003880 0.005000" rpy="0.000000 0.000000 -3.141593"/>
+  <joint name="Revolucionar_93" type="continuous">
+    <parent link="Base"/>
+    <child link="Junta_2"/>
+    <origin xyz="-0.048860 -0.079000 0.004000" rpy="3.141593 0.000000 -1.570796"/>
+    <axis xyz="0.000000 0.000000 1.000000"/>
+    <limit effort="100.0" velocity="1.00"/>
   </joint>
 
-  <joint name="R_gido_60" type="fixed">
-    <parent link="Healical_Gear_20R_0_00_m_1_0"/>
-    <child link="Componente5_Espelhar_Espelhar"/>
-    <origin xyz="0.016666 0.003880 -0.005000" rpy="0.000000 0.000000 -3.141593"/>
+  <joint name="Revolucionar_95" type="continuous">
+    <parent link="Base"/>
+    <child link="Junta"/>
+    <origin xyz="-0.048860 -0.079000 0.000000" rpy="3.141593 0.000000 -1.570796"/>
+    <axis xyz="0.000000 0.000000 1.000000"/>
+    <limit effort="100.0" velocity="1.00"/>
   </joint>
 
-  <joint name="R_gido_57" type="fixed">
-    <parent link="Healical_Gear_20R_0_00_m_1_0_1"/>
-    <child link="Componente5"/>
-    <origin xyz="-0.016666 -0.003880 -0.005000" rpy="0.000000 0.000000 0.000000"/>
+  <joint name="Revolucionar_86" type="continuous">
+    <parent link="Engr_2"/>
+    <child link="P_1"/>
+    <origin xyz="0.034279 0.029154 0.000000" rpy="0.000000 0.000000 0.000000"/>
+    <axis xyz="0.000000 0.000000 1.000000"/>
+    <limit effort="100.0" velocity="1.00"/>
   </joint>
 
-  <joint name="R_gido_58" type="fixed">
-    <parent link="Healical_Gear_20R_0_00_m_1_0_1"/>
-    <child link="Componente5_Espelhar"/>
-    <origin xyz="-0.016666 -0.003880 0.005000" rpy="0.000000 0.000000 0.000000"/>
+  <joint name="Revolucionar_92" type="continuous">
+    <parent link="Engr_1"/>
+    <child link="P_1_1"/>
+    <origin xyz="0.000359 -0.044999 0.000000" rpy="0.000000 0.000000 0.000000"/>
+    <axis xyz="0.000000 0.000000 1.000000"/>
+    <limit effort="100.0" velocity="1.00"/>
   </joint>
 
-  <joint name="R_gido_64" type="fixed">
-    <parent link="Healical_Gear_20R_0_00_m_1_0_1"/>
-    <child link="Componente4"/>
-    <origin xyz="-0.014000 0.000000 -0.005000" rpy="0.000000 0.000000 0.000000"/>
-  </joint>
+  <!-- ROS 2 control: generated generic system -->
+  <ros2_control name="garra_final_system" type="system">
+    <hardware>
+      <plugin>mock_components/GenericSystem</plugin>
+      <param name="cmd_topic">sim/garra_final_system/cmd</param>
+      <param name="state_topic">sim/garra_final_system/state</param>
+    </hardware>
 
-  <joint name="R_gido_61" type="fixed">
-    <parent link="Componente5_Espelhar_Espelhar"/>
-    <child link="Componente6_Espelhar"/>
-    <origin xyz="0.000000 0.000000 0.010000" rpy="0.000000 0.000000 0.000000"/>
-  </joint>
+    <joint name="Revolucionar_46">
+      <command_interface name="position"/>
+      <command_interface name="velocity"/>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="Revolucionar_49">
+      <command_interface name="position"/>
+      <command_interface name="velocity"/>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="Revolucionar_72">
+      <command_interface name="position"/>
+      <command_interface name="velocity"/>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="Revolucionar_85">
+      <command_interface name="position"/>
+      <command_interface name="velocity"/>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="Revolucionar_86">
+      <command_interface name="position"/>
+      <command_interface name="velocity"/>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="Revolucionar_87">
+      <command_interface name="position"/>
+      <command_interface name="velocity"/>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="Revolucionar_89">
+      <command_interface name="position"/>
+      <command_interface name="velocity"/>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="Revolucionar_91">
+      <command_interface name="position"/>
+      <command_interface name="velocity"/>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="Revolucionar_92">
+      <command_interface name="position"/>
+      <command_interface name="velocity"/>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="Revolucionar_93">
+      <command_interface name="position"/>
+      <command_interface name="velocity"/>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="Revolucionar_95">
+      <command_interface name="position"/>
+      <command_interface name="velocity"/>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+  </ros2_control>
 
-  <joint name="R_gido_62" type="fixed">
-    <parent link="Componente5"/>
-    <child link="Componente6"/>
-    <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
-  </joint>
-  <!-- TCP: centro da regiao de pega, entre as pontas dos dedos.
-       Z aponta na direcao de aproximacao (saindo da garra, paralelo a J3);
-       X fica na direcao de fechamento dos dedos. -->
-  <link name="tool0"/>
-
-  <joint name="tool0_fixed" type="fixed">
-      <parent link="Componente4_Espelhar"/>
-      <child link="tool0"/>
-      <origin xyz="0 -0.070 -0.003" rpy="1.570796 0 0"/>
-  </joint>
-
-</robot>
+</robot>
