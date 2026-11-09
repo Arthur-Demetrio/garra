@@ -21,7 +21,7 @@
       <collision>
         <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
         <geometry>
-          <mesh filename="package://garra_final_description/meshes/garra_final/base_link_collision.stl" scale="0.01 0.01 0.01"/>
+          <mesh filename="package://garra_final_description/meshes/garra_final/base_link.dae" scale="1 1 1"/>
         </geometry>
       </collision>
     </link>
@@ -43,7 +43,7 @@
       <collision>
         <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
         <geometry>
-          <mesh filename="package://garra_final_description/meshes/garra_final/shoulder_motor_collision.stl" scale="0.01 0.01 0.01"/>
+          <mesh filename="package://garra_final_description/meshes/garra_final/shoulder_motor.dae" scale="1 1 1"/>
         </geometry>
       </collision>
     </link>
@@ -65,7 +65,7 @@
       <collision>
         <origin xyz="0.015787 -0.085385 -0.003000" rpy="0.000000 0.000000 0.000000"/>
         <geometry>
-          <mesh filename="package://garra_final_description/meshes/garra_final/garra_final_showder_servo_horn_collision.stl" scale="0.01 0.01 0.01"/>
+          <mesh filename="package://garra_final_description/meshes/garra_final/garra_final_showder_servo_horn.dae" scale="1 1 1"/>
         </geometry>
       </collision>
     </link>
@@ -87,7 +87,7 @@
       <collision>
         <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
         <geometry>
-          <mesh filename="package://garra_final_description/meshes/garra_final/M_dulo_1_collision.stl" scale="0.01 0.01 0.01"/>
+          <mesh filename="package://garra_final_description/meshes/garra_final/M_dulo_1.dae" scale="1 1 1"/>
         </geometry>
       </collision>
     </link>
@@ -109,7 +109,7 @@
       <collision>
         <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
         <geometry>
-          <mesh filename="package://garra_final_description/meshes/garra_final/MOTOR_1_collision.stl" scale="0.01 0.01 0.01"/>
+          <mesh filename="package://garra_final_description/meshes/garra_final/MOTOR_1.dae" scale="1 1 1"/>
         </geometry>
       </collision>
     </link>
@@ -131,7 +131,7 @@
       <collision>
         <origin xyz="0.015787 -0.085385 0.000000" rpy="0.000000 0.000000 0.000000"/>
         <geometry>
-          <mesh filename="package://garra_final_description/meshes/garra_final/garra_final_showder_servo_horn_2_collision.stl" scale="0.01 0.01 0.01"/>
+          <mesh filename="package://garra_final_description/meshes/garra_final/garra_final_showder_servo_horn_2.dae" scale="1 1 1"/>
         </geometry>
       </collision>
     </link>
@@ -153,7 +153,7 @@
       <collision>
         <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
         <geometry>
-          <mesh filename="package://garra_final_description/meshes/garra_final/M_dulo_2_collision.stl" scale="0.01 0.01 0.01"/>
+          <mesh filename="package://garra_final_description/meshes/garra_final/M_dulo_2.dae" scale="1 1 1"/>
         </geometry>
       </collision>
     </link>
@@ -175,29 +175,29 @@
       <collision>
         <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
         <geometry>
-          <mesh filename="package://garra_final_description/meshes/garra_final/MOTOR_1_1_collision.stl" scale="0.01 0.01 0.01"/>
+          <mesh filename="package://garra_final_description/meshes/garra_final/MOTOR_1_1.dae" scale="1 1 1"/>
         </geometry>
       </collision>
     </link>
 
     <link name="${prefix}garra_final_showder_servo_horn_3">
       <inertial>
-        <origin xyz="0.008621 -0.000154 0.001500" rpy="0 0 0"/>
+        <origin xyz="-0.000294 -0.008617 0.001500" rpy="0 0 0"/>
         <mass value="0.007175"/>
-        <inertia ixx="1.000000e-06" ixy="1.104621e-08" ixz="0.000000e+00"
+        <inertia ixx="1.000000e-06" ixy="-2.116718e-08" ixz="0.000000e+00"
                  iyy="1.000000e-06" iyz="0.000000e+00" izz="1.000000e-06"/>
       </inertial>
       <visual>
-        <origin xyz="-0.065655 -0.056827 0.003000" rpy="-3.141593 0.000000 2.467068"/>
+        <origin xyz="-0.055746 0.066574 0.003000" rpy="-3.141593 0.000000 0.879928"/>
         <geometry>
           <mesh filename="package://garra_final_description/meshes/garra_final/garra_final_showder_servo_horn_3.dae" scale="1 1 1"/>
         </geometry>
         <material name="A_o"/>
       </visual>
       <collision>
-        <origin xyz="-0.065655 -0.056827 0.003000" rpy="-3.141593 0.000000 2.467068"/>
+        <origin xyz="-0.055746 0.066574 0.003000" rpy="-3.141593 0.000000 0.879928"/>
         <geometry>
-          <mesh filename="package://garra_final_description/meshes/garra_final/garra_final_showder_servo_horn_3_collision.stl" scale="0.01 0.01 0.01"/>
+          <mesh filename="package://garra_final_description/meshes/garra_final/garra_final_showder_servo_horn_3.dae" scale="1 1 1"/>
         </geometry>
       </collision>
     </link>
@@ -212,7 +212,7 @@
     <joint name="${prefix}Revolucionar_46" type="continuous">
       <parent link="${prefix}shoulder_motor"/>
       <child link="${prefix}garra_final_showder_servo_horn"/>
-      <origin xyz="-0.023838 -0.025144 0.086064" rpy="1.570796 1.197477 0.000000"/>
+      <origin xyz="-0.023838 -0.025144 0.086064" rpy="1.570796 1.131260 0.000000"/>
       <axis xyz="0.000000 0.000000 1.000000"/>
       <limit effort="100.0" velocity="1.00"/>
     </joint>
@@ -232,7 +232,7 @@
     <joint name="${prefix}Revolucionar_49" type="continuous">
       <parent link="${prefix}MOTOR_1"/>
       <child link="${prefix}garra_final_showder_servo_horn_2"/>
-      <origin xyz="0.059838 -0.008856 0.173222" rpy="-1.570796 1.475992 3.141593"/>
+      <origin xyz="0.059838 -0.008856 0.173222" rpy="1.570796 1.536874 0.000000"/>
       <axis xyz="0.000000 0.000000 -1.000000"/>
       <limit effort="100.0" velocity="1.00"/>
     </joint>
@@ -252,7 +252,7 @@
     <joint name="${prefix}Revolucionar_72" type="continuous">
       <parent link="${prefix}MOTOR_1_1"/>
       <child link="${prefix}garra_final_showder_servo_horn_3"/>
-      <origin xyz="0.146796 0.022261 0.173559" rpy="-1.570796 1.401400 0.000000"/>
+      <origin xyz="0.146796 0.022261 0.173559" rpy="1.570796 1.545249 3.141593"/>
       <axis xyz="0.000000 0.000000 1.000000"/>
       <limit effort="100.0" velocity="1.00"/>
     </joint>

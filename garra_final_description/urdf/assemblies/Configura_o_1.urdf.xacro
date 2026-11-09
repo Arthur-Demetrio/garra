@@ -21,7 +21,7 @@
       <collision>
         <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
         <geometry>
-          <mesh filename="package://garra_final_description/meshes/Configura_o_1/Base_collision.stl" scale="0.01 0.01 0.01"/>
+          <mesh filename="package://garra_final_description/meshes/Configura_o_1/Base.dae" scale="1 1 1"/>
         </geometry>
       </collision>
     </link>
@@ -43,183 +43,183 @@
       <collision>
         <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
         <geometry>
-          <mesh filename="package://garra_final_description/meshes/Configura_o_1/Motor_collision.stl" scale="0.01 0.01 0.01"/>
+          <mesh filename="package://garra_final_description/meshes/Configura_o_1/Motor.dae" scale="1 1 1"/>
         </geometry>
       </collision>
     </link>
 
     <link name="${prefix}Engr_2">
       <inertial>
-        <origin xyz="0.012302 0.010477 -0.001895" rpy="0 0 0"/>
+        <origin xyz="-0.012589 -0.010130 -0.001895" rpy="0 0 0"/>
         <mass value="0.020209"/>
-        <inertia ixx="2.980671e-06" ixy="-2.974360e-06" ixz="1.310687e-08"
-                 iyy="3.949671e-06" iyz="1.139934e-08" izz="6.875480e-06"/>
+        <inertia ixx="2.815627e-06" ixy="-2.942728e-06" ixz="-1.341961e-08"
+                 iyy="4.114715e-06" iyz="-1.102947e-08" izz="6.875480e-06"/>
       </inertial>
       <visual>
-        <origin xyz="-0.060399 -0.064595 0.004000" rpy="-3.141593 0.000000 -1.651422"/>
+        <origin xyz="0.062176 0.062886 0.004000" rpy="3.141593 0.000000 1.462285"/>
         <geometry>
           <mesh filename="package://garra_final_description/meshes/Configura_o_1/Engr_2.dae" scale="1 1 1"/>
         </geometry>
         <material name="A_o"/>
       </visual>
       <collision>
-        <origin xyz="-0.060399 -0.064595 0.004000" rpy="-3.141593 0.000000 -1.651422"/>
+        <origin xyz="0.062176 0.062886 0.004000" rpy="3.141593 0.000000 1.462285"/>
         <geometry>
-          <mesh filename="package://garra_final_description/meshes/Configura_o_1/Engr_2_collision.stl" scale="0.01 0.01 0.01"/>
+          <mesh filename="package://garra_final_description/meshes/Configura_o_1/Engr_2.dae" scale="1 1 1"/>
         </geometry>
       </collision>
     </link>
 
     <link name="${prefix}Junta_1">
       <inertial>
-        <origin xyz="0.013041 0.007277 -0.002000" rpy="0 0 0"/>
+        <origin xyz="-0.013345 -0.006703 -0.002000" rpy="0 0 0"/>
         <mass value="0.006788"/>
-        <inertia ixx="1.000000e-06" ixy="-4.668696e-07" ixz="0.000000e+00"
+        <inertia ixx="1.000000e-06" ixy="-4.401022e-07" ixz="0.000000e+00"
                  iyy="1.000000e-06" iyz="0.000000e+00" izz="1.165360e-06"/>
       </inertial>
       <visual>
-        <origin xyz="-0.094335 -0.043366 -0.008000" rpy="0.000000 0.000000 2.708050"/>
+        <origin xyz="0.096130 0.039228 -0.008000" rpy="0.000000 0.000000 -0.476992"/>
         <geometry>
           <mesh filename="package://garra_final_description/meshes/Configura_o_1/Junta_1.dae" scale="1 1 1"/>
         </geometry>
         <material name="A_o"/>
       </visual>
       <collision>
-        <origin xyz="-0.094335 -0.043366 -0.008000" rpy="0.000000 0.000000 2.708050"/>
+        <origin xyz="0.096130 0.039228 -0.008000" rpy="0.000000 0.000000 -0.476992"/>
         <geometry>
-          <mesh filename="package://garra_final_description/meshes/Configura_o_1/Junta_1_collision.stl" scale="0.01 0.01 0.01"/>
+          <mesh filename="package://garra_final_description/meshes/Configura_o_1/Junta_1.dae" scale="1 1 1"/>
         </geometry>
       </collision>
     </link>
 
     <link name="${prefix}Junta_1_1">
       <inertial>
-        <origin xyz="0.013041 0.007277 0.002000" rpy="0 0 0"/>
+        <origin xyz="-0.013345 -0.006703 0.002000" rpy="0 0 0"/>
         <mass value="0.006788"/>
-        <inertia ixx="1.000000e-06" ixy="-4.668696e-07" ixz="0.000000e+00"
+        <inertia ixx="1.000000e-06" ixy="-4.401022e-07" ixz="0.000000e+00"
                  iyy="1.000000e-06" iyz="0.000000e+00" izz="1.165360e-06"/>
       </inertial>
       <visual>
-        <origin xyz="-0.040397 -0.032449 -0.004000" rpy="0.000000 0.000000 1.451413"/>
+        <origin xyz="0.041768 0.030664 -0.004000" rpy="0.000000 0.000000 -1.733629"/>
         <geometry>
           <mesh filename="package://garra_final_description/meshes/Configura_o_1/Junta_1_1.dae" scale="1 1 1"/>
         </geometry>
         <material name="A_o"/>
       </visual>
       <collision>
-        <origin xyz="-0.040397 -0.032449 -0.004000" rpy="0.000000 0.000000 1.451413"/>
+        <origin xyz="0.041768 0.030664 -0.004000" rpy="0.000000 0.000000 -1.733629"/>
         <geometry>
-          <mesh filename="package://garra_final_description/meshes/Configura_o_1/Junta_1_1_collision.stl" scale="0.01 0.01 0.01"/>
+          <mesh filename="package://garra_final_description/meshes/Configura_o_1/Junta_1_1.dae" scale="1 1 1"/>
         </geometry>
       </collision>
     </link>
 
     <link name="${prefix}Engr_1">
       <inertial>
-        <origin xyz="0.000121 -0.015122 -0.002000" rpy="0 0 0"/>
+        <origin xyz="-0.000027 0.015123 -0.002000" rpy="0 0 0"/>
         <mass value="0.023094"/>
-        <inertia ixx="6.797929e-06" ixy="5.055261e-08" ixz="0.000000e+00"
+        <inertia ixx="6.798312e-06" ixy="1.133009e-08" ixz="0.000000e+00"
                  iyy="1.000000e-06" iyz="0.000000e+00" izz="7.204434e-06"/>
       </inertial>
       <visual>
-        <origin xyz="-0.071992 0.005259 0.004000" rpy="-3.141593 0.000000 -2.348209"/>
+        <origin xyz="0.071958 -0.005705 0.004000" rpy="3.141593 0.000000 0.787188"/>
         <geometry>
           <mesh filename="package://garra_final_description/meshes/Configura_o_1/Engr_1.dae" scale="1 1 1"/>
         </geometry>
         <material name="A_o"/>
       </visual>
       <collision>
-        <origin xyz="-0.071992 0.005259 0.004000" rpy="-3.141593 0.000000 -2.348209"/>
+        <origin xyz="0.071958 -0.005705 0.004000" rpy="3.141593 0.000000 0.787188"/>
         <geometry>
-          <mesh filename="package://garra_final_description/meshes/Configura_o_1/Engr_1_collision.stl" scale="0.01 0.01 0.01"/>
+          <mesh filename="package://garra_final_description/meshes/Configura_o_1/Engr_1.dae" scale="1 1 1"/>
         </geometry>
       </collision>
     </link>
 
     <link name="${prefix}Junta_2">
       <inertial>
-        <origin xyz="-0.007594 -0.012859 -0.002000" rpy="0 0 0"/>
+        <origin xyz="0.007173 0.013099 -0.002000" rpy="0 0 0"/>
         <mass value="0.006788"/>
-        <inertia ixx="1.000000e-06" ixy="-4.804180e-07" ixz="0.000000e+00"
+        <inertia ixx="1.000000e-06" ixy="-4.622335e-07" ixz="0.000000e+00"
                  iyy="1.000000e-06" iyz="0.000000e+00" izz="1.165360e-06"/>
       </inertial>
       <visual>
-        <origin xyz="0.087436 0.069572 -0.008000" rpy="0.000000 0.000000 -1.161747"/>
+        <origin xyz="-0.085134 -0.072371 -0.008000" rpy="0.000000 0.000000 2.012283"/>
         <geometry>
           <mesh filename="package://garra_final_description/meshes/Configura_o_1/Junta_2.dae" scale="1 1 1"/>
         </geometry>
         <material name="A_o"/>
       </visual>
       <collision>
-        <origin xyz="0.087436 0.069572 -0.008000" rpy="0.000000 0.000000 -1.161747"/>
+        <origin xyz="-0.085134 -0.072371 -0.008000" rpy="0.000000 0.000000 2.012283"/>
         <geometry>
-          <mesh filename="package://garra_final_description/meshes/Configura_o_1/Junta_2_collision.stl" scale="0.01 0.01 0.01"/>
+          <mesh filename="package://garra_final_description/meshes/Configura_o_1/Junta_2.dae" scale="1 1 1"/>
         </geometry>
       </collision>
     </link>
 
     <link name="${prefix}Junta">
       <inertial>
-        <origin xyz="-0.007594 -0.012859 0.002000" rpy="0 0 0"/>
+        <origin xyz="0.007173 0.013099 0.002000" rpy="0 0 0"/>
         <mass value="0.006788"/>
-        <inertia ixx="1.000000e-06" ixy="-4.804180e-07" ixz="0.000000e+00"
+        <inertia ixx="1.000000e-06" ixy="-4.622335e-07" ixz="0.000000e+00"
                  iyy="1.000000e-06" iyz="0.000000e+00" izz="1.165360e-06"/>
       </inertial>
       <visual>
-        <origin xyz="0.091913 -0.013442 -0.004000" rpy="0.000000 0.000000 -1.161747"/>
+        <origin xyz="-0.092300 0.010454 -0.004000" rpy="0.000000 0.000000 2.012283"/>
         <geometry>
           <mesh filename="package://garra_final_description/meshes/Configura_o_1/Junta.dae" scale="1 1 1"/>
         </geometry>
         <material name="A_o"/>
       </visual>
       <collision>
-        <origin xyz="0.091913 -0.013442 -0.004000" rpy="0.000000 0.000000 -1.161747"/>
+        <origin xyz="-0.092300 0.010454 -0.004000" rpy="0.000000 0.000000 2.012283"/>
         <geometry>
-          <mesh filename="package://garra_final_description/meshes/Configura_o_1/Junta_collision.stl" scale="0.01 0.01 0.01"/>
+          <mesh filename="package://garra_final_description/meshes/Configura_o_1/Junta.dae" scale="1 1 1"/>
         </geometry>
       </collision>
     </link>
 
     <link name="${prefix}P_1">
       <inertial>
-        <origin xyz="0.044056 -0.016580 0.002000" rpy="0 0 0"/>
+        <origin xyz="-0.043864 0.017082 0.002000" rpy="0 0 0"/>
         <mass value="0.067383"/>
-        <inertia ixx="4.175649e-06" ixy="3.884766e-06" ixz="0.000000e+00"
-                 iyy="2.338659e-05" iyz="0.000000e+00" izz="2.249340e-05"/>
+        <inertia ixx="4.266957e-06" ixy="4.103313e-06" ixz="0.000000e+00"
+                 iyy="2.329528e-05" iyz="0.000000e+00" izz="2.249340e-05"/>
       </inertial>
       <visual>
-        <origin xyz="-0.089605 -0.098609 0.004000" rpy="3.141593 0.000000 -1.598693"/>
+        <origin xyz="0.090726 0.097578 0.004000" rpy="3.141593 0.000000 1.531470"/>
         <geometry>
           <mesh filename="package://garra_final_description/meshes/Configura_o_1/P_1.dae" scale="1 1 1"/>
         </geometry>
         <material name="A_o"/>
       </visual>
       <collision>
-        <origin xyz="-0.089605 -0.098609 0.004000" rpy="3.141593 0.000000 -1.598693"/>
+        <origin xyz="0.090726 0.097578 0.004000" rpy="3.141593 0.000000 1.531470"/>
         <geometry>
-          <mesh filename="package://garra_final_description/meshes/Configura_o_1/P_1_collision.stl" scale="0.01 0.01 0.01"/>
+          <mesh filename="package://garra_final_description/meshes/Configura_o_1/P_1.dae" scale="1 1 1"/>
         </geometry>
       </collision>
     </link>
 
     <link name="${prefix}P_1_1">
       <inertial>
-        <origin xyz="0.034727 0.031779 0.002000" rpy="0 0 0"/>
+        <origin xyz="-0.036361 -0.029895 0.002000" rpy="0 0 0"/>
         <mass value="0.067383"/>
-        <inertia ixx="9.516798e-06" ixy="-9.443093e-06" ixz="0.000000e+00"
-                 iyy="1.804544e-05" iyz="0.000000e+00" izz="2.249340e-05"/>
+        <inertia ixx="8.541989e-06" ixy="-8.939125e-06" ixz="0.000000e+00"
+                 iyy="1.902025e-05" iyz="0.000000e+00" izz="2.249340e-05"/>
       </inertial>
       <visual>
-        <origin xyz="-0.073719 -0.048230 0.004000" rpy="-3.141593 0.000000 -1.161747"/>
+        <origin xyz="0.076169 0.044258 0.004000" rpy="3.141593 0.000000 1.926866"/>
         <geometry>
           <mesh filename="package://garra_final_description/meshes/Configura_o_1/P_1_1.dae" scale="1 1 1"/>
         </geometry>
         <material name="A_o"/>
       </visual>
       <collision>
-        <origin xyz="-0.073719 -0.048230 0.004000" rpy="-3.141593 0.000000 -1.161747"/>
+        <origin xyz="0.076169 0.044258 0.004000" rpy="3.141593 0.000000 1.926866"/>
         <geometry>
-          <mesh filename="package://garra_final_description/meshes/Configura_o_1/P_1_1_collision.stl" scale="0.01 0.01 0.01"/>
+          <mesh filename="package://garra_final_description/meshes/Configura_o_1/P_1_1.dae" scale="1 1 1"/>
         </geometry>
       </collision>
     </link>
@@ -234,7 +234,7 @@
     <joint name="${prefix}Revolucionar_85" type="continuous">
       <parent link="${prefix}Base"/>
       <child link="${prefix}Engr_2"/>
-      <origin xyz="-0.069250 -0.055000 0.004000" rpy="3.141593 0.000000 -1.570796"/>
+      <origin xyz="-0.069250 -0.055000 0.004000" rpy="-3.141593 0.000000 1.570796"/>
       <axis xyz="0.000000 0.000000 1.000000"/>
       <limit effort="100.0" velocity="1.00"/>
     </joint>
@@ -242,7 +242,7 @@
     <joint name="${prefix}Revolucionar_87" type="continuous">
       <parent link="${prefix}Base"/>
       <child link="${prefix}Junta_1"/>
-      <origin xyz="-0.067140 -0.079000 0.004000" rpy="3.141593 0.000000 -1.570796"/>
+      <origin xyz="-0.067140 -0.079000 0.004000" rpy="-3.141593 0.000000 1.570796"/>
       <axis xyz="0.000000 0.000000 1.000000"/>
       <limit effort="100.0" velocity="1.00"/>
     </joint>
@@ -250,7 +250,7 @@
     <joint name="${prefix}Revolucionar_89" type="continuous">
       <parent link="${prefix}Base"/>
       <child link="${prefix}Junta_1_1"/>
-      <origin xyz="-0.067140 -0.079000 0.000000" rpy="3.141593 0.000000 -1.570796"/>
+      <origin xyz="-0.067140 -0.079000 0.000000" rpy="-3.141593 0.000000 1.570796"/>
       <axis xyz="0.000000 0.000000 1.000000"/>
       <limit effort="100.0" velocity="1.00"/>
     </joint>
@@ -258,7 +258,7 @@
     <joint name="${prefix}Revolucionar_91" type="continuous">
       <parent link="${prefix}Base"/>
       <child link="${prefix}Engr_1"/>
-      <origin xyz="-0.046750 -0.055000 0.004000" rpy="3.141593 0.000000 -1.570796"/>
+      <origin xyz="-0.046750 -0.055000 0.004000" rpy="-3.141593 0.000000 1.570796"/>
       <axis xyz="0.000000 0.000000 1.000000"/>
       <limit effort="100.0" velocity="1.00"/>
     </joint>
@@ -266,7 +266,7 @@
     <joint name="${prefix}Revolucionar_93" type="continuous">
       <parent link="${prefix}Base"/>
       <child link="${prefix}Junta_2"/>
-      <origin xyz="-0.048860 -0.079000 0.004000" rpy="3.141593 0.000000 -1.570796"/>
+      <origin xyz="-0.048860 -0.079000 0.004000" rpy="-3.141593 0.000000 1.570796"/>
       <axis xyz="0.000000 0.000000 1.000000"/>
       <limit effort="100.0" velocity="1.00"/>
     </joint>
@@ -274,7 +274,7 @@
     <joint name="${prefix}Revolucionar_95" type="continuous">
       <parent link="${prefix}Base"/>
       <child link="${prefix}Junta"/>
-      <origin xyz="-0.048860 -0.079000 0.000000" rpy="3.141593 0.000000 -1.570796"/>
+      <origin xyz="-0.048860 -0.079000 0.000000" rpy="-3.141593 0.000000 1.570796"/>
       <axis xyz="0.000000 0.000000 1.000000"/>
       <limit effort="100.0" velocity="1.00"/>
     </joint>
@@ -282,7 +282,7 @@
     <joint name="${prefix}Revolucionar_86" type="continuous">
       <parent link="${prefix}Engr_2"/>
       <child link="${prefix}P_1"/>
-      <origin xyz="0.034279 0.029154 0.000000" rpy="0.000000 0.000000 0.000000"/>
+      <origin xyz="-0.035079 -0.028187 0.000000" rpy="0.000000 0.000000 0.000000"/>
       <axis xyz="0.000000 0.000000 1.000000"/>
       <limit effort="100.0" velocity="1.00"/>
     </joint>
@@ -290,7 +290,7 @@
     <joint name="${prefix}Revolucionar_92" type="continuous">
       <parent link="${prefix}Engr_1"/>
       <child link="${prefix}P_1_1"/>
-      <origin xyz="0.000359 -0.044999 0.000000" rpy="0.000000 0.000000 0.000000"/>
+      <origin xyz="-0.000081 0.045000 0.000000" rpy="0.000000 0.000000 0.000000"/>
       <axis xyz="0.000000 0.000000 1.000000"/>
       <limit effort="100.0" velocity="1.00"/>
     </joint>

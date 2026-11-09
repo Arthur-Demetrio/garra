@@ -36,146 +36,139 @@ links:
     color_rgba: [0.769, 0.208, 0.153, 1.0]
     body_count: 1
     is_empty: false
-    collision_source: primitive
-    collision_shape: box
+    collision_source: visual_reuse
   Engr_1:
     assembly: Configura_o_1
     mass_kg: 0.023094
     volume_m3: 0.00000294
     bbox_size_m: [0.048820, 0.048820, 0.004000]
-    com_local_m: [0.000121, -0.015122, -0.002000]
+    com_local_m: [-0.000027, 0.015123, -0.002000]
     inertia_at_com:
-      ixx: 6.797929e-06
-      ixy: 5.055261e-08
+      ixx: 6.798312e-06
+      ixy: 1.133009e-08
       ixz: 0.000000e+00
-      iyy: 4.680897e-07
+      iyy: 4.677063e-07
       iyz: 0.000000e+00
       izz: 7.204434e-06
     material: 'A_o'
     color_rgba: [0.769, 0.208, 0.153, 1.0]
     body_count: 1
     is_empty: false
-    collision_source: primitive
-    collision_shape: box
-    bake_offset_m: [-0.071992, 0.005259, 0.004000]
-    mesh_origin_rpy_rad: [-3.141593, 0.000000, -2.348209]
+    collision_source: visual_reuse
+    bake_offset_m: [0.071958, -0.005705, 0.004000]
+    mesh_origin_rpy_rad: [3.141593, 0.000000, 0.787188]
     frame_rule: auto
-    frame_rebase_rpy_rad: [-3.141593, 0.000000, -2.348209]
+    frame_rebase_rpy_rad: [3.141593, 0.000000, 0.787188]
   Engr_2:
     assembly: Configura_o_1
     mass_kg: 0.020209
     volume_m3: 0.00000257
     bbox_size_m: [0.048719, 0.048719, 0.004000]
-    com_local_m: [0.012302, 0.010477, -0.001895]
+    com_local_m: [-0.012589, -0.010130, -0.001895]
     inertia_at_com:
-      ixx: 2.980671e-06
-      ixy: -2.974360e-06
-      ixz: 1.310687e-08
-      iyy: 3.949671e-06
-      iyz: 1.139934e-08
+      ixx: 2.815627e-06
+      ixy: -2.942728e-06
+      ixz: -1.341961e-08
+      iyy: 4.114715e-06
+      iyz: -1.102947e-08
       izz: 6.875480e-06
     material: 'A_o'
     color_rgba: [0.769, 0.208, 0.153, 1.0]
     body_count: 1
     is_empty: false
-    collision_source: primitive
-    collision_shape: box
-    bake_offset_m: [-0.060399, -0.064595, 0.004000]
-    mesh_origin_rpy_rad: [-3.141593, 0.000000, -1.651422]
+    collision_source: visual_reuse
+    bake_offset_m: [0.062176, 0.062886, 0.004000]
+    mesh_origin_rpy_rad: [3.141593, 0.000000, 1.462285]
     frame_rule: auto
-    frame_rebase_rpy_rad: [3.141593, 0.000000, -1.651422]
+    frame_rebase_rpy_rad: [3.141593, 0.000000, 1.462285]
   Junta:
     assembly: Configura_o_1
     mass_kg: 0.006788
     volume_m3: 0.00000086
     bbox_size_m: [0.027556, 0.034164, 0.004000]
-    com_local_m: [-0.007594, -0.012859, 0.002000]
+    com_local_m: [0.007173, 0.013099, 0.002000]
     inertia_at_com:
-      ixx: 8.566469e-07
-      ixy: -4.804180e-07
+      ixx: 8.872340e-07
+      ixy: -4.622335e-07
       ixz: 0.000000e+00
-      iyy: 3.268136e-07
+      iyy: 2.962265e-07
       iyz: 0.000000e+00
       izz: 1.165360e-06
     material: 'A_o'
     color_rgba: [0.627, 0.627, 0.627, 1.0]
     body_count: 1
     is_empty: false
-    collision_source: primitive
-    collision_shape: cylinder
-    bake_offset_m: [0.091913, -0.013442, -0.004000]
-    mesh_origin_rpy_rad: [0.000000, 0.000000, -1.161747]
+    collision_source: visual_reuse
+    bake_offset_m: [-0.092300, 0.010454, -0.004000]
+    mesh_origin_rpy_rad: [0.000000, 0.000000, 2.012283]
     frame_rule: auto
-    frame_rebase_rpy_rad: [0.000000, 0.000000, 1.161747]
+    frame_rebase_rpy_rad: [0.000000, 0.000000, -2.012283]
   Junta_1:
     assembly: Configura_o_1
     mass_kg: 0.006788
     volume_m3: 0.00000086
     bbox_size_m: [0.027556, 0.034164, 0.004000]
-    com_local_m: [0.013041, 0.007277, -0.002000]
+    com_local_m: [-0.013345, -0.006703, -0.002000]
     inertia_at_com:
-      ixx: 3.036069e-07
-      ixy: -4.668696e-07
+      ixx: 2.641751e-07
+      ixy: -4.401022e-07
       ixz: 0.000000e+00
-      iyy: 8.798537e-07
+      iyy: 9.192855e-07
       iyz: 0.000000e+00
       izz: 1.165360e-06
     material: 'A_o'
     color_rgba: [0.627, 0.627, 0.627, 1.0]
     body_count: 1
     is_empty: false
-    collision_source: primitive
-    collision_shape: cylinder
-    bake_offset_m: [-0.094335, -0.043366, -0.008000]
-    mesh_origin_rpy_rad: [0.000000, 0.000000, 2.708050]
+    collision_source: visual_reuse
+    bake_offset_m: [0.096130, 0.039228, -0.008000]
+    mesh_origin_rpy_rad: [0.000000, 0.000000, -0.476992]
     frame_rule: auto
-    frame_rebase_rpy_rad: [0.000000, 0.000000, -2.708050]
+    frame_rebase_rpy_rad: [0.000000, 0.000000, 0.476992]
   Junta_1_1:
     assembly: Configura_o_1
     mass_kg: 0.006788
     volume_m3: 0.00000086
     bbox_size_m: [0.027556, 0.034164, 0.004000]
-    com_local_m: [0.013041, 0.007277, 0.002000]
+    com_local_m: [-0.013345, -0.006703, 0.002000]
     inertia_at_com:
-      ixx: 3.036069e-07
-      ixy: -4.668696e-07
+      ixx: 2.641751e-07
+      ixy: -4.401022e-07
       ixz: 0.000000e+00
-      iyy: 8.798537e-07
+      iyy: 9.192855e-07
       iyz: 0.000000e+00
       izz: 1.165360e-06
     material: 'A_o'
     color_rgba: [0.627, 0.627, 0.627, 1.0]
     body_count: 1
     is_empty: false
-    collision_source: primitive
-    collision_shape: cylinder
-    bake_offset_m: [-0.040397, -0.032449, -0.004000]
-    mesh_origin_rpy_rad: [0.000000, 0.000000, 1.451413]
+    collision_source: visual_reuse
+    bake_offset_m: [0.041768, 0.030664, -0.004000]
+    mesh_origin_rpy_rad: [0.000000, 0.000000, -1.733629]
     frame_rule: auto
-    frame_rebase_rpy_rad: [0.000000, 0.000000, -1.451413]
+    frame_rebase_rpy_rad: [0.000000, 0.000000, 1.733629]
   Junta_2:
     assembly: Configura_o_1
     mass_kg: 0.006788
     volume_m3: 0.00000086
     bbox_size_m: [0.027556, 0.034164, 0.004000]
-    com_local_m: [-0.007594, -0.012859, -0.002000]
+    com_local_m: [0.007173, 0.013099, -0.002000]
     inertia_at_com:
-      ixx: 8.566469e-07
-      ixy: -4.804180e-07
+      ixx: 8.872340e-07
+      ixy: -4.622335e-07
       ixz: 0.000000e+00
-      iyy: 3.268136e-07
+      iyy: 2.962265e-07
       iyz: 0.000000e+00
       izz: 1.165360e-06
     material: 'A_o'
     color_rgba: [0.627, 0.627, 0.627, 1.0]
     body_count: 1
     is_empty: false
-    collision_source: primitive
-    collision_shape: cylinder
-    bake_offset_m: [0.087436, 0.069572, -0.008000]
-    mesh_origin_rpy_rad: [0.000000, 0.000000, -1.161747]
+    collision_source: visual_reuse
+    bake_offset_m: [-0.085134, -0.072371, -0.008000]
+    mesh_origin_rpy_rad: [0.000000, 0.000000, 2.012283]
     frame_rule: auto
-    frame_rebase_rpy_rad: [0.000000, 0.000000, 1.161747]
+    frame_rebase_rpy_rad: [0.000000, 0.000000, -2.012283]
   MOTOR_1:
     assembly: garra_final
     mass_kg: 0.089211
@@ -193,8 +186,7 @@ links:
     color_rgba: [0.537, 0.537, 0.537, 1.0]
     body_count: 1
     is_empty: false
-    collision_source: primitive
-    collision_shape: cylinder
+    collision_source: visual_reuse
   MOTOR_1_1:
     assembly: garra_final
     mass_kg: 0.089211
@@ -212,8 +204,7 @@ links:
     color_rgba: [0.537, 0.537, 0.537, 1.0]
     body_count: 1
     is_empty: false
-    collision_source: primitive
-    collision_shape: cylinder
+    collision_source: visual_reuse
   M_dulo_1:
     assembly: garra_final
     mass_kg: 0.096143
@@ -231,8 +222,7 @@ links:
     color_rgba: [0.769, 0.208, 0.153, 1.0]
     body_count: 1
     is_empty: false
-    collision_source: primitive
-    collision_shape: box
+    collision_source: visual_reuse
   M_dulo_2:
     assembly: garra_final
     mass_kg: 0.070749
@@ -250,8 +240,7 @@ links:
     color_rgba: [0.769, 0.208, 0.153, 1.0]
     body_count: 1
     is_empty: false
-    collision_source: primitive
-    collision_shape: box
+    collision_source: visual_reuse
   Motor:
     assembly: Configura_o_1
     mass_kg: 0.050915
@@ -269,54 +258,51 @@ links:
     color_rgba: [0.627, 0.627, 0.627, 1.0]
     body_count: 1
     is_empty: false
-    collision_source: primitive
-    collision_shape: box
+    collision_source: visual_reuse
   P_1:
     assembly: Configura_o_1
     mass_kg: 0.067383
     volume_m3: 0.00000858
     bbox_size_m: [0.026263, 0.075573, 0.024000]
-    com_local_m: [0.044056, -0.016580, 0.002000]
+    com_local_m: [-0.043864, 0.017082, 0.002000]
     inertia_at_com:
-      ixx: 4.175649e-06
-      ixy: 3.884766e-06
+      ixx: 4.266957e-06
+      ixy: 4.103313e-06
       ixz: 0.000000e+00
-      iyy: 2.338659e-05
+      iyy: 2.329528e-05
       iyz: 0.000000e+00
       izz: 2.249340e-05
     material: 'A_o'
     color_rgba: [0.769, 0.208, 0.153, 1.0]
     body_count: 1
     is_empty: false
-    collision_source: primitive
-    collision_shape: box
-    bake_offset_m: [-0.089605, -0.098609, 0.004000]
-    mesh_origin_rpy_rad: [3.141593, 0.000000, -1.598693]
+    collision_source: visual_reuse
+    bake_offset_m: [0.090726, 0.097578, 0.004000]
+    mesh_origin_rpy_rad: [3.141593, 0.000000, 1.531470]
     frame_rule: auto
-    frame_rebase_rpy_rad: [-3.141593, 0.000000, -1.598693]
+    frame_rebase_rpy_rad: [3.141593, 0.000000, 1.531470]
   P_1_1:
     assembly: Configura_o_1
     mass_kg: 0.067383
     volume_m3: 0.00000858
     bbox_size_m: [0.026263, 0.075573, 0.024000]
-    com_local_m: [0.034727, 0.031779, 0.002000]
+    com_local_m: [-0.036361, -0.029895, 0.002000]
     inertia_at_com:
-      ixx: 9.516798e-06
-      ixy: -9.443093e-06
+      ixx: 8.541989e-06
+      ixy: -8.939125e-06
       ixz: 0.000000e+00
-      iyy: 1.804544e-05
+      iyy: 1.902025e-05
       iyz: 0.000000e+00
       izz: 2.249340e-05
     material: 'A_o'
     color_rgba: [0.769, 0.208, 0.153, 1.0]
     body_count: 1
     is_empty: false
-    collision_source: primitive
-    collision_shape: box
-    bake_offset_m: [-0.073719, -0.048230, 0.004000]
-    mesh_origin_rpy_rad: [-3.141593, 0.000000, -1.161747]
+    collision_source: visual_reuse
+    bake_offset_m: [0.076169, 0.044258, 0.004000]
+    mesh_origin_rpy_rad: [3.141593, 0.000000, 1.926866]
     frame_rule: auto
-    frame_rebase_rpy_rad: [3.141593, 0.000000, -1.161747]
+    frame_rebase_rpy_rad: [3.141593, 0.000000, 1.926866]
   base_link:
     assembly: garra_final
     mass_kg: 0.122493
@@ -334,8 +320,7 @@ links:
     color_rgba: [0.769, 0.208, 0.153, 1.0]
     body_count: 1
     is_empty: false
-    collision_source: primitive
-    collision_shape: cylinder
+    collision_source: visual_reuse
     frame_rule: auto
     frame_rebase_rpy_rad: [0.000000, 0.000000, 0.000000]
   garra_final_showder_servo_horn:
@@ -355,8 +340,7 @@ links:
     color_rgba: [0.627, 0.627, 0.627, 1.0]
     body_count: 1
     is_empty: false
-    collision_source: primitive
-    collision_shape: box
+    collision_source: visual_reuse
     bake_offset_m: [0.015787, -0.085385, -0.003000]
     mesh_origin_rpy_rad: [0.000000, 0.000000, 0.000000]
   garra_final_showder_servo_horn_2:
@@ -376,8 +360,7 @@ links:
     color_rgba: [0.627, 0.627, 0.627, 1.0]
     body_count: 1
     is_empty: false
-    collision_source: primitive
-    collision_shape: box
+    collision_source: visual_reuse
     bake_offset_m: [0.015787, -0.085385, 0.000000]
     mesh_origin_rpy_rad: [0.000000, 0.000000, 0.000000]
   garra_final_showder_servo_horn_3:
@@ -385,24 +368,23 @@ links:
     mass_kg: 0.007175
     volume_m3: 0.00000091
     bbox_size_m: [0.030387, 0.026013, 0.003000]
-    com_local_m: [0.008621, -0.000154, 0.001500]
+    com_local_m: [-0.000294, -0.008617, 0.001500]
     inertia_at_com:
-      ixx: 8.136522e-08
-      ixy: 1.104621e-08
+      ixx: 7.006000e-07
+      ixy: -2.116718e-08
       ixz: 0.000000e+00
-      iyy: 7.011265e-07
+      iyy: 8.189173e-08
       iyz: 0.000000e+00
       izz: 7.717288e-07
     material: 'A_o'
     color_rgba: [0.627, 0.627, 0.627, 1.0]
     body_count: 1
     is_empty: false
-    collision_source: primitive
-    collision_shape: box
-    bake_offset_m: [-0.065655, -0.056827, 0.003000]
-    mesh_origin_rpy_rad: [-3.141593, 0.000000, 2.467068]
+    collision_source: visual_reuse
+    bake_offset_m: [-0.055746, 0.066574, 0.003000]
+    mesh_origin_rpy_rad: [-3.141593, 0.000000, 0.879928]
     frame_rule: auto
-    frame_rebase_rpy_rad: [3.141593, 0.000000, 2.467068]
+    frame_rebase_rpy_rad: [-3.141593, 0.000000, 0.879928]
   shoulder_motor:
     assembly: garra_final
     mass_kg: 0.089211
@@ -420,8 +402,7 @@ links:
     color_rgba: [0.537, 0.537, 0.537, 1.0]
     body_count: 1
     is_empty: false
-    collision_source: primitive
-    collision_shape: cylinder
+    collision_source: visual_reuse
 
 joints:
   R_gido:
@@ -473,8 +454,8 @@ joints:
     type: fixed
     parent: garra_final_showder_servo_horn_3
     child: Base
-    origin_xyz_m: [0.004924, 0.001353, 0.062500]
-    origin_rpy_rad: [1.550770, -1.570796, 0.000000]
+    origin_xyz_m: [0.001272, -0.004945, 0.062500]
+    origin_rpy_rad: [-0.896983, -1.570796, 0.386126]
     axis: [0.0000, 0.0000, 1.0000]
     is_mount: true
     passive: false
@@ -492,7 +473,7 @@ joints:
     parent: shoulder_motor
     child: garra_final_showder_servo_horn
     origin_xyz_m: [-0.023838, -0.025144, 0.086064]
-    origin_rpy_rad: [1.570796, 1.197477, 0.000000]
+    origin_rpy_rad: [1.570796, 1.131260, 0.000000]
     axis: [0.0000, 0.0000, 1.0000]
     is_mount: false
     passive: false
@@ -501,7 +482,7 @@ joints:
     parent: MOTOR_1
     child: garra_final_showder_servo_horn_2
     origin_xyz_m: [0.059838, -0.008856, 0.173222]
-    origin_rpy_rad: [-1.570796, 1.475992, 3.141593]
+    origin_rpy_rad: [1.570796, 1.536874, 0.000000]
     axis: [0.0000, 0.0000, -1.0000]
     is_mount: false
     passive: false
@@ -510,7 +491,7 @@ joints:
     parent: MOTOR_1_1
     child: garra_final_showder_servo_horn_3
     origin_xyz_m: [0.146796, 0.022261, 0.173559]
-    origin_rpy_rad: [-1.570796, 1.401400, 0.000000]
+    origin_rpy_rad: [1.570796, 1.545249, 3.141593]
     axis: [0.0000, 0.0000, 1.0000]
     is_mount: false
     passive: false
@@ -519,7 +500,7 @@ joints:
     parent: Base
     child: Engr_2
     origin_xyz_m: [-0.069250, -0.055000, 0.004000]
-    origin_rpy_rad: [3.141593, 0.000000, -1.570796]
+    origin_rpy_rad: [-3.141593, 0.000000, 1.570796]
     axis: [0.0000, 0.0000, 1.0000]
     is_mount: false
     passive: false
@@ -527,7 +508,7 @@ joints:
     type: continuous
     parent: Engr_2
     child: P_1
-    origin_xyz_m: [0.034279, 0.029154, 0.000000]
+    origin_xyz_m: [-0.035079, -0.028187, 0.000000]
     origin_rpy_rad: [0.000000, 0.000000, 0.000000]
     axis: [0.0000, 0.0000, 1.0000]
     is_mount: false
@@ -537,7 +518,7 @@ joints:
     parent: Base
     child: Junta_1
     origin_xyz_m: [-0.067140, -0.079000, 0.004000]
-    origin_rpy_rad: [3.141593, 0.000000, -1.570796]
+    origin_rpy_rad: [-3.141593, 0.000000, 1.570796]
     axis: [0.0000, 0.0000, 1.0000]
     is_mount: false
     passive: false
@@ -546,7 +527,7 @@ joints:
     parent: Base
     child: Junta_1_1
     origin_xyz_m: [-0.067140, -0.079000, 0.000000]
-    origin_rpy_rad: [3.141593, 0.000000, -1.570796]
+    origin_rpy_rad: [-3.141593, 0.000000, 1.570796]
     axis: [0.0000, 0.0000, 1.0000]
     is_mount: false
     passive: false
@@ -555,7 +536,7 @@ joints:
     parent: Base
     child: Engr_1
     origin_xyz_m: [-0.046750, -0.055000, 0.004000]
-    origin_rpy_rad: [3.141593, 0.000000, -1.570796]
+    origin_rpy_rad: [-3.141593, 0.000000, 1.570796]
     axis: [0.0000, 0.0000, 1.0000]
     is_mount: false
     passive: false
@@ -563,7 +544,7 @@ joints:
     type: continuous
     parent: Engr_1
     child: P_1_1
-    origin_xyz_m: [0.000359, -0.044999, 0.000000]
+    origin_xyz_m: [-0.000081, 0.045000, 0.000000]
     origin_rpy_rad: [0.000000, 0.000000, 0.000000]
     axis: [0.0000, 0.0000, 1.0000]
     is_mount: false
@@ -573,7 +554,7 @@ joints:
     parent: Base
     child: Junta_2
     origin_xyz_m: [-0.048860, -0.079000, 0.004000]
-    origin_rpy_rad: [3.141593, 0.000000, -1.570796]
+    origin_rpy_rad: [-3.141593, 0.000000, 1.570796]
     axis: [0.0000, 0.0000, 1.0000]
     is_mount: false
     passive: false
@@ -582,7 +563,7 @@ joints:
     parent: Base
     child: Junta
     origin_xyz_m: [-0.048860, -0.079000, 0.000000]
-    origin_rpy_rad: [3.141593, 0.000000, -1.570796]
+    origin_rpy_rad: [-3.141593, 0.000000, 1.570796]
     axis: [0.0000, 0.0000, 1.0000]
     is_mount: false
     passive: false
@@ -593,7 +574,7 @@ closing_joints:
     type: continuous
     parent: P_1
     child: Junta_1
-    origin_xyz_m: [0.015803, -0.016711, 0.000000]
+    origin_xyz_m: [-0.015611, 0.016890, 0.000000]
     origin_rpy_rad: [0.000000, 0.000000, 0.000000]
     axis: [0.0000, 0.0000, 1.0000]
   - name: Revolucionar_90
@@ -601,7 +582,7 @@ closing_joints:
     type: continuous
     parent: P_1
     child: Junta_1_1
-    origin_xyz_m: [0.015803, -0.016711, 0.004000]
+    origin_xyz_m: [-0.015611, 0.016890, 0.004000]
     origin_rpy_rad: [0.000000, 0.000000, 0.000000]
     axis: [0.0000, 0.0000, 1.0000]
   - name: Revolucionar_94
@@ -609,7 +590,7 @@ closing_joints:
     type: continuous
     parent: P_1_1
     child: Junta_2
-    origin_xyz_m: [0.008453, 0.021390, 0.000000]
+    origin_xyz_m: [-0.009574, -0.020913, 0.000000]
     origin_rpy_rad: [0.000000, 0.000000, 0.000000]
     axis: [0.0000, 0.0000, -1.0000]
   - name: Revolucionar_96
@@ -617,7 +598,7 @@ closing_joints:
     type: continuous
     parent: P_1_1
     child: Junta
-    origin_xyz_m: [0.008453, 0.021390, 0.004000]
+    origin_xyz_m: [-0.009574, -0.020913, 0.004000]
     origin_rpy_rad: [0.000000, 0.000000, 0.000000]
     axis: [0.0000, 0.0000, -1.0000]
 

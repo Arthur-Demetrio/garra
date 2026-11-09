@@ -67,25 +67,25 @@ base_link
 
 | Link | Mass (kg) | Material | Collision | Bodies |
 |------|-----------|----------|-----------|--------|
-| `Base` | 0.1915 | A_o | box | 1 |
-| `Engr_1` | 0.0231 | A_o | box | 1 |
-| `Engr_2` | 0.0202 | A_o | box | 1 |
-| `Junta` | 0.0068 | A_o | cylinder | 1 |
-| `Junta_1` | 0.0068 | A_o | cylinder | 1 |
-| `Junta_1_1` | 0.0068 | A_o | cylinder | 1 |
-| `Junta_2` | 0.0068 | A_o | cylinder | 1 |
-| `MOTOR_1` | 0.0892 | Alum_nio_prata_anodizada | cylinder | 1 |
-| `MOTOR_1_1` | 0.0892 | Alum_nio_prata_anodizada | cylinder | 1 |
-| `M_dulo_1` | 0.0961 | Laminado_vermelho_fosco | box | 1 |
-| `M_dulo_2` | 0.0707 | Laminado_vermelho_fosco | box | 1 |
-| `Motor` | 0.0509 | A_o | box | 1 |
-| `P_1` | 0.0674 | A_o | box | 1 |
-| `P_1_1` | 0.0674 | A_o | box | 1 |
-| `base_link` | 0.1225 | Laminado_vermelho_fosco | cylinder | 1 |
-| `garra_final_showder_servo_horn` | 0.0072 | A_o | box | 1 |
-| `garra_final_showder_servo_horn_2` | 0.0072 | A_o | box | 1 |
-| `garra_final_showder_servo_horn_3` | 0.0072 | A_o | box | 1 |
-| `shoulder_motor` | 0.0892 | Alum_nio_prata_anodizada | cylinder | 1 |
+| `Base` | 0.1915 | A_o | visual_reuse | 1 |
+| `Engr_1` | 0.0231 | A_o | visual_reuse | 1 |
+| `Engr_2` | 0.0202 | A_o | visual_reuse | 1 |
+| `Junta` | 0.0068 | A_o | visual_reuse | 1 |
+| `Junta_1` | 0.0068 | A_o | visual_reuse | 1 |
+| `Junta_1_1` | 0.0068 | A_o | visual_reuse | 1 |
+| `Junta_2` | 0.0068 | A_o | visual_reuse | 1 |
+| `MOTOR_1` | 0.0892 | Alum_nio_prata_anodizada | visual_reuse | 1 |
+| `MOTOR_1_1` | 0.0892 | Alum_nio_prata_anodizada | visual_reuse | 1 |
+| `M_dulo_1` | 0.0961 | Laminado_vermelho_fosco | visual_reuse | 1 |
+| `M_dulo_2` | 0.0707 | Laminado_vermelho_fosco | visual_reuse | 1 |
+| `Motor` | 0.0509 | A_o | visual_reuse | 1 |
+| `P_1` | 0.0674 | A_o | visual_reuse | 1 |
+| `P_1_1` | 0.0674 | A_o | visual_reuse | 1 |
+| `base_link` | 0.1225 | Laminado_vermelho_fosco | visual_reuse | 1 |
+| `garra_final_showder_servo_horn` | 0.0072 | A_o | visual_reuse | 1 |
+| `garra_final_showder_servo_horn_2` | 0.0072 | A_o | visual_reuse | 1 |
+| `garra_final_showder_servo_horn_3` | 0.0072 | A_o | visual_reuse | 1 |
+| `shoulder_motor` | 0.0892 | Alum_nio_prata_anodizada | visual_reuse | 1 |
 
 ## Joint Properties
 

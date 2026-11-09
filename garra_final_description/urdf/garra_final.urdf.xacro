@@ -29,7 +29,7 @@
   <joint name="R_gido_73" type="fixed">
     <parent link="garra_final_showder_servo_horn_3"/>
     <child link="Base"/>
-    <origin xyz="0.004924 0.001353 0.062500" rpy="1.550770 -1.570796 0.000000"/>
+    <origin xyz="0.001272 -0.004945 0.062500" rpy="-0.896983 -1.570796 0.386126"/>
   </joint>
 
 </robot>
