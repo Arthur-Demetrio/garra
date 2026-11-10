@@ -3,21 +3,23 @@
 default_velocity_scaling_factor: 0.1
 default_acceleration_scaling_factor: 0.1
 
+# max_velocity = velocidade do firmware: 10 us a cada 40 ms = 250 us/s / 590.6 us/rad = 0.42 rad/s.
+# Acima disso o servo fica atrasado em relacao ao que o ROS acha (os servos nao informam a posicao).
 joint_limits:
   Revolucionar_46:
     has_velocity_limits: true
-    max_velocity: 1.0
+    max_velocity: 0.42
     has_acceleration_limits: true
     max_acceleration: 1.0
 
   Revolucionar_49:
     has_velocity_limits: true
-    max_velocity: 1.0
+    max_velocity: 0.42
     has_acceleration_limits: true
     max_acceleration: 1.0
 
-  Revolucionar_52:
+  Revolucionar_72:
     has_velocity_limits: true
-    max_velocity: 1.0
+    max_velocity: 0.42
     has_acceleration_limits: true
     max_acceleration: 1.0

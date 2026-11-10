@@ -53,6 +53,16 @@ colcon build --symlink-install
 source install/setup.bash
 ```
 
+### 2.1 Depois de uma nova exportação do CAD
+
+O exportador gera as juntas como `continuous`, sem limites, com os dedos livres e com um bloco `<ros2_control>` próprio. Antes de compilar, ajuste o URDF exportado:
+
+```bash
+python3 scripts/ajustar_urdf.py
+```
+
+O script torna J1–J3 `revolute` com limites, prende os dedos (até o J4 ser integrado) e remove o `<ros2_control>` exportado. Se os nomes das juntas mudarem, ele avisa. Depois, refaça a matriz de colisão do SRDF e confira o `tool0`.
+
 ## 3. Teste 1 — Visualização do modelo
 
 Esse teste não usa um script Python de `scripts/`; é a primeira verificação recomendada antes de executar os testes automatizados.
@@ -209,7 +219,7 @@ A classe utiliza:
 - grupo de planejamento: `garra`;
 - base: `base_link`;
 - TCP: `tool0`;
-- juntas: `Revolucionar_46`, `Revolucionar_49` e `Revolucionar_52`.
+- juntas: `Revolucionar_46`, `Revolucionar_49` e `Revolucionar_72`.
 
 Métodos principais:
 
@@ -313,9 +323,10 @@ Depois que o script reconhecer o firmware, ele apresenta os comandos:
 
 | Comando | Ação |
 |---|---|
+| `1,90` | Formato `<motor>,<angulo>` (igual ao Monitor Serial): seleciona o motor e leva ao ângulo de 0 a 180°. Salta direto ao destino (a ~25°/s); confira o caminho antes. |
 | `j 1` | Seleciona a junta 1 (`Revolucionar_46`). |
 | `j 2` | Seleciona a junta 2 (`Revolucionar_49`). |
-| `j 3` | Seleciona a junta 3 (`Revolucionar_52`). |
+| `j 3` | Seleciona a junta 3 (`Revolucionar_72`). |
 | `+` | Aumenta o pulso em 10 µs (padrão). |
 | `+ 5` | Aumenta o pulso em 5 µs. |
 | `-` | Diminui o pulso em 10 µs (padrão). |
@@ -336,7 +347,7 @@ O incremento por comando é limitado a 50 µs. O script também limita o pulso a
 Repita o procedimento para cada uma das três juntas:
 
 1. Selecione a junta (`j 1`, `j 2` ou `j 3`).
-2. Use incrementos pequenos (`+ 5`, `- 5`, por exemplo) para aproximar o elo da posição zero definida no CAD.
+2. Use `<motor>,<angulo>` para chegar perto da referência (ex.: `1,90`) e incrementos pequenos (`+ 5`, `- 5`) para aproximar o elo da posição zero definida no CAD.
 3. Digite `zero` quando a junta estiver alinhada à referência mecânica.
 4. Determine o sentido: se o ângulo positivo do modelo aumenta quando o pulso aumenta, registre `sentido +`; caso contrário, `sentido -`.
 5. Meça o limite inferior seguro sem forçar a estrutura e registre `min`.
@@ -363,7 +374,7 @@ O formato esperado é semelhante a:
 juntas:
   Revolucionar_46: {zero_us: 1472, us_por_rad: -590.6, min_us: 1400, max_us: 1600}
   Revolucionar_49: {zero_us: 1472, us_por_rad: -590.6, min_us: 1400, max_us: 1600}
-  Revolucionar_52: {zero_us: 1472, us_por_rad: -590.6, min_us: 1400, max_us: 1600}
+  Revolucionar_72: {zero_us: 1472, us_por_rad: -590.6, min_us: 1400, max_us: 1600}
 ```
 
 Os números acima são apenas ilustrativos e **não devem ser copiados como calibração real**. O arquivo atualmente versionado no repositório está explicitamente marcado como provisório.

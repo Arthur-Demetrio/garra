@@ -16,124 +16,90 @@
     <group_state name="home" group="garra">
         <joint name="Revolucionar_46" value="0"/>
         <joint name="Revolucionar_49" value="0"/>
-        <joint name="Revolucionar_52" value="0"/>
+        <joint name="Revolucionar_72" value="0"/>
     </group_state>
     <!-- Pose de trabalho: garra para a frente (-X), quase horizontal.
          "home" (q=0) e o comando de 90 graus nos tres servos: braco e garra na vertical. -->
     <group_state name="pronta" group="garra">
         <joint name="Revolucionar_46" value="0.2"/>
         <joint name="Revolucionar_49" value="-1.1"/>
-        <joint name="Revolucionar_52" value="0.2"/>
+        <joint name="Revolucionar_72" value="-0.2"/>
     </group_state>
     <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
 
-    <!-- Matriz gerada com as malhas reais (varredura de autocolisao): so ficam desabilitados
-         pares do mesmo corpo rigido, adjacentes pela junta e encaixes do CAD. Pares dedo/base seguem ativos. -->
-    <disable_collisions link1="Caixa_motor_pequeno" link2="Componente4" reason="Rigid"/>
-    <disable_collisions link1="Caixa_motor_pequeno" link2="Componente4_Espelhar" reason="Rigid"/>
-    <disable_collisions link1="Caixa_motor_pequeno" link2="Componente5" reason="Rigid"/>
-    <disable_collisions link1="Caixa_motor_pequeno" link2="Componente5_Espelhar" reason="Rigid"/>
-    <disable_collisions link1="Caixa_motor_pequeno" link2="Componente5_Espelhar_1" reason="Rigid"/>
-    <disable_collisions link1="Caixa_motor_pequeno" link2="Componente5_Espelhar_Espelhar" reason="Rigid"/>
-    <disable_collisions link1="Caixa_motor_pequeno" link2="Componente6" reason="Rigid"/>
-    <disable_collisions link1="Caixa_motor_pequeno" link2="Componente6_Espelhar" reason="Rigid"/>
-    <disable_collisions link1="Caixa_motor_pequeno" link2="Healical_Gear_20R_0_00_m_1_0" reason="Rigid"/>
-    <disable_collisions link1="Caixa_motor_pequeno" link2="Healical_Gear_20R_0_00_m_1_0_1" reason="Rigid"/>
-    <disable_collisions link1="Caixa_motor_pequeno" link2="Healical_Gear_8R_0_00_m_1_0" reason="Rigid"/>
-    <disable_collisions link1="Caixa_motor_pequeno" link2="MOTOR_1_1" reason="Adjacent"/>
-    <disable_collisions link1="Caixa_motor_pequeno" link2="motor_pequeno" reason="Rigid"/>
-    <disable_collisions link1="Componente4" link2="Componente4_Espelhar" reason="Rigid"/>
-    <disable_collisions link1="Componente4" link2="Componente5" reason="Rigid"/>
-    <disable_collisions link1="Componente4" link2="Componente5_Espelhar" reason="Rigid"/>
-    <disable_collisions link1="Componente4" link2="Componente5_Espelhar_1" reason="Rigid"/>
-    <disable_collisions link1="Componente4" link2="Componente5_Espelhar_Espelhar" reason="Rigid"/>
-    <disable_collisions link1="Componente4" link2="Componente6" reason="Rigid"/>
-    <disable_collisions link1="Componente4" link2="Componente6_Espelhar" reason="Rigid"/>
-    <disable_collisions link1="Componente4" link2="Healical_Gear_20R_0_00_m_1_0" reason="Rigid"/>
-    <disable_collisions link1="Componente4" link2="Healical_Gear_20R_0_00_m_1_0_1" reason="Rigid"/>
-    <disable_collisions link1="Componente4" link2="Healical_Gear_8R_0_00_m_1_0" reason="Rigid"/>
-    <disable_collisions link1="Componente4" link2="motor_pequeno" reason="Rigid"/>
-    <disable_collisions link1="Componente4_Espelhar" link2="Componente5" reason="Rigid"/>
-    <disable_collisions link1="Componente4_Espelhar" link2="Componente5_Espelhar" reason="Rigid"/>
-    <disable_collisions link1="Componente4_Espelhar" link2="Componente5_Espelhar_1" reason="Rigid"/>
-    <disable_collisions link1="Componente4_Espelhar" link2="Componente5_Espelhar_Espelhar" reason="Rigid"/>
-    <disable_collisions link1="Componente4_Espelhar" link2="Componente6" reason="Rigid"/>
-    <disable_collisions link1="Componente4_Espelhar" link2="Componente6_Espelhar" reason="Rigid"/>
-    <disable_collisions link1="Componente4_Espelhar" link2="Healical_Gear_20R_0_00_m_1_0" reason="Rigid"/>
-    <disable_collisions link1="Componente4_Espelhar" link2="Healical_Gear_20R_0_00_m_1_0_1" reason="Rigid"/>
-    <disable_collisions link1="Componente4_Espelhar" link2="Healical_Gear_8R_0_00_m_1_0" reason="Rigid"/>
-    <disable_collisions link1="Componente4_Espelhar" link2="motor_pequeno" reason="Rigid"/>
-    <disable_collisions link1="Componente5" link2="Componente5_Espelhar" reason="Rigid"/>
-    <disable_collisions link1="Componente5" link2="Componente5_Espelhar_1" reason="Rigid"/>
-    <disable_collisions link1="Componente5" link2="Componente5_Espelhar_Espelhar" reason="Rigid"/>
-    <disable_collisions link1="Componente5" link2="Componente6" reason="Rigid"/>
-    <disable_collisions link1="Componente5" link2="Componente6_Espelhar" reason="Rigid"/>
-    <disable_collisions link1="Componente5" link2="Healical_Gear_20R_0_00_m_1_0" reason="Rigid"/>
-    <disable_collisions link1="Componente5" link2="Healical_Gear_20R_0_00_m_1_0_1" reason="Rigid"/>
-    <disable_collisions link1="Componente5" link2="Healical_Gear_8R_0_00_m_1_0" reason="Rigid"/>
-    <disable_collisions link1="Componente5" link2="motor_pequeno" reason="Rigid"/>
-    <disable_collisions link1="Componente5_Espelhar" link2="Componente5_Espelhar_1" reason="Rigid"/>
-    <disable_collisions link1="Componente5_Espelhar" link2="Componente5_Espelhar_Espelhar" reason="Rigid"/>
-    <disable_collisions link1="Componente5_Espelhar" link2="Componente6" reason="Rigid"/>
-    <disable_collisions link1="Componente5_Espelhar" link2="Componente6_Espelhar" reason="Rigid"/>
-    <disable_collisions link1="Componente5_Espelhar" link2="Healical_Gear_20R_0_00_m_1_0" reason="Rigid"/>
-    <disable_collisions link1="Componente5_Espelhar" link2="Healical_Gear_20R_0_00_m_1_0_1" reason="Rigid"/>
-    <disable_collisions link1="Componente5_Espelhar" link2="Healical_Gear_8R_0_00_m_1_0" reason="Rigid"/>
-    <disable_collisions link1="Componente5_Espelhar" link2="motor_pequeno" reason="Rigid"/>
-    <disable_collisions link1="Componente5_Espelhar_1" link2="Componente5_Espelhar_Espelhar" reason="Rigid"/>
-    <disable_collisions link1="Componente5_Espelhar_1" link2="Componente6" reason="Rigid"/>
-    <disable_collisions link1="Componente5_Espelhar_1" link2="Componente6_Espelhar" reason="Rigid"/>
-    <disable_collisions link1="Componente5_Espelhar_1" link2="Healical_Gear_20R_0_00_m_1_0" reason="Rigid"/>
-    <disable_collisions link1="Componente5_Espelhar_1" link2="Healical_Gear_20R_0_00_m_1_0_1" reason="Rigid"/>
-    <disable_collisions link1="Componente5_Espelhar_1" link2="Healical_Gear_8R_0_00_m_1_0" reason="Rigid"/>
-    <disable_collisions link1="Componente5_Espelhar_1" link2="motor_pequeno" reason="Rigid"/>
-    <disable_collisions link1="Componente5_Espelhar_Espelhar" link2="Componente6" reason="Rigid"/>
-    <disable_collisions link1="Componente5_Espelhar_Espelhar" link2="Componente6_Espelhar" reason="Rigid"/>
-    <disable_collisions link1="Componente5_Espelhar_Espelhar" link2="Healical_Gear_20R_0_00_m_1_0" reason="Rigid"/>
-    <disable_collisions link1="Componente5_Espelhar_Espelhar" link2="Healical_Gear_20R_0_00_m_1_0_1" reason="Rigid"/>
-    <disable_collisions link1="Componente5_Espelhar_Espelhar" link2="Healical_Gear_8R_0_00_m_1_0" reason="Rigid"/>
-    <disable_collisions link1="Componente5_Espelhar_Espelhar" link2="motor_pequeno" reason="Rigid"/>
-    <disable_collisions link1="Componente6" link2="Componente6_Espelhar" reason="Rigid"/>
-    <disable_collisions link1="Componente6" link2="Healical_Gear_20R_0_00_m_1_0" reason="Rigid"/>
-    <disable_collisions link1="Componente6" link2="Healical_Gear_20R_0_00_m_1_0_1" reason="Rigid"/>
-    <disable_collisions link1="Componente6" link2="Healical_Gear_8R_0_00_m_1_0" reason="Rigid"/>
-    <disable_collisions link1="Componente6" link2="motor_pequeno" reason="Rigid"/>
-    <disable_collisions link1="Componente6_Espelhar" link2="Healical_Gear_20R_0_00_m_1_0" reason="Rigid"/>
-    <disable_collisions link1="Componente6_Espelhar" link2="Healical_Gear_20R_0_00_m_1_0_1" reason="Rigid"/>
-    <disable_collisions link1="Componente6_Espelhar" link2="Healical_Gear_8R_0_00_m_1_0" reason="Rigid"/>
-    <disable_collisions link1="Componente6_Espelhar" link2="motor_pequeno" reason="Rigid"/>
-    <disable_collisions link1="Healical_Gear_20R_0_00_m_1_0" link2="Healical_Gear_20R_0_00_m_1_0_1" reason="Rigid"/>
-    <disable_collisions link1="Healical_Gear_20R_0_00_m_1_0" link2="Healical_Gear_8R_0_00_m_1_0" reason="Rigid"/>
-    <disable_collisions link1="Healical_Gear_20R_0_00_m_1_0" link2="motor_pequeno" reason="Rigid"/>
-    <disable_collisions link1="Healical_Gear_20R_0_00_m_1_0_1" link2="Healical_Gear_8R_0_00_m_1_0" reason="Rigid"/>
-    <disable_collisions link1="Healical_Gear_20R_0_00_m_1_0_1" link2="motor_pequeno" reason="Rigid"/>
-    <disable_collisions link1="Healical_Gear_8R_0_00_m_1_0" link2="motor_pequeno" reason="Rigid"/>
-    <disable_collisions link1="MOTOR_1" link2="M_dulo_1" reason="Rigid"/>
-    <disable_collisions link1="MOTOR_1" link2="M_dulo_2" reason="CADContact"/>
-    <disable_collisions link1="MOTOR_1" link2="garra_final_showder_servo_horn" reason="Rigid"/>
-    <disable_collisions link1="MOTOR_1" link2="garra_final_showder_servo_horn_2" reason="Adjacent"/>
-    <disable_collisions link1="MOTOR_1_1" link2="M_dulo_2" reason="Rigid"/>
-    <disable_collisions link1="MOTOR_1_1" link2="garra_final_showder_servo_horn_2" reason="Rigid"/>
-    <disable_collisions link1="M_dulo_1" link2="garra_final_showder_servo_horn" reason="Rigid"/>
-    <disable_collisions link1="M_dulo_1" link2="shoulder_motor" reason="CADContact"/>
-    <disable_collisions link1="M_dulo_2" link2="garra_final_showder_servo_horn_2" reason="Rigid"/>
+    <!-- Matriz refeita para a exportacao com J3 paralelo a J1/J2 e colisao pelas malhas visuais.
+         Os dedos estao fixos (J4 ainda nao integrado): cada grupo abaixo e um corpo rigido. So ficam desabilitados
+         pares do mesmo corpo, os adjacentes pela junta e os contatos de encaixe do CAD (secao seguinte). -->
     <disable_collisions link1="base_link" link2="shoulder_motor" reason="Rigid"/>
-    <disable_collisions link1="garra_final_showder_servo_horn" link2="shoulder_motor" reason="Adjacent"/>
-    <disable_collisions link1="ambiente_montagem" link2="base_link" reason="Adjacent"/>
-    <disable_collisions link1="pulso_j3" link2="Caixa_motor_pequeno" reason="Rigid"/>
-    <disable_collisions link1="pulso_j3" link2="motor_pequeno" reason="Rigid"/>
-    <disable_collisions link1="pulso_j3" link2="Componente4_Espelhar" reason="Rigid"/>
-    <disable_collisions link1="pulso_j3" link2="Healical_Gear_20R_0_00_m_1_0" reason="Rigid"/>
-    <disable_collisions link1="pulso_j3" link2="Healical_Gear_20R_0_00_m_1_0_1" reason="Rigid"/>
-    <disable_collisions link1="pulso_j3" link2="Healical_Gear_8R_0_00_m_1_0" reason="Rigid"/>
-    <disable_collisions link1="pulso_j3" link2="Componente5_Espelhar_1" reason="Rigid"/>
-    <disable_collisions link1="pulso_j3" link2="Componente5_Espelhar_Espelhar" reason="Rigid"/>
-    <disable_collisions link1="pulso_j3" link2="Componente5" reason="Rigid"/>
-    <disable_collisions link1="pulso_j3" link2="Componente5_Espelhar" reason="Rigid"/>
-    <disable_collisions link1="pulso_j3" link2="Componente4" reason="Rigid"/>
-    <disable_collisions link1="pulso_j3" link2="Componente6_Espelhar" reason="Rigid"/>
-    <disable_collisions link1="pulso_j3" link2="Componente6" reason="Rigid"/>
-    <disable_collisions link1="pulso_j3" link2="MOTOR_1_1" reason="Adjacent"/>
-    <disable_collisions link1="pulso_j3" link2="M_dulo_2" reason="Adjacent"/>
+    <disable_collisions link1="garra_final_showder_servo_horn" link2="M_dulo_1" reason="Rigid"/>
+    <disable_collisions link1="garra_final_showder_servo_horn" link2="MOTOR_1" reason="Rigid"/>
+    <disable_collisions link1="M_dulo_1" link2="MOTOR_1" reason="Rigid"/>
+    <disable_collisions link1="garra_final_showder_servo_horn_2" link2="M_dulo_2" reason="Rigid"/>
+    <disable_collisions link1="garra_final_showder_servo_horn_2" link2="MOTOR_1_1" reason="Rigid"/>
+    <disable_collisions link1="M_dulo_2" link2="MOTOR_1_1" reason="Rigid"/>
+    <disable_collisions link1="garra_final_showder_servo_horn_3" link2="Base" reason="Rigid"/>
+    <disable_collisions link1="garra_final_showder_servo_horn_3" link2="Motor" reason="Rigid"/>
+    <disable_collisions link1="garra_final_showder_servo_horn_3" link2="Engr_1" reason="Rigid"/>
+    <disable_collisions link1="garra_final_showder_servo_horn_3" link2="Engr_2" reason="Rigid"/>
+    <disable_collisions link1="garra_final_showder_servo_horn_3" link2="Junta" reason="Rigid"/>
+    <disable_collisions link1="garra_final_showder_servo_horn_3" link2="Junta_1" reason="Rigid"/>
+    <disable_collisions link1="garra_final_showder_servo_horn_3" link2="Junta_1_1" reason="Rigid"/>
+    <disable_collisions link1="garra_final_showder_servo_horn_3" link2="Junta_2" reason="Rigid"/>
+    <disable_collisions link1="garra_final_showder_servo_horn_3" link2="P_1" reason="Rigid"/>
+    <disable_collisions link1="garra_final_showder_servo_horn_3" link2="P_1_1" reason="Rigid"/>
+    <disable_collisions link1="Base" link2="Motor" reason="Rigid"/>
+    <disable_collisions link1="Base" link2="Engr_1" reason="Rigid"/>
+    <disable_collisions link1="Base" link2="Engr_2" reason="Rigid"/>
+    <disable_collisions link1="Base" link2="Junta" reason="Rigid"/>
+    <disable_collisions link1="Base" link2="Junta_1" reason="Rigid"/>
+    <disable_collisions link1="Base" link2="Junta_1_1" reason="Rigid"/>
+    <disable_collisions link1="Base" link2="Junta_2" reason="Rigid"/>
+    <disable_collisions link1="Base" link2="P_1" reason="Rigid"/>
+    <disable_collisions link1="Base" link2="P_1_1" reason="Rigid"/>
+    <disable_collisions link1="Motor" link2="Engr_1" reason="Rigid"/>
+    <disable_collisions link1="Motor" link2="Engr_2" reason="Rigid"/>
+    <disable_collisions link1="Motor" link2="Junta" reason="Rigid"/>
+    <disable_collisions link1="Motor" link2="Junta_1" reason="Rigid"/>
+    <disable_collisions link1="Motor" link2="Junta_1_1" reason="Rigid"/>
+    <disable_collisions link1="Motor" link2="Junta_2" reason="Rigid"/>
+    <disable_collisions link1="Motor" link2="P_1" reason="Rigid"/>
+    <disable_collisions link1="Motor" link2="P_1_1" reason="Rigid"/>
+    <disable_collisions link1="Engr_1" link2="Engr_2" reason="Rigid"/>
+    <disable_collisions link1="Engr_1" link2="Junta" reason="Rigid"/>
+    <disable_collisions link1="Engr_1" link2="Junta_1" reason="Rigid"/>
+    <disable_collisions link1="Engr_1" link2="Junta_1_1" reason="Rigid"/>
+    <disable_collisions link1="Engr_1" link2="Junta_2" reason="Rigid"/>
+    <disable_collisions link1="Engr_1" link2="P_1" reason="Rigid"/>
+    <disable_collisions link1="Engr_1" link2="P_1_1" reason="Rigid"/>
+    <disable_collisions link1="Engr_2" link2="Junta" reason="Rigid"/>
+    <disable_collisions link1="Engr_2" link2="Junta_1" reason="Rigid"/>
+    <disable_collisions link1="Engr_2" link2="Junta_1_1" reason="Rigid"/>
+    <disable_collisions link1="Engr_2" link2="Junta_2" reason="Rigid"/>
+    <disable_collisions link1="Engr_2" link2="P_1" reason="Rigid"/>
+    <disable_collisions link1="Engr_2" link2="P_1_1" reason="Rigid"/>
+    <disable_collisions link1="Junta" link2="Junta_1" reason="Rigid"/>
+    <disable_collisions link1="Junta" link2="Junta_1_1" reason="Rigid"/>
+    <disable_collisions link1="Junta" link2="Junta_2" reason="Rigid"/>
+    <disable_collisions link1="Junta" link2="P_1" reason="Rigid"/>
+    <disable_collisions link1="Junta" link2="P_1_1" reason="Rigid"/>
+    <disable_collisions link1="Junta_1" link2="Junta_1_1" reason="Rigid"/>
+    <disable_collisions link1="Junta_1" link2="Junta_2" reason="Rigid"/>
+    <disable_collisions link1="Junta_1" link2="P_1" reason="Rigid"/>
+    <disable_collisions link1="Junta_1" link2="P_1_1" reason="Rigid"/>
+    <disable_collisions link1="Junta_1_1" link2="Junta_2" reason="Rigid"/>
+    <disable_collisions link1="Junta_1_1" link2="P_1" reason="Rigid"/>
+    <disable_collisions link1="Junta_1_1" link2="P_1_1" reason="Rigid"/>
+    <disable_collisions link1="Junta_2" link2="P_1" reason="Rigid"/>
+    <disable_collisions link1="Junta_2" link2="P_1_1" reason="Rigid"/>
+    <disable_collisions link1="P_1" link2="P_1_1" reason="Rigid"/>
+    <disable_collisions link1="shoulder_motor" link2="garra_final_showder_servo_horn" reason="Adjacent"/>
+    <disable_collisions link1="MOTOR_1" link2="garra_final_showder_servo_horn_2" reason="Adjacent"/>
+    <disable_collisions link1="MOTOR_1_1" link2="garra_final_showder_servo_horn_3" reason="Adjacent"/>
+    <!-- Encaixes do CAD: em contato nas 343 poses da varredura (corpos vizinhos, montados encostados). -->
+    <disable_collisions link1="M_dulo_1" link2="shoulder_motor" reason="CADContact"/>
+    <disable_collisions link1="Base" link2="MOTOR_1_1" reason="CADContact"/>
+    <!-- Estrutura do robo: so os links fixos da base da garra sao liberados. -->
+    <disable_collisions link1="robo_base" link2="base_link" reason="Adjacent"/>
+    <disable_collisions link1="robo_base" link2="shoulder_motor" reason="Rigid"/>
 </robot>
 

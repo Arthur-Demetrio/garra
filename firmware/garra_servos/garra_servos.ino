@@ -4,10 +4,16 @@
 //   V                    -> responde "GARRA 1"
 //   M <j1> <j2> <j3>*HH  -> pulsos em us; 0 = nao alterar a junta. HH = XOR, em hexadecimal,
 //                           de todos os bytes antes do '*'. Responde "K", ou "E <motivo>".
+//   <motor>,<angulo>     -> comando manual do time (ex.: "1,90"): motor 1 a 3, angulo 0 a 180
+//                           no mesmo padrao do Servo.write. Para testes pelo Monitor Serial
+//                           (115200 baud, final de linha "Nova linha"). Nao usa a calibracao!
 //
 // Seguranca:
-//  - Um servo so recebe sinal depois do primeiro pulso valido para ele.
-//  - O pulso muda no maximo MAX_US_POR_S, mesmo que o comando salte.
+//  - Ao ligar, todos os servos vao para 90 graus (PULSO_INICIAL), como no sketch do time. Esse
+//    primeiro movimento e na velocidade maxima do servo, porque nao se sabe onde ele esta.
+//    Dai em diante todo movimento, inclusive o primeiro comando, respeita a velocidade abaixo.
+//  - Velocidade do time (firmware/ino atual): 1 grau (~10 us) a cada 40 ms, ~25 graus/s,
+//    em qualquer tipo de comando. Nao bloqueia: os tres servos andam juntos.
 //  - Se a comunicacao cair, os servos mantem a ultima posicao: soltar deixaria o braco cair.
 
 #include <Servo.h>
@@ -17,13 +23,17 @@ const uint8_t PINOS[3] = {9, 10, 11};
 
 const int PULSO_MIN = 500;
 const int PULSO_MAX = 2500;
-const int MAX_US_POR_S = 200;
-const unsigned long PERIODO_MS = 20;
-const int PASSO_US = (long)MAX_US_POR_S * PERIODO_MS / 1000;
+const unsigned long PERIODO_MS = 40;  // INTERVALO_MOVIMENTO_MS do time
+const int PASSO_US = 10;              // ~1 grau: (2400 - 544) / 180 = 10.31 us por grau
+
+// Conversao do Servo.write (angulo em graus -> pulso), para o comando manual.
+const int SERVO_WRITE_MIN = 544;
+const int SERVO_WRITE_MAX = 2400;
+const int PULSO_INICIAL = 1472;  // 90 graus no Servo.write = q=0 do modelo (vertical)
 
 Servo servos[3];
-int alvo[3] = {0, 0, 0};
-int atual[3] = {0, 0, 0};
+int alvo[3];
+int atual[3];
 
 char linha[48];
 uint8_t tamanho = 0;
@@ -32,12 +42,6 @@ unsigned long ultimo_passo = 0;
 
 void aplicar(uint8_t i, int pulso) {
   alvo[i] = pulso;
-  if (atual[i] == 0) {
-    // Define o pulso antes do attach para o servo nao ir ao padrao da biblioteca (1500 us).
-    atual[i] = pulso;
-    servos[i].writeMicroseconds(pulso);
-    servos[i].attach(PINOS[i], PULSO_MIN, PULSO_MAX);
-  }
 }
 
 int hexa(char c) {
@@ -95,11 +99,43 @@ void comando_movimento() {
   Serial.println(F("K"));
 }
 
+// "<motor>,<angulo>", como no sketch do time.
+bool comando_manual() {
+  const char *p = linha;
+  long motor = ler_numero(p);
+  if (motor < 0 || *p != ',') return false;
+  p++;
+  long angulo = ler_numero(p);
+  if (angulo < 0 || *p != '\0') {
+    Serial.println(F("Erro: formato invalido! Use [motor],[angulo], ex.: 1,90"));
+    return true;
+  }
+  if (motor < 1 || motor > 3) {
+    Serial.println(F("Erro: Motor invalido! Escolha 1, 2 ou 3."));
+    return true;
+  }
+  if (angulo > 180) {
+    Serial.println(F("Erro: Angulo invalido! Digite entre 0 e 180."));
+    return true;
+  }
+  int pulso = SERVO_WRITE_MIN + (int)((long)angulo * (SERVO_WRITE_MAX - SERVO_WRITE_MIN) / 180);
+  aplicar((uint8_t)(motor - 1), pulso);
+  Serial.print(F("-> Motor "));
+  Serial.print(motor);
+  Serial.print(F(" indo para "));
+  Serial.print(angulo);
+  Serial.print(F(" graus ("));
+  Serial.print(pulso);
+  Serial.println(F(" us)"));
+  return true;
+}
+
 void processar_linha() {
   if (strcmp(linha, "V") == 0) {
     Serial.println(F("GARRA 1"));
   } else if (linha[0] == 'M') {
     comando_movimento();
+  } else if (comando_manual()) {
   } else {
     Serial.println(F("E comando"));
   }
@@ -107,6 +143,12 @@ void processar_linha() {
 
 void setup() {
   Serial.begin(115200);
+  for (uint8_t i = 0; i < 3; i++) {
+    // Define o pulso antes do attach para o servo nao ir ao padrao da biblioteca (1500 us).
+    atual[i] = alvo[i] = PULSO_INICIAL;
+    servos[i].writeMicroseconds(PULSO_INICIAL);
+    servos[i].attach(PINOS[i], PULSO_MIN, PULSO_MAX);
+  }
 }
 
 void loop() {
@@ -133,7 +175,7 @@ void loop() {
   if (agora - ultimo_passo >= PERIODO_MS) {
     ultimo_passo = agora;
     for (uint8_t i = 0; i < 3; i++) {
-      if (atual[i] == 0 || atual[i] == alvo[i]) continue;
+      if (atual[i] == alvo[i]) continue;
       int erro = alvo[i] - atual[i];
       if (erro > PASSO_US) erro = PASSO_US;
       if (erro < -PASSO_US) erro = -PASSO_US;

@@ -28,14 +28,14 @@ from rclpy.node import Node
 from sensor_msgs.msg import JointState
 
 
-JUNTAS = ['Revolucionar_46', 'Revolucionar_49', 'Revolucionar_52']
+JUNTAS = ['Revolucionar_46', 'Revolucionar_49', 'Revolucionar_72']
 LIMITES = [(-1.5708, 1.5708), (-1.5708, 1.5708), (-1.5708, 1.5708)]
 GRUPO = 'garra'
 TCP = 'tool0'
 BASE = 'base_link'
 
 HOME = [0.0, 0.0, 0.0]
-PRONTA = [0.2, -1.1, 0.2]  # garra para a frente, quase horizontal
+PRONTA = [0.2, -1.1, -0.2]  # garra para a frente, quase horizontal
 
 SUCESSO = MoveItErrorCodes.SUCCESS
 

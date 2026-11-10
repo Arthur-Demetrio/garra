@@ -48,7 +48,7 @@ A garra possui quatro eixos de movimentação, controlados por quatro servomotor
 |---|---|---|---|
 | J1 | `Revolucionar_46` | Movimento do primeiro segmento do braço | Em desenvolvimento |
 | J2 | `Revolucionar_49` | Movimento do segundo segmento do braço | Em desenvolvimento |
-| J3 | `Revolucionar_52` | Movimento do pulso, permitindo inclinar a garra para cima e para baixo | Em desenvolvimento |
+| J3 | `Revolucionar_72` | Movimento do pulso, permitindo inclinar a garra para cima e para baixo | Em desenvolvimento |
 | J4 | A definir | Abertura e fechamento da garra | Ainda não integrado |
 
 O J4 utilizará um modelo de servo diferente dos três primeiros. Sua integração será realizada separadamente, após a identificação de suas características elétricas e mecânicas.

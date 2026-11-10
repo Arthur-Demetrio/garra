@@ -112,7 +112,7 @@ A configuração usada pelos scripts e pelo MoveIt é:
 | TCP (ponta/ferramenta) | `tool0` |
 | Junta 1 | `Revolucionar_46` |
 | Junta 2 | `Revolucionar_49` |
-| Junta 3 | `Revolucionar_52` |
+| Junta 3 | `Revolucionar_72` |
 
 A garra é planar: os três eixos de junta são paralelos. O movimento do TCP ocorre no plano X–Z e a coordenada Y permanece fixa. Portanto, um deslocamento cartesiano em Y não é esperado ser executável.
 

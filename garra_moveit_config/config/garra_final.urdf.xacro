@@ -10,44 +10,109 @@
     <!-- Importa a descrição original do robô -->
     <xacro:include filename="$(find garra_final_description)/urdf/garra_final.urdf" />
 
-    <!-- Ambiente de montagem, so para o MoveIt. Fica aqui, e nao na URDF exportada, para
-         sobreviver a uma nova exportacao do CAD. A frente do robo e a borda da placa, -X da base (estimado pelas fotos).
-         Superficie: plano com o topo folga_montagem acima da base da garra, maior que o alcance.
-         Corpo do robo: volume provisorio atras da base; ajuste com as medidas reais.
-         A folga absorve tremor da montagem; a base e o unico link liberado contra este link. -->
-    <xacro:property name="folga_montagem" value="0.010"/>
-    <xacro:property name="z_apoio" value="0.003"/>
-    <xacro:property name="x_corpo_robo" value="0.070"/>
-    <xacro:property name="topo" value="${z_apoio + folga_montagem}"/>
+    <!-- TCP: ponto medio entre as pontas dos dedos na pose do CAD (dedos fixos, levemente assimetricos),
+         a ~138 mm do eixo de J3.
+         Fica aqui para sobreviver a uma nova exportacao do CAD. Pai: Base, o corpo da garra apos J3.
+         Z aponta na direcao de aproximacao (de J3 para o TCP, perpendicular a J3);
+         X fica na direcao de fechamento dos dedos. -->
+    <link name="tool0"/>
+    <joint name="tool0_fixed" type="fixed">
+        <parent link="Base"/>
+        <child link="tool0"/>
+        <origin xyz="-0.058 -0.1337 -0.0103" rpy="1.6712 0 0"/>
+    </joint>
 
-    <material name="ambiente_montagem">
-        <color rgba="0.5 0.6 0.7 0.35"/>
+    <!-- Estrutura do robo movel (dimensoes.md), so para o MoveIt. Fica aqui, e nao na URDF
+         exportada, para sobreviver a uma nova exportacao do CAD.
+         Frame "robo_base": centro da base do robo no chao; X frente, Y esquerda, Z cima.
+         Todas as geometrias sao caixas simples de colisao. Valores marcados PENDENTE sao
+         estimativas conservadoras ate a medicao fisica (ver dimensoes.md, secao 6). -->
+
+    <!-- Base -->
+    <xacro:property name="base_x" value="0.55"/>
+    <xacro:property name="base_y" value="0.50"/>
+    <xacro:property name="base_topo" value="0.100"/>
+    <!-- PENDENTE: espessura da base. Modelada como bloco solido do chao ao topo. -->
+    <xacro:property name="base_esp" value="${base_topo}"/>
+
+    <!-- Andares (alinhados a borda traseira, X = -base_x/2) -->
+    <xacro:property name="esp_andar" value="0.01"/>
+    <xacro:property name="a1_x" value="0.39"/>
+    <xacro:property name="a1_topo" value="0.270"/>
+    <xacro:property name="a2_x" value="0.21"/>
+    <xacro:property name="a2_topo" value="0.370"/>
+
+    <!-- Suportes do 1o andar: 0.02 (X) x 0.05 (Y), do topo da base ao fundo do 1o andar -->
+    <xacro:property name="s1_x_frente" value="0.050"/>
+    <xacro:property name="s1_x_tras" value="-0.205"/>
+    <!-- PENDENTE: Y dos suportes do 1o andar. Assumido rente a borda lateral. -->
+    <xacro:property name="s1_y" value="0.225"/>
+
+    <!-- Suportes do 2o andar: 0.05 (X) x 0.02 (Y), do topo do 1o andar ao fundo do 2o -->
+    <xacro:property name="s2_x_frente" value="-0.090"/>
+    <xacro:property name="s2_x_tras" value="-0.250"/>
+    <xacro:property name="s2_y" value="0.240"/>
+
+    <!-- Montagem da garra: 0.05 m atras da borda dianteira, no centro, sobre a base.
+         A frente da garra e -X do base_link, por isso yaw = pi.
+         O fundo da malha do base_link fica 5.4 mm acima da origem; descontado para apoiar
+         a garra exatamente no topo da base. -->
+    <xacro:property name="garra_x" value="${base_x/2 - 0.050}"/>
+    <xacro:property name="garra_z_malha" value="0.0054"/>
+
+    <xacro:macro name="caixa" params="x y z sx sy sz">
+        <visual>
+            <origin xyz="${x} ${y} ${z}"/>
+            <geometry><box size="${sx} ${sy} ${sz}"/></geometry>
+            <material name="estrutura_robo"/>
+        </visual>
+        <collision>
+            <origin xyz="${x} ${y} ${z}"/>
+            <geometry><box size="${sx} ${sy} ${sz}"/></geometry>
+        </collision>
+    </xacro:macro>
+
+    <xacro:macro name="andar" params="lx topo">
+        <xacro:caixa x="${-base_x/2 + lx/2}" y="0" z="${topo - esp_andar/2}"
+                     sx="${lx}" sy="${base_y}" sz="${esp_andar}"/>
+    </xacro:macro>
+
+    <xacro:macro name="suporte" params="x y sx sy z0 z1">
+        <xacro:caixa x="${x}" y="${y}" z="${(z0 + z1)/2}" sx="${sx}" sy="${sy}" sz="${z1 - z0}"/>
+    </xacro:macro>
+
+    <material name="estrutura_robo">
+        <color rgba="0.5 0.6 0.7 0.45"/>
     </material>
 
-    <link name="ambiente_montagem">
-        <visual>
-            <origin xyz="0 0 ${topo - 0.01}"/>
-            <geometry><box size="1.0 1.0 0.02"/></geometry>
-            <material name="ambiente_montagem"/>
-        </visual>
-        <visual>
-            <origin xyz="${x_corpo_robo + 0.25} 0 ${topo + 0.3}"/>
-            <geometry><box size="0.5 1.0 0.6"/></geometry>
-            <material name="ambiente_montagem"/>
-        </visual>
+    <!-- Raiz da arvore: estrutura do robo movel -->
+    <link name="robo_base">
+        <!-- Chao (Z = 0): 2 x 2 m, so colisao. A garra passa da borda dianteira e alcanca o piso. -->
         <collision>
-            <origin xyz="0 0 ${topo - 0.01}"/>
-            <geometry><box size="1.0 1.0 0.02"/></geometry>
+            <origin xyz="0 0 -0.01"/>
+            <geometry><box size="2.0 2.0 0.02"/></geometry>
         </collision>
-        <collision>
-            <origin xyz="${x_corpo_robo + 0.25} 0 ${topo + 0.3}"/>
-            <geometry><box size="0.5 1.0 0.6"/></geometry>
-        </collision>
+        <!-- Base -->
+        <xacro:caixa x="0" y="0" z="${base_topo - base_esp/2}" sx="${base_x}" sy="${base_y}" sz="${base_esp}"/>
+        <!-- Andares -->
+        <xacro:andar lx="${a1_x}" topo="${a1_topo}"/>
+        <xacro:andar lx="${a2_x}" topo="${a2_topo}"/>
+        <!-- Suportes do 1o andar -->
+        <xacro:suporte x="${s1_x_frente}" y="${ s1_y}" sx="0.02" sy="0.05" z0="${base_topo}" z1="${a1_topo - esp_andar}"/>
+        <xacro:suporte x="${s1_x_frente}" y="${-s1_y}" sx="0.02" sy="0.05" z0="${base_topo}" z1="${a1_topo - esp_andar}"/>
+        <xacro:suporte x="${s1_x_tras}"   y="${ s1_y}" sx="0.02" sy="0.05" z0="${base_topo}" z1="${a1_topo - esp_andar}"/>
+        <xacro:suporte x="${s1_x_tras}"   y="${-s1_y}" sx="0.02" sy="0.05" z0="${base_topo}" z1="${a1_topo - esp_andar}"/>
+        <!-- Suportes do 2o andar -->
+        <xacro:suporte x="${s2_x_frente}" y="${ s2_y}" sx="0.05" sy="0.02" z0="${a1_topo}" z1="${a2_topo - esp_andar}"/>
+        <xacro:suporte x="${s2_x_frente}" y="${-s2_y}" sx="0.05" sy="0.02" z0="${a1_topo}" z1="${a2_topo - esp_andar}"/>
+        <xacro:suporte x="${s2_x_tras}"   y="${ s2_y}" sx="0.05" sy="0.02" z0="${a1_topo}" z1="${a2_topo - esp_andar}"/>
+        <xacro:suporte x="${s2_x_tras}"   y="${-s2_y}" sx="0.05" sy="0.02" z0="${a1_topo}" z1="${a2_topo - esp_andar}"/>
     </link>
 
-    <joint name="ambiente_montagem_fixo" type="fixed">
-        <parent link="base_link"/>
-        <child link="ambiente_montagem"/>
+    <joint name="montagem_garra" type="fixed">
+        <parent link="robo_base"/>
+        <child link="base_link"/>
+        <origin xyz="${garra_x} 0 ${base_topo - garra_z_malha}" rpy="0 0 ${pi}"/>
     </joint>
 
     <!-- Interface ros2_control (unica definicao do sistema) -->

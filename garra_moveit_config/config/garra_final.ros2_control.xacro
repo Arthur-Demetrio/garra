@@ -25,7 +25,7 @@
             </hardware>
             <xacro:garra_final_junta nome="Revolucionar_46" inicial="${inicial}" calibracao="${calibracao}"/>
             <xacro:garra_final_junta nome="Revolucionar_49" inicial="${inicial}" calibracao="${calibracao}"/>
-            <xacro:garra_final_junta nome="Revolucionar_52" inicial="${inicial}" calibracao="${calibracao}"/>
+            <xacro:garra_final_junta nome="Revolucionar_72" inicial="${inicial}" calibracao="${calibracao}"/>
         </ros2_control>
     </xacro:macro>
 </robot>

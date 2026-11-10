@@ -20,7 +20,7 @@ TOL_POSICAO = 0.001   # m: erro aceito da IK
 TOL_RETA = 0.001      # m: desvio aceito em relacao a reta pedida
 TOL_FINAL = 0.03      # rad: erro de junta aceito ao fim de uma execucao
 MIN_IK = 0.95         # o KDL e aleatorio e pode estourar o tempo perto dos limites
-TCP_HOME = (-0.0252, 0.0205, 0.4386)  # m: braco e garra na vertical, com as medidas da montagem
+TCP_HOME = (-0.0710, 0.0290, 0.4245)  # m, em base_link: pose do CAD (servos em 90 graus), dedos fixos
 
 
 class Relatorio:
@@ -49,8 +49,11 @@ def testar_tcp(c, r):
     r.secao('TCP')
     erro = distancia(xyz(c.fk(HOME)), TCP_HOME)
     r.item(erro < 0.001, f'tool0 na ponta da garra em q=0 (erro {erro * 1000:.2f} mm)')
+    # Sentido da garra fisica: J3 positiva dobra a garra para a frente (-X), como J1.
+    # O eixo vem corrigido por scripts/ajustar_urdf.py (EIXOS).
     d = xyz(c.fk([0.0, 0.0, math.pi / 2]))
-    r.item(d[0] < TCP_HOME[0] - 0.15, f'J3 positiva leva a garra para a frente (X={d[0]:.3f})')
+    # A garra ja parte inclinada ~25 graus para a frente, entao o TCP avanca ~7 cm em X.
+    r.item(d[0] < TCP_HOME[0] - 0.05, f'J3 positiva leva a garra para a frente, -X (X={d[0]:.3f})')
 
 
 def testar_colisao(c, r):
@@ -58,8 +61,8 @@ def testar_colisao(c, r):
     for nome, q, esperado in [
         ('home (q=0)', HOME, True),
         ('pronta', PRONTA, True),
-        ('dobrado para baixo: contra a superficie', [math.pi / 2, 0.0, math.pi / 2], False),
-        ('J1=-30 graus: contra o volume do robo', [math.radians(-30), 0.0, 0.0], False),
+        ('esticado para a frente e para baixo: contra o chao', [1.5, -1.5, -0.5], False),
+        ('J1=-60 graus: contra a estrutura do robo', [math.radians(-60), 0.0, 0.0], False),
     ]:
         valido, pares = c.valido(q)
         detalhe = f' {pares[:2]}' if pares else ''

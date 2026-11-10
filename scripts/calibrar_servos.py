@@ -4,8 +4,9 @@ Fale direto com o firmware: NAO rode com o ROS usando a mesma porta.
 
     python3 scripts/calibrar_servos.py --versao 180 [--porta /dev/ttyACM0]
 
-Cuidado: ao selecionar uma junta, o servo vai direto ao pulso inicial (1500 us, ou o zero ja
-medido). So as juntas selecionadas recebem sinal. Comece com o elo livre para nao bater, e
+Cuidado: ao abrir a porta o Arduino reinicia e os tres servos vao para 90 graus (1472 us) na
+velocidade maxima. Ao selecionar uma junta, ela vai ao zero ja medido, se houver. O comando <motor>,<angulo> (padrao do firmware do time) leva o servo direto ao
+angulo; o firmware limita a velocidade (~25 graus/s), mas nao o destino. Comece com o elo livre para nao bater, e
 mantenha a mao na fonte. Os passos sao limitados a MAX_PASSO; a faixa e por sua conta: pare
 antes de forcar a estrutura ou os cabos.
 """
@@ -19,17 +20,25 @@ import termios
 import time
 
 
-JUNTAS = ['Revolucionar_46', 'Revolucionar_49', 'Revolucionar_52']
+JUNTAS = ['Revolucionar_46', 'Revolucionar_49', 'Revolucionar_72']
 MAX_PASSO = 50
 PULSO_MIN = 500
 PULSO_MAX = 2500
+# Conversao do Servo.write, a mesma do comando manual do firmware.
+SERVO_WRITE_MIN = 544
+SERVO_WRITE_MAX = 2400
+US_POR_GRAU = (SERVO_WRITE_MAX - SERVO_WRITE_MIN) / 180
+PULSO_INICIAL = SERVO_WRITE_MIN + round(90 * US_POR_GRAU)  # 1472 us
+GRAUS_POR_S = 25  # velocidade do firmware: 1 grau a cada 40 ms
 SAIDA_PADRAO = os.path.join(
     os.path.dirname(os.path.abspath(__file__)),
     '..', 'garra_moveit_config', 'config', 'calibracao_servos.yaml')
 
 AJUDA = """Comandos:
+  <motor>,<angulo>  seleciona a junta e leva ao angulo de 0 a 180 (ex.: 1,90), como no
+                    Monitor Serial. Salta direto: confira o caminho antes
   j <1|2|3>     seleciona a junta
-  + [us] / - [us]  move o pulso (padrao 10 us, maximo por comando: {passo} us)
+  + [us] / - [us]  ajuste fino do pulso (padrao 10 us ~ 1 grau, maximo por comando: {passo} us)
   zero          marca o pulso atual como a pose q=0 do CAD
   min / max     marca o pulso atual como limite inferior / superior de pulso
   sentido <+|-> + se o angulo da junta no modelo cresce quando o pulso cresce
@@ -79,6 +88,14 @@ class Firmware:
         return self._linha(1.0)
 
 
+def graus(pulso):
+    return (pulso - SERVO_WRITE_MIN) / US_POR_GRAU
+
+
+def descrever(pulso):
+    return f'{pulso} us (~{graus(pulso):.1f} graus)'
+
+
 def faltando(m):
     return [k for k in ('zero', 'min', 'max', 'sentido') if k not in m]
 
@@ -124,6 +141,25 @@ def main():
         if not partes:
             continue
         cmd = partes[0]
+        if ',' in linha:
+            texto = linha.replace(' ', '').strip()
+            motor, _, angulo = texto.partition(',')
+            if motor not in ('1', '2', '3') or not angulo.isdigit():
+                print('Use: <motor>,<angulo>, ex.: 1,90 (motor 1 a 3)')
+                continue
+            if int(angulo) > 180:
+                print('Angulo invalido! Digite entre 0 e 180.')
+                continue
+            atual = int(motor) - 1
+            antes = pulsos[atual]
+            pulsos[atual] = SERVO_WRITE_MIN + round(int(angulo) * US_POR_GRAU)
+            if enviar():
+                t = abs(pulsos[atual] - antes) / US_POR_GRAU / GRAUS_POR_S if antes else 0
+                print(f'-> Motor {motor} ({JUNTAS[atual]}) indo para {descrever(pulsos[atual])}'
+                      + (f', ~{t:.1f} s' if t >= 0.5 else ''))
+            else:
+                pulsos[atual] = antes
+            continue
         if cmd == 'sair':
             break
         if cmd == 'salvar':
@@ -139,8 +175,13 @@ def main():
                 print(f'Gravado em {args.saida}. Recompile se nao usar --symlink-install.')
             continue
         if cmd == 'estado':
-            for nome in JUNTAS:
-                print(f'{nome}: {medidas[nome]}')
+            for i, nome in enumerate(JUNTAS):
+                m = medidas[nome]
+                campos = [f'{k} {descrever(m[k])}' for k in ('zero', 'min', 'max') if k in m]
+                if 'sentido' in m:
+                    campos.append('sentido ' + ('+' if m['sentido'] > 0 else '-'))
+                marca = '>' if i == atual else ' '
+                print(f'{marca} {i + 1} {nome}: ' + (', '.join(campos) or 'nada medido'))
             continue
         if cmd == 'j':
             if len(partes) != 2 or partes[1] not in ('1', '2', '3'):
@@ -148,9 +189,9 @@ def main():
                 continue
             atual = int(partes[1]) - 1
             if pulsos[atual] == 0:
-                pulsos[atual] = medidas[JUNTAS[atual]].get('zero', 1500)
+                pulsos[atual] = medidas[JUNTAS[atual]].get('zero', PULSO_INICIAL)
                 enviar()
-            print(f'{JUNTAS[atual]}: pulso {pulsos[atual]} us')
+            print(f'{JUNTAS[atual]}: pulso {descrever(pulsos[atual])}')
             continue
         if atual is None:
             print('Selecione uma junta antes: j 1, j 2 ou j 3')
@@ -171,10 +212,10 @@ def main():
                 continue
             pulsos[atual] = novo
             enviar()
-            print(f'pulso {novo} us')
+            print(f'pulso {descrever(novo)}')
         elif cmd in ('zero', 'min', 'max'):
             m[cmd] = pulsos[atual]
-            print(f'{cmd} = {pulsos[atual]} us')
+            print(f'{cmd} = {descrever(pulsos[atual])}')
         elif cmd == 'sentido' and len(partes) == 2 and partes[1] in ('+', '-'):
             m['sentido'] = 1 if partes[1] == '+' else -1
             print(f'sentido {partes[1]}')

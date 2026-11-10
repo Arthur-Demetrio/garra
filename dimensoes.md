@@ -122,8 +122,8 @@ Posicionamento dos centros:
 
 | Posição | X | Y |
 |---|---:|---:|
-| Dianteiro esquerdo | −0,040 m | +0,240 m |
-| Dianteiro direito | −0,040 m | −0,240 m |
+| Dianteiro esquerdo | −0,090 m | +0,240 m |
+| Dianteiro direito | −0,090 m | −0,240 m |
 | Traseiro esquerdo | −0,250 m | +0,240 m |
 | Traseiro direito | −0,250 m | −0,240 m |
 

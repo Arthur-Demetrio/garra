@@ -7,4 +7,4 @@
 juntas:
   Revolucionar_46: {zero_us: 1472, us_por_rad: -590.6, min_us: 1400, max_us: 1600}
   Revolucionar_49: {zero_us: 1472, us_por_rad: -590.6, min_us: 1400, max_us: 1600}
-  Revolucionar_52: {zero_us: 1472, us_por_rad: -590.6, min_us: 1400, max_us: 1600}
+  Revolucionar_72: {zero_us: 1472, us_por_rad: -590.6, min_us: 1400, max_us: 1600}

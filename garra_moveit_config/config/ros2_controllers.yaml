@@ -15,7 +15,7 @@ joint_trajectory_controller:
     joints:
       - Revolucionar_46
       - Revolucionar_49
-      - Revolucionar_52
+      - Revolucionar_72
     command_interfaces:
       - position
     state_interfaces:
@@ -27,4 +27,4 @@ joint_trajectory_controller:
       goal_time: 1.0
       Revolucionar_46: {trajectory: 0.1, goal: 0.03}
       Revolucionar_49: {trajectory: 0.1, goal: 0.03}
-      Revolucionar_52: {trajectory: 0.1, goal: 0.03}
+      Revolucionar_72: {trajectory: 0.1, goal: 0.03}
