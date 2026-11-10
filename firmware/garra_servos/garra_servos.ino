@@ -1,10 +1,11 @@
-// Firmware da garra para Arduino Mega: recebe pulsos pela serial e aciona 3 servos DS3218MG.
+// Firmware da garra para Arduino Mega: recebe pulsos pela serial e aciona 3 servos DS3218MG
+// (J1-J3) e o servo DS-S006MP dos dedos (J4).
 //
 // Protocolo (115200 baud, linhas terminadas em \n):
 //   V                    -> responde "GARRA 1"
-//   M <j1> <j2> <j3>*HH  -> pulsos em us; 0 = nao alterar a junta. HH = XOR, em hexadecimal,
+//   M <j1> <j2> <j3> [<j4>]*HH -> pulsos em us; o J4 (dedos) e opcional. 0 = nao alterar a junta. HH = XOR, em hexadecimal,
 //                           de todos os bytes antes do '*'. Responde "K", ou "E <motivo>".
-//   <motor>,<angulo>     -> comando manual do time (ex.: "1,90"): motor 1 a 3, angulo 0 a 180
+//   <motor>,<angulo>     -> comando manual do time (ex.: "1,90"): motor 1 a 4, angulo 0 a 180
 //                           no mesmo padrao do Servo.write. Para testes pelo Monitor Serial
 //                           (115200 baud, final de linha "Nova linha"). Nao usa a calibracao!
 //
@@ -19,7 +20,10 @@
 #include <Servo.h>
 
 // Mesmos pinos do sketch atual (firmware/ino atual/garra/garra.ino): motor 1 = J1, 2 = J2, 3 = J3.
-const uint8_t PINOS[3] = {9, 10, 11};
+// Motor 4 = J4 (dedos), DS-S006MP no pino 12: ~90 graus de curso util em 500-2500 us, entao o
+// angulo do comando manual nao e o angulo real do servo. Alimentar com 4,8 a 6 V.
+const uint8_t N_SERVOS = 4;
+const uint8_t PINOS[N_SERVOS] = {9, 10, 11, 12};
 
 const int PULSO_MIN = 500;
 const int PULSO_MAX = 2500;
@@ -31,9 +35,9 @@ const int SERVO_WRITE_MIN = 544;
 const int SERVO_WRITE_MAX = 2400;
 const int PULSO_INICIAL = 1472;  // 90 graus no Servo.write = q=0 do modelo (vertical)
 
-Servo servos[3];
-int alvo[3];
-int atual[3];
+Servo servos[N_SERVOS];
+int alvo[N_SERVOS];
+int atual[N_SERVOS];
 
 char linha[48];
 uint8_t tamanho = 0;
@@ -79,9 +83,11 @@ void comando_movimento() {
     return;
   }
 
-  long pulsos[3];
+  // J1-J3 obrigatorios; J4 opcional (o calibrar_servos.py manda so 3).
+  long pulsos[N_SERVOS] = {0, 0, 0, 0};
   const char *p = linha + 1;
-  for (uint8_t i = 0; i < 3; i++) {
+  for (uint8_t i = 0; i < N_SERVOS; i++) {
+    if (i == 3 && *p == '*') break;
     pulsos[i] = ler_numero(p);
     if (pulsos[i] < 0 || (pulsos[i] != 0 && (pulsos[i] < PULSO_MIN || pulsos[i] > PULSO_MAX))) {
       Serial.println(F("E faixa"));
@@ -93,7 +99,7 @@ void comando_movimento() {
     return;
   }
   // So aplica depois de validar a linha inteira.
-  for (uint8_t i = 0; i < 3; i++) {
+  for (uint8_t i = 0; i < N_SERVOS; i++) {
     if (pulsos[i] != 0) aplicar(i, (int)pulsos[i]);
   }
   Serial.println(F("K"));
@@ -110,8 +116,8 @@ bool comando_manual() {
     Serial.println(F("Erro: formato invalido! Use [motor],[angulo], ex.: 1,90"));
     return true;
   }
-  if (motor < 1 || motor > 3) {
-    Serial.println(F("Erro: Motor invalido! Escolha 1, 2 ou 3."));
+  if (motor < 1 || motor > N_SERVOS) {
+    Serial.println(F("Erro: Motor invalido! Escolha 1, 2, 3 ou 4."));
     return true;
   }
   if (angulo > 180) {
@@ -143,7 +149,7 @@ void processar_linha() {
 
 void setup() {
   Serial.begin(115200);
-  for (uint8_t i = 0; i < 3; i++) {
+  for (uint8_t i = 0; i < N_SERVOS; i++) {
     // Define o pulso antes do attach para o servo nao ir ao padrao da biblioteca (1500 us).
     atual[i] = alvo[i] = PULSO_INICIAL;
     servos[i].writeMicroseconds(PULSO_INICIAL);
@@ -174,7 +180,7 @@ void loop() {
   unsigned long agora = millis();
   if (agora - ultimo_passo >= PERIODO_MS) {
     ultimo_passo = agora;
-    for (uint8_t i = 0; i < 3; i++) {
+    for (uint8_t i = 0; i < N_SERVOS; i++) {
       if (atual[i] == alvo[i]) continue;
       int erro = alvo[i] - atual[i];
       if (erro > PASSO_US) erro = PASSO_US;

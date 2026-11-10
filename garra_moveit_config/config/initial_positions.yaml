@@ -5,3 +5,5 @@ initial_positions:
   Revolucionar_46: 0.0
   Revolucionar_49: 0.0
   Revolucionar_72: 0.0
+  # J4: o firmware liga o servo dos dedos em 90 graus (1472 us).
+  dedos: 1.571

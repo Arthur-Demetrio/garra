@@ -83,7 +83,7 @@ Os diretórios `build/`, `install/` e `log/` são gerados pelo `colcon` e não d
 O firmware principal está em `firmware/garra_servos/garra_servos.ino`. Ele controla três servos e recebe comandos pela serial a **115200 baud**.
 
 - Arduino Mega;
-- pinos 9, 10 e 11 para os três servos;
+- pinos 9, 10 e 11 para os três servos do braço (J1–J3) e pino 12 para o servo dos dedos (J4, DS-S006MP);
 - pulsos de comando entre 500 e 2500 µs;
 - protocolo de texto com verificação XOR;
 - resposta `GARRA 1` ao comando de identificação `V`;

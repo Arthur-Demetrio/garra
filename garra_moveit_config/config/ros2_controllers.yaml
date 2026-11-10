@@ -10,6 +10,9 @@ controller_manager:
     joint_state_broadcaster:
       type: joint_state_broadcaster/JointStateBroadcaster
 
+    garra_dedos_controller:
+      type: position_controllers/GripperActionController
+
 joint_trajectory_controller:
   ros__parameters:
     joints:
@@ -28,3 +31,10 @@ joint_trajectory_controller:
       Revolucionar_46: {trajectory: 0.1, goal: 0.03}
       Revolucionar_49: {trajectory: 0.1, goal: 0.03}
       Revolucionar_72: {trajectory: 0.1, goal: 0.03}
+
+# J4 (dedos). Sem sensor de forca: o estado e o comando, entao o "fechar" sempre chega ao alvo.
+garra_dedos_controller:
+  ros__parameters:
+    joint: dedos
+    goal_tolerance: 0.02
+    allow_stalling: true

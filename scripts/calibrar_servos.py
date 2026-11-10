@@ -107,6 +107,11 @@ def gravar(caminho, medidas, us_por_rad, versao):
         linhas.append(
             f'  {nome}: {{zero_us: {m["zero"]}, us_por_rad: {m["sentido"] * us_por_rad:.1f}, '
             f'min_us: {m["min"]}, max_us: {m["max"]}}}')
+    # Mantem o que nao e de J1-J3 (o J4 dos dedos e seus comentarios), medido a parte.
+    if os.path.exists(caminho):
+        with open(caminho) as arquivo:
+            antigas = arquivo.read().splitlines()[2:]
+        linhas += [l for l in antigas if not any(l.startswith(f'  {nome}:') for nome in JUNTAS)]
     with open(caminho, 'w') as arquivo:
         arquivo.write('\n'.join(linhas) + '\n')
 

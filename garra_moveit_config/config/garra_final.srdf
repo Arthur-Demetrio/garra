@@ -18,13 +18,26 @@
         <joint name="Revolucionar_49" value="0"/>
         <joint name="Revolucionar_72" value="0"/>
     </group_state>
-    <!-- Pose de trabalho: garra para a frente (-X), quase horizontal.
+    <!-- Pose de espera (scripts/cliente_garra.py, PRONTA): TCP ~25 cm do chao, 20 cm a frente da base
+         da garra, inclinado 45 graus para baixo, no meio da regiao de coleta.
          "home" (q=0) e o comando de 90 graus nos tres servos: braco e garra na vertical. -->
     <group_state name="pronta" group="garra">
-        <joint name="Revolucionar_46" value="0.2"/>
-        <joint name="Revolucionar_49" value="-1.1"/>
-        <joint name="Revolucionar_72" value="-0.2"/>
+        <joint name="Revolucionar_46" value="0.12"/>
+        <joint name="Revolucionar_49" value="-0.95"/>
+        <joint name="Revolucionar_72" value="0.87"/>
     </group_state>
+    <!-- J4: dedos (servo no pino 12). Valores = angulo do comando do servo em rad. -->
+    <group name="dedos">
+        <joint name="dedos"/>
+    </group>
+    <group_state name="aberta" group="dedos">
+        <joint name="dedos" value="0"/>
+    </group_state>
+    <!-- 95 graus: prende o cubo sem o servo forcar. -->
+    <group_state name="fechada" group="dedos">
+        <joint name="dedos" value="1.658"/>
+    </group_state>
+    <end_effector name="dedos" parent_link="tool0" group="dedos" parent_group="garra"/>
     <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
 
     <!-- Matriz refeita para a exportacao com J3 paralelo a J1/J2 e colisao pelas malhas visuais.

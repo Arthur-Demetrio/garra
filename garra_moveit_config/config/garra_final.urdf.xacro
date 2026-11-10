@@ -22,6 +22,18 @@
         <origin xyz="-0.058 -0.1337 -0.0103" rpy="1.6712 0 0"/>
     </joint>
 
+    <!-- J4: servo dos dedos (DS-S006MP, pino 12). Junta provisoria, sem geometria: os dedos da malha
+         continuam fixos ate o CAD dos dedos ser finalizado (ai entram as juntas "mimic").
+         Valor = angulo do comando do servo (Servo.write), nao o angulo real dos dedos:
+         0 = garra aberta (0 graus), 1.658 = fechada no cubo (95 graus), 1.745 = 100 graus. -->
+    <link name="dedos_servo"/>
+    <joint name="dedos" type="revolute">
+        <parent link="Base"/>
+        <child link="dedos_servo"/>
+        <axis xyz="0 0 1"/>
+        <limit lower="0.0" upper="1.745" effort="0.15" velocity="1.30"/>
+    </joint>
+
     <!-- Estrutura do robo movel (dimensoes.md), so para o MoveIt. Fica aqui, e nao na URDF
          exportada, para sobreviver a uma nova exportacao do CAD.
          Frame "robo_base": centro da base do robo no chao; X frente, Y esquerda, Z cima.

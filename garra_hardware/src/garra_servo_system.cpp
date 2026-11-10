@@ -75,8 +75,9 @@ hardware_interface::CallbackReturn GarraServoSystem::on_init(
     return CallbackReturn::ERROR;
   }
 
-  if (juntas_.size() != 3) {
-    RCLCPP_ERROR(LOGGER, "O firmware espera 3 juntas, recebidas %zu", juntas_.size());
+  // J1-J3 do braco; o J4 (dedos) e opcional no firmware.
+  if (juntas_.size() != 3 && juntas_.size() != 4) {
+    RCLCPP_ERROR(LOGGER, "O firmware aceita 3 ou 4 juntas, recebidas %zu", juntas_.size());
     return CallbackReturn::ERROR;
   }
   return CallbackReturn::SUCCESS;
@@ -278,19 +279,17 @@ hardware_interface::return_type GarraServoSystem::write(
     }
   }
 
-  std::vector<int> pulsos;
+  std::string corpo = "M";
   for (const auto & junta : juntas_) {
-    pulsos.push_back(pulso_de(junta, junta.comando));
+    corpo += " " + std::to_string(pulso_de(junta, junta.comando));
   }
-  char corpo[40];
-  std::snprintf(corpo, sizeof(corpo), "M %d %d %d", pulsos[0], pulsos[1], pulsos[2]);
   unsigned soma = 0;
-  for (const char * c = corpo; *c != '\0'; ++c) {
-    soma ^= static_cast<unsigned char>(*c);
+  for (const char c : corpo) {
+    soma ^= static_cast<unsigned char>(c);
   }
-  char mensagem[48];
-  std::snprintf(mensagem, sizeof(mensagem), "%s*%02X\n", corpo, soma);
-  return enviar(mensagem) ? return_type::OK : return_type::ERROR;
+  char checksum[8];
+  std::snprintf(checksum, sizeof(checksum), "*%02X\n", soma);
+  return enviar(corpo + checksum) ? return_type::OK : return_type::ERROR;
 }
 
 }  // namespace garra_hardware

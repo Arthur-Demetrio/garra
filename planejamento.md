@@ -68,9 +68,11 @@ A garra possui quatro eixos de movimentação, controlados por quatro servomotor
 | J1 | `Revolucionar_46` | Movimento do primeiro segmento do braço | Em desenvolvimento |
 | J2 | `Revolucionar_49` | Movimento do segundo segmento do braço | Em desenvolvimento |
 | J3 | `Revolucionar_72` | Movimento do pulso, permitindo inclinar a garra para cima e para baixo | Em desenvolvimento |
-| J4 | A definir | Abertura e fechamento da garra | Ainda não integrado |
+| J4 | `dedos` | Abertura e fechamento da garra | Integrado ao ROS; falta teste na garra real |
 
 J1, J2 e J3 usam servos DS3218MG de 180° nos pinos 9, 10 e 11 do Arduino Mega. Os três eixos são paralelos; com os servos em 90° (q = 0) a garra fica na vertical.
+
+O J4 usa um micro servo DS-S006MP (engrenagem metálica, 4,8 a 6 V, ~90° de curso útil) no pino 12. Medido pelo Monitor Serial: 0° = aberta, 95° = presa no cubo, ~90–100° = fechada. No ROS ele é a junta `dedos` (valor = ângulo do comando em rad, não o ângulo real dos dedos), com o controlador `garra_dedos_controller` (GripperCommand) e o grupo `dedos` do MoveIt (estados `aberta` e `fechada`). Os dedos da malha continuam fixos no modelo até o CAD dos dedos ser finalizado.
 
 O J4 utilizará um modelo de servo diferente dos três primeiros. Sua integração será realizada separadamente, após a identificação de suas características elétricas e mecânicas.
 
@@ -88,7 +90,7 @@ O objetivo desta fase é fazer a garra funcionar corretamente sem depender do co
 - [ ] Verificar tensão e corrente de alimentação.
 - [ ] Confirmar a capacidade da fonte externa.
 - [ ] Documentar as conexões entre Arduino, servos e alimentação.
-- [x] Confirmar os pinos utilizados por cada servo (J1–J3: 9, 10 e 11).
+- [x] Confirmar os pinos utilizados por cada servo (J1–J3: 9, 10 e 11; J4: 12).
 - [ ] Verificar o aterramento comum entre Arduino e fonte.
 - [ ] Identificar limitações mecânicas de cada eixo.
 
@@ -120,7 +122,7 @@ O Arduino será responsável pelo acionamento direto dos servomotores.
 - [x] Verificar mecanismos de proteção contra comandos inválidos (checksum e faixa de pulso).
 - [ ] Implementar tratamento de falhas de comunicação.
 - [x] Avaliar o comportamento seguro na perda de comunicação (os servos mantêm a última posição).
-- [ ] Integrar o J4 ao firmware.
+- [x] Integrar o J4 ao firmware.
 
 **Resultado esperado:** firmware estável, capaz de controlar os quatro servos de forma independente e previsível.
 

@@ -30,13 +30,16 @@ from sensor_msgs.msg import JointState
 
 JUNTAS = ['Revolucionar_46', 'Revolucionar_49', 'Revolucionar_72']
 # Iguais aos do URDF (scripts/ajustar_urdf.py), que vem da calibracao dos servos.
-LIMITES = [(-0.85, 1.55), (-1.55, 1.48), (-1.52, 1.55)]
+LIMITES = [(-0.79, 1.50), (-1.47, 1.35), (-1.25, 1.30)]
 GRUPO = 'garra'
 TCP = 'tool0'
 BASE = 'base_link'
 
 HOME = [0.0, 0.0, 0.0]
-PRONTA = [0.2, -1.1, -0.2]  # garra para a frente, quase horizontal
+# Pose de espera: TCP ~25 cm do chao, 20 cm a frente da base da garra, inclinado 45 graus para baixo,
+# no meio da regiao de coleta e com folga nas juntas. A coleta planeja pelas juntas daqui ate a
+# pre-pegada; as retas a partir dela sao curtas (2 a 5 cm).
+PRONTA = [0.12, -0.95, 0.87]
 
 SUCESSO = MoveItErrorCodes.SUCCESS
 

@@ -128,10 +128,11 @@ def testar_retas(c, r):
         return
     q = c.juntas_atuais()
     for nome, d in [
-        ('X -3 cm', (-0.03, 0, 0)),
-        ('X +3 cm', (0.03, 0, 0)),
-        ('Z +3 cm', (0, 0, 0.03)),
-        ('Z -3 cm', (0, 0, -0.03)),
+        # Curtas: com a inclinacao fixa, a garra tem pouca folga em linha reta (ver PRONTA).
+        ('X -2 cm', (-0.02, 0, 0)),
+        ('X +2 cm', (0.02, 0, 0)),
+        ('Z +2 cm', (0, 0, 0.02)),
+        ('Z -2 cm', (0, 0, -0.02)),
     ]:
         res = c.linha_cartesiana(q, d)
         extra = f', {res.mensagem}' if res.mensagem else ''
@@ -143,18 +144,18 @@ def testar_retas(c, r):
     r.item(fora.fracao < 0.2, f'Y +1 cm recusado, fora do plano: {fora.fracao * 100:.0f}%')
 
     r.secao('Execucao de reta (ida e volta)')
-    ida = c.linha_cartesiana(q, (-0.03, 0, -0.02))
+    ida = c.linha_cartesiana(q, (-0.02, 0, -0.02))
     r.item(ida.fracao >= 0.999, f'calcular ida: {ida.fracao * 100:.0f}% {ida.mensagem}')
     if ida.fracao < 0.999:
         return
     inicio = xyz(c.fk(c.juntas_atuais()))
     codigo = c.executar(ida.trajetoria)
     fim = xyz(c.fk(c.juntas_atuais()))
-    alvo = (inicio[0] - 0.03, inicio[1], inicio[2] - 0.02)
+    alvo = (inicio[0] - 0.02, inicio[1], inicio[2] - 0.02)
     erro = distancia(fim, alvo)
     r.item(codigo == SUCESSO and erro < 0.002,
            f'executar ida (codigo {codigo}, TCP a {erro * 1000:.2f} mm do alvo)')
-    volta = c.linha_cartesiana(c.juntas_atuais(), (0.03, 0, 0.02))
+    volta = c.linha_cartesiana(c.juntas_atuais(), (0.02, 0, 0.02))
     r.item(volta.fracao >= 0.999, f'calcular volta: {volta.fracao * 100:.0f}% {volta.mensagem}')
     if volta.fracao >= 0.999:
         codigo = c.executar(volta.trajetoria)
@@ -169,7 +170,7 @@ def testar_planejamento(c, r):
         return
     if not mover(c, r, 'home -> pronta', PRONTA):
         return
-    pose = c.fk([0.1, -0.9, 0.5])
+    pose = c.fk([0.2, -1.1, -0.2])  # garra para a frente, quase horizontal
     alvo = xyz(pose)
     trajetoria, codigo = c.planejar_pose(c.juntas_atuais(), pose)
     r.item(codigo == SUCESSO, f'planejar ate uma pose do TCP (codigo {codigo})')
