@@ -25,7 +25,7 @@ Será utilizado o centro da base do robô como referência horizontal.
 | Comprimento (X) | 0,55 m |
 | Largura (Y) | 0,50 m |
 | Altura do topo em relação ao chão | 0,10 m |
-| Espessura | Pendente de confirmação |
+| Espessura | 0,01 m (igual à dos andares) |
 
 A base está centralizada na origem horizontal.
 
@@ -35,7 +35,13 @@ Seus limites são:
 - Y: −0,250 m a +0,250 m.
 - Topo: Z = 0,100 m.
 
-A espessura da base ainda precisa ser medida para determinar a posição vertical de seu centro geométrico.
+A placa da base tem a mesma espessura dos andares (0,01 m):
+
+- Superfície inferior: Z = 0,090 m.
+- Superfície superior: Z = 0,100 m.
+- Centro Z: 0,095 m.
+
+O volume abaixo da placa (chassi, rodas e motores) ainda não foi medido. No URDF ele é representado provisoriamente como um bloco sólido do chão até a placa.
 
 ### 2.2 Primeiro andar
 
@@ -190,7 +196,7 @@ Para a análise de colisões no MoveIt 2:
 
 | Item | Informação pendente |
 |---|---|
-| Base | Espessura física |
+| Base | Volume do chassi abaixo da placa (rodas, motores) |
 | Suportes do primeiro andar | Posições laterais (Y) |
 | Suportes do primeiro andar | Altura física |
 | Suportes do segundo andar | Altura física |

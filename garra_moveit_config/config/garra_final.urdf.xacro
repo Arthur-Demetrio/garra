@@ -32,8 +32,8 @@
     <xacro:property name="base_x" value="0.55"/>
     <xacro:property name="base_y" value="0.50"/>
     <xacro:property name="base_topo" value="0.100"/>
-    <!-- PENDENTE: espessura da base. Modelada como bloco solido do chao ao topo. -->
-    <xacro:property name="base_esp" value="${base_topo}"/>
+    <!-- Placa da base: mesma espessura dos andares (1 cm). -->
+    <xacro:property name="base_esp" value="0.01"/>
 
     <!-- Andares (alinhados a borda traseira, X = -base_x/2) -->
     <xacro:property name="esp_andar" value="0.01"/>
@@ -94,6 +94,9 @@
         </collision>
         <!-- Base -->
         <xacro:caixa x="0" y="0" z="${base_topo - base_esp/2}" sx="${base_x}" sy="${base_y}" sz="${base_esp}"/>
+        <!-- PENDENTE: chassi sob a placa da base (rodas, motores). Ate ser medido, fica como volume
+             solido do chao ate a placa, para a garra nao planejar por baixo da base. -->
+        <xacro:caixa x="0" y="0" z="${(base_topo - base_esp)/2}" sx="${base_x}" sy="${base_y}" sz="${base_topo - base_esp}"/>
         <!-- Andares -->
         <xacro:andar lx="${a1_x}" topo="${a1_topo}"/>
         <xacro:andar lx="${a2_x}" topo="${a2_topo}"/>
