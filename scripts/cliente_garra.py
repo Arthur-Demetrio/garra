@@ -29,7 +29,8 @@ from sensor_msgs.msg import JointState
 
 
 JUNTAS = ['Revolucionar_46', 'Revolucionar_49', 'Revolucionar_72']
-LIMITES = [(-1.5708, 1.5708), (-1.5708, 1.5708), (-1.5708, 1.5708)]
+# Iguais aos do URDF (scripts/ajustar_urdf.py), que vem da calibracao dos servos.
+LIMITES = [(-0.85, 1.55), (-1.55, 1.48), (-1.52, 1.55)]
 GRUPO = 'garra'
 TCP = 'tool0'
 BASE = 'base_link'

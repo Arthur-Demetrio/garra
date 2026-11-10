@@ -12,7 +12,7 @@
 //  - Ao ligar, todos os servos vao para 90 graus (PULSO_INICIAL), como no sketch do time. Esse
 //    primeiro movimento e na velocidade maxima do servo, porque nao se sabe onde ele esta.
 //    Dai em diante todo movimento, inclusive o primeiro comando, respeita a velocidade abaixo.
-//  - Velocidade do time (firmware/ino atual): 1 grau (~10 us) a cada 40 ms, ~25 graus/s,
+//  - Velocidade: ~1,5 grau (15 us) a cada 20 ms, ~73 graus/s (3x o sketch do time),
 //    em qualquer tipo de comando. Nao bloqueia: os tres servos andam juntos.
 //  - Se a comunicacao cair, os servos mantem a ultima posicao: soltar deixaria o braco cair.
 
@@ -23,8 +23,8 @@ const uint8_t PINOS[3] = {9, 10, 11};
 
 const int PULSO_MIN = 500;
 const int PULSO_MAX = 2500;
-const unsigned long PERIODO_MS = 40;  // INTERVALO_MOVIMENTO_MS do time
-const int PASSO_US = 10;              // ~1 grau: (2400 - 544) / 180 = 10.31 us por grau
+const unsigned long PERIODO_MS = 20;  // mesmo periodo do sinal do servo (50 Hz)
+const int PASSO_US = 15;              // ~1,5 grau: (2400 - 544) / 180 = 10.31 us por grau
 
 // Conversao do Servo.write (angulo em graus -> pulso), para o comando manual.
 const int SERVO_WRITE_MIN = 544;

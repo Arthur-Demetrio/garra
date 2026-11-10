@@ -6,7 +6,7 @@ Fale direto com o firmware: NAO rode com o ROS usando a mesma porta.
 
 Cuidado: ao abrir a porta o Arduino reinicia e os tres servos vao para 90 graus (1472 us) na
 velocidade maxima. Ao selecionar uma junta, ela vai ao zero ja medido, se houver. O comando <motor>,<angulo> (padrao do firmware do time) leva o servo direto ao
-angulo; o firmware limita a velocidade (~25 graus/s), mas nao o destino. Comece com o elo livre para nao bater, e
+angulo; o firmware limita a velocidade (~73 graus/s), mas nao o destino. Comece com o elo livre para nao bater, e
 mantenha a mao na fonte. Os passos sao limitados a MAX_PASSO; a faixa e por sua conta: pare
 antes de forcar a estrutura ou os cabos.
 """
@@ -29,7 +29,7 @@ SERVO_WRITE_MIN = 544
 SERVO_WRITE_MAX = 2400
 US_POR_GRAU = (SERVO_WRITE_MAX - SERVO_WRITE_MIN) / 180
 PULSO_INICIAL = SERVO_WRITE_MIN + round(90 * US_POR_GRAU)  # 1472 us
-GRAUS_POR_S = 25  # velocidade do firmware: 1 grau a cada 40 ms
+GRAUS_POR_S = 73  # velocidade do firmware: 15 us (~1,5 grau) a cada 20 ms
 SAIDA_PADRAO = os.path.join(
     os.path.dirname(os.path.abspath(__file__)),
     '..', 'garra_moveit_config', 'config', 'calibracao_servos.yaml')

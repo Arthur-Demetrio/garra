@@ -34,7 +34,7 @@ EIXOS = {
     'Revolucionar_72': '0 0 -1',
 }
 EFFORT = '1.86'
-VELOCIDADE = '1.00'
+VELOCIDADE = '1.30'
 
 
 def main():

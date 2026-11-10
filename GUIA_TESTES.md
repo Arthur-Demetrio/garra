@@ -323,7 +323,7 @@ Depois que o script reconhecer o firmware, ele apresenta os comandos:
 
 | Comando | Ação |
 |---|---|
-| `1,90` | Formato `<motor>,<angulo>` (igual ao Monitor Serial): seleciona o motor e leva ao ângulo de 0 a 180°. Salta direto ao destino (a ~25°/s); confira o caminho antes. |
+| `1,90` | Formato `<motor>,<angulo>` (igual ao Monitor Serial): seleciona o motor e leva ao ângulo de 0 a 180°. Salta direto ao destino (a ~73°/s); confira o caminho antes. |
 | `j 1` | Seleciona a junta 1 (`Revolucionar_46`). |
 | `j 2` | Seleciona a junta 2 (`Revolucionar_49`). |
 | `j 3` | Seleciona a junta 3 (`Revolucionar_72`). |
