@@ -2,7 +2,7 @@
 
 Fale direto com o firmware: NAO rode com o ROS usando a mesma porta.
 
-    python3 scripts/calibrar_servos.py --versao 180 [--porta /dev/ttyACM0]
+    python3 scripts/calibrar_servos.py --versao 180 [--porta /dev/ttyUSB0]
 
 Cuidado: ao abrir a porta o Arduino reinicia e os tres servos vao para 90 graus (1472 us) na
 velocidade maxima. Ao selecionar uma junta, ela vai ao zero ja medido, se houver. O comando <motor>,<angulo> (padrao do firmware do time) leva o servo direto ao
@@ -114,7 +114,7 @@ def gravar(caminho, medidas, us_por_rad, versao):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--versao', type=int, choices=[180, 270], required=True)
-    parser.add_argument('--porta', default='/dev/ttyACM0')
+    parser.add_argument('--porta', default='/dev/ttyUSB0')
     parser.add_argument('--saida', default=SAIDA_PADRAO)
     args = parser.parse_args()
     # 180 graus: faixa do Servo.write usada nas medicoes (544 a 2400 us).

@@ -272,7 +272,7 @@ ls /dev/ttyACM*
 ls /dev/ttyUSB*
 ```
 
-Exemplo de porta: `/dev/ttyACM0`. O dispositivo real pode ser diferente na sua máquina.
+Exemplo de porta: `/dev/ttyUSB0` (Mega com conversor CH340). Um Mega original aparece como `/dev/ttyACM0`; confira com `ls /dev/serial/by-id`.
 
 Se houver erro de permissão, confira:
 
@@ -294,13 +294,13 @@ Para servos de 180 graus:
 
 ```bash
 cd ~/braco_ws/src/garra
-python3 scripts/calibrar_servos.py --versao 180 --porta /dev/ttyACM0
+python3 scripts/calibrar_servos.py --versao 180 --porta /dev/ttyUSB0
 ```
 
 Para servos de 270 graus:
 
 ```bash
-python3 scripts/calibrar_servos.py --versao 270 --porta /dev/ttyACM0
+python3 scripts/calibrar_servos.py --versao 270 --porta /dev/ttyUSB0
 ```
 
 Parâmetros:
@@ -308,7 +308,7 @@ Parâmetros:
 | Parâmetro | Obrigatório | Descrição |
 |---|---:|---|
 | `--versao` | Sim | `180` ou `270`, conforme a faixa do servo considerada na conversão. |
-| `--porta` | Não | Porta serial do Arduino. Padrão do script: `/dev/ttyACM0`. |
+| `--porta` | Não | Porta serial do Arduino. Padrão do script: `/dev/ttyUSB0`. |
 | `--saida` | Não | Caminho do YAML gerado. Por padrão, aponta para `garra_moveit_config/config/calibracao_servos.yaml`. |
 
 Para ver a ajuda:
@@ -395,7 +395,7 @@ Somente depois de concluir a calibração, conferir o firmware e verificar a mec
 source /opt/ros/jazzy/setup.bash
 source ~/braco_ws/install/setup.bash
 
-export GARRA_PORTA=/dev/ttyACM0
+export GARRA_PORTA=/dev/ttyUSB0
 ros2 launch garra_moveit_config garra_real.launch.py
 ```
 
@@ -436,7 +436,7 @@ Confira se o `joint_state_broadcaster` está ativo e se os controladores foram i
 
 ```bash
 groups
-ls -l /dev/ttyACM0
+ls -l /dev/ttyUSB0
 ```
 
 Confirme o grupo `dialout`, adicione o usuário se necessário e faça logout/login.

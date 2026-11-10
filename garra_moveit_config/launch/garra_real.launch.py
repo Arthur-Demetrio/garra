@@ -4,7 +4,7 @@ Nao usa generate_demo_launch: ele inclui o rsp.launch.py e o move_group.launch.p
 que recriam a configuracao com o hardware simulado e ignorariam o driver real.
 
 Variaveis de ambiente opcionais:
-    GARRA_PORTA        porta serial do Arduino (padrao: /dev/ttyACM0)
+    GARRA_PORTA        porta serial do Arduino (padrao: /dev/ttyUSB0)
     GARRA_CALIBRACAO   arquivo de calibracao (padrao: config/calibracao_servos.yaml do pacote)
 
 Argumento: use_rviz:=false para rodar sem RViz.
@@ -32,7 +32,7 @@ def generate_launch_description():
         MoveItConfigsBuilder('garra_final', package_name='garra_moveit_config')
         .robot_description(mappings={
             'hardware_plugin': 'garra_hardware/GarraServoSystem',
-            'porta_serial': os.environ.get('GARRA_PORTA', '/dev/ttyACM0'),
+            'porta_serial': os.environ.get('GARRA_PORTA', '/dev/ttyUSB0'),
             'calibracao_file': os.environ.get(
                 'GARRA_CALIBRACAO', os.path.join(pacote, 'config', 'calibracao_servos.yaml')),
         })

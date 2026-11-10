@@ -238,7 +238,7 @@ A calibração deve ser feita antes de iniciar o hardware com MoveIt. Exemplo:
 
 ```bash
 cd ~/braco_ws/src/garra
-python3 scripts/calibrar_servos.py --versao 180 --porta /dev/ttyACM0
+python3 scripts/calibrar_servos.py --versao 180 --porta /dev/ttyUSB0
 ```
 
 Use `--versao 270` se os servos utilizados forem da faixa mecânica de 270 graus. O script grava os dados em `garra_moveit_config/config/calibracao_servos.yaml` por padrão.
@@ -255,7 +255,7 @@ Depois de gravar o firmware, calibrar os três servos e conferir a montagem:
 source /opt/ros/jazzy/setup.bash
 source ~/braco_ws/install/setup.bash
 
-export GARRA_PORTA=/dev/ttyACM0
+export GARRA_PORTA=/dev/ttyUSB0
 ros2 launch garra_moveit_config garra_real.launch.py
 ```
 
