@@ -3,15 +3,34 @@
 ## Observações:
 este arquivo é só um guia e não necessáriamente será seguido 100%
 
-# Planejamento de Desenvolvimento e Integração da Garra Robótica
-
 **Projeto:** Garra Robótica — RoboCup@Work  
 **Ambiente de desenvolvimento:** Linux Mint 22.3  
 **Middleware:** ROS 2 Jazzy  
 **Plataforma de controle:** Arduino Mega  
 **Planejamento de movimentos:** MoveIt 2  
 **Controle de hardware:** ros2_control  
-**Status:** em desenvolvimento
+**Status:** em desenvolvimento — Fase 1, teste físico de J1–J3
+
+---
+
+# 0. Situação atual e próximos passos (atualizado em 10/11/2026)
+
+**Concluído:**
+
+- Novo URDF exportado do CAD e ajustado com `scripts/ajustar_urdf.py` (J3 paralelo a J1/J2; dedos fixos até o J4 ser integrado).
+- Simulação validada com `scripts/validar_garra.py`, incluindo a estrutura do robô, a placa da base (1 cm) e o chão.
+- Firmware `firmware/garra_servos/garra_servos.ino` gravado no Arduino Mega e testado pelo Monitor Serial (115200 baud).
+- Calibração de J1–J3 com `scripts/calibrar_servos.py --versao 180`, gravada em `garra_moveit_config/config/calibracao_servos.yaml`.
+- Limites das juntas no URDF ajustados para a faixa calibrada: J1 −0,85 a 1,55 rad; J2 −1,55 a 1,48 rad; J3 −1,52 a 1,55 rad.
+
+**Próximos passos, em ordem:**
+
+1. Rodar `validar_garra.py` na simulação com os limites novos.
+2. Primeiro movimento real com `garra_real.launch.py`, só pelo RViz, com velocidade 0.1 e alvos próximos da pose inicial (vertical). Conferir se o braço real acompanha o RViz em sentido e amplitude.
+3. Medir o Y dos suportes do 1º andar e o volume do chassi sob a placa da base, para completar o modelo de colisão.
+4. Depois: conectar e integrar o J4 (dedos).
+
+Os testes físicos iniciais usam só J1, J2 e J3. Firmware, driver e URDF ainda não cobrem o J4.
 
 ---
 
@@ -51,6 +70,8 @@ A garra possui quatro eixos de movimentação, controlados por quatro servomotor
 | J3 | `Revolucionar_72` | Movimento do pulso, permitindo inclinar a garra para cima e para baixo | Em desenvolvimento |
 | J4 | A definir | Abertura e fechamento da garra | Ainda não integrado |
 
+J1, J2 e J3 usam servos DS3218MG de 180° nos pinos 9, 10 e 11 do Arduino Mega. Os três eixos são paralelos; com os servos em 90° (q = 0) a garra fica na vertical.
+
 O J4 utilizará um modelo de servo diferente dos três primeiros. Sua integração será realizada separadamente, após a identificação de suas características elétricas e mecânicas.
 
 **Observação:** a montagem física atual ainda não corresponde integralmente ao CAD e ao URDF existentes. Os modelos digitais deverão ser atualizados após a finalização da mecânica.
@@ -67,7 +88,7 @@ O objetivo desta fase é fazer a garra funcionar corretamente sem depender do co
 - [ ] Verificar tensão e corrente de alimentação.
 - [ ] Confirmar a capacidade da fonte externa.
 - [ ] Documentar as conexões entre Arduino, servos e alimentação.
-- [ ] Confirmar os pinos utilizados por cada servo.
+- [x] Confirmar os pinos utilizados por cada servo (J1–J3: 9, 10 e 11).
 - [ ] Verificar o aterramento comum entre Arduino e fonte.
 - [ ] Identificar limitações mecânicas de cada eixo.
 
@@ -77,12 +98,12 @@ O objetivo desta fase é fazer a garra funcionar corretamente sem depender do co
 
 Inicialmente, serão testados J1, J2 e J3, que utilizam o mesmo modelo de servo.
 
-- [ ] Verificar a comunicação serial entre computador e Arduino.
-- [ ] Testar individualmente cada servo.
-- [ ] Identificar o sentido de movimentação.
-- [ ] Determinar limites seguros de pulso.
+- [x] Verificar a comunicação serial entre computador e Arduino.
+- [x] Testar individualmente cada servo.
+- [x] Identificar o sentido de movimentação.
+- [x] Determinar limites seguros de pulso.
 - [ ] Verificar vibrações, aquecimento e comportamento sob carga.
-- [ ] Registrar parâmetros provisórios de calibração.
+- [x] Registrar parâmetros provisórios de calibração.
 
 Posteriormente, repetir o procedimento para J4, considerando suas especificações próprias.
 
@@ -92,13 +113,13 @@ Posteriormente, repetir o procedimento para J4, considerando suas especificaçõ
 
 O Arduino será responsável pelo acionamento direto dos servomotores.
 
-- [ ] Revisar a implementação atual do firmware.
-- [ ] Organizar o protocolo de comunicação serial.
-- [ ] Implementar ou revisar os comandos individuais de cada servo.
+- [x] Revisar a implementação atual do firmware.
+- [x] Organizar o protocolo de comunicação serial.
+- [x] Implementar ou revisar os comandos individuais de cada servo.
 - [ ] Validar o recebimento e a interpretação dos comandos.
-- [ ] Verificar mecanismos de proteção contra comandos inválidos.
+- [x] Verificar mecanismos de proteção contra comandos inválidos (checksum e faixa de pulso).
 - [ ] Implementar tratamento de falhas de comunicação.
-- [ ] Avaliar o comportamento seguro na perda de comunicação.
+- [x] Avaliar o comportamento seguro na perda de comunicação (os servos mantêm a última posição).
 - [ ] Integrar o J4 ao firmware.
 
 **Resultado esperado:** firmware estável, capaz de controlar os quatro servos de forma independente e previsível.
@@ -112,11 +133,11 @@ A calibração deverá separar duas questões:
 
 Atividades:
 
-- [ ] Determinar limites seguros de cada servo.
-- [ ] Identificar a posição de referência de cada junta.
-- [ ] Determinar o sentido positivo de movimentação.
+- [x] Determinar limites seguros de cada servo.
+- [x] Identificar a posição de referência de cada junta.
+- [x] Determinar o sentido positivo de movimentação.
 - [ ] Medir a relação entre pulso e ângulo.
-- [ ] Registrar parâmetros em arquivo de configuração.
+- [x] Registrar parâmetros em arquivo de configuração.
 - [ ] Validar os resultados com a montagem mecânica definitiva.
 
 Resultados obtidos antes da finalização mecânica deverão ser identificados como provisórios.
@@ -137,12 +158,12 @@ Resultados obtidos antes da finalização mecânica deverão ser identificados c
 
 Após a finalização do CAD:
 
-- [ ] Exportar novamente a descrição da garra.
+- [x] Exportar novamente a descrição da garra.
 - [ ] Revisar links e joints.
 - [ ] Configurar corretamente os quatro eixos.
-- [ ] Definir limites de posição e velocidade.
+- [x] Definir limites de posição e velocidade (J1–J3).
 - [ ] Revisar os sistemas de coordenadas.
-- [ ] Configurar corretamente o `tool0`.
+- [x] Configurar corretamente o `tool0`.
 - [ ] Representar o mecanismo de abertura e fechamento do J4.
 - [ ] Validar a descrição no RViz.
 
@@ -152,7 +173,7 @@ Quando a mecânica dos dedos permitir, avaliar o uso de `mimic joint` para repre
 
 - [ ] Atualizar o grupo de planejamento `garra`.
 - [ ] Configurar os quatro eixos.
-- [ ] Revisar os limites das juntas.
+- [x] Revisar os limites das juntas (J1–J3, conforme a calibração).
 - [ ] Validar a cinemática direta.
 - [ ] Validar a cinemática inversa.
 - [ ] Testar movimentos individuais.
@@ -536,7 +557,8 @@ O projeto será considerado concluído quando os seguintes objetivos forem ating
 | Pendência | Responsável lógico | Prioridade |
 |---|---|---|
 | Finalizar a mecânica atual | Desenvolvimento mecânico | Alta |
-| Testar J1, J2 e J3 | Hardware e firmware | Alta |
+| Testar J1, J2 e J3 pelo ROS 2 (`garra_real.launch.py`) | Hardware e controle | Alta |
+| Medir suportes do 1º andar e chassi sob a placa da base | Descrição mecânica | Média |
 | Identificar o servo J4 | Hardware | Alta |
 | Integrar J4 ao firmware | Hardware e firmware | Média |
 | Atualizar CAD e URDF | Descrição mecânica | Após finalização mecânica |
@@ -556,12 +578,12 @@ O desenvolvimento deverá seguir uma sequência que reduza retrabalho e permita 
 
 **Ordem recomendada:**
 
-1. Validar o hardware e os servos atuais.
-2. Integrar e testar o J4.
-3. Finalizar a montagem mecânica.
-4. Atualizar o CAD e o URDF.
-5. Validar a garra no RViz e MoveIt 2.
-6. Validar o acionamento real por ROS 2.
+1. Validar o hardware e os servos atuais (J1–J3).
+2. Validar a garra no RViz e MoveIt 2.
+3. Validar o acionamento real de J1–J3 por ROS 2.
+4. Integrar e testar o J4.
+5. Finalizar a montagem mecânica.
+6. Atualizar o CAD e o URDF.
 7. Investigar a interface do sistema de visão.
 8. Validar a transformação das coordenadas da câmera.
 9. Desenvolver o coordenador de manipulação.
@@ -573,6 +595,6 @@ O desenvolvimento deverá seguir uma sequência que reduza retrabalho e permita 
 
 ---
 
-**Documento de planejamento — versão 1.0**
+**Documento de planejamento — versão 1.1 (10/11/2026)**
 
 *As decisões ainda não confirmadas deverão permanecer identificadas como pendências, evitando que hipóteses sejam tratadas como requisitos definitivos.*

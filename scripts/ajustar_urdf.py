@@ -18,12 +18,14 @@ import xml.etree.ElementTree as ET
 PADRAO = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..',
                       'garra_final_description', 'urdf', 'garra_final.urdf')
 
-# J1, J2, J3. PROVISORIO: +-90 graus em torno da pose do CAD, ate a calibracao.
+# J1, J2, J3. Faixa medida em calibracao_servos.yaml (2026-11-10), convertida para q e com ~0.02 rad
+# de margem: o driver corta o pulso nos limites e, sem realimentacao, o ROS nao perceberia.
+# Refaca estes valores se recalibrar.
 # effort: torque do DS3218MG (~1.86 N.m). A velocidade real fica em joint_limits.yaml.
 LIMITES = {
-    'Revolucionar_46': (-1.5708, 1.5708),
-    'Revolucionar_49': (-1.5708, 1.5708),
-    'Revolucionar_72': (-1.5708, 1.5708),
+    'Revolucionar_46': (-0.85, 1.55),
+    'Revolucionar_49': (-1.55, 1.48),
+    'Revolucionar_72': (-1.52, 1.55),
 }
 # Eixo de cada junta no frame dela, quando a exportacao erra o sentido. Fixo (nao inverte), para o
 # script continuar idempotente. J3: positivo dobra a garra para a frente (-X do base_link), como J1.

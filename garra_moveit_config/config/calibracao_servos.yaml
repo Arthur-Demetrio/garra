@@ -1,10 +1,5 @@
-# Conversao de angulo de junta para pulso. PROVISORIO: 1400 a 1600 us mantem cada servo perto de
-# q=0 (braco e garra na vertical) ate a calibracao. Gere os valores com scripts/calibrar_servos.py.
-#
-# pulso = zero_us + angulo * us_por_rad, limitado entre min_us e max_us.
-# q=0 e o comando de 90 graus do Servo.write (544 + 10.31 * 90 = 1472 us). 590.6 us/rad vem da faixa
-# 544 a 2400 us em 180 graus. Sinal negativo: angulo positivo vai para a frente, rumo ao comando 0.
+# Gerado por calibrar_servos.py (servo de 180 graus).
 juntas:
-  Revolucionar_46: {zero_us: 1472, us_por_rad: -590.6, min_us: 1400, max_us: 1600}
-  Revolucionar_49: {zero_us: 1472, us_por_rad: -590.6, min_us: 1400, max_us: 1600}
-  Revolucionar_72: {zero_us: 1472, us_por_rad: -590.6, min_us: 1400, max_us: 1600}
+  Revolucionar_46: {zero_us: 1472, us_por_rad: -590.8, min_us: 504, max_us: 1988}
+  Revolucionar_49: {zero_us: 1432, us_por_rad: -590.8, min_us: 544, max_us: 2400}
+  Revolucionar_72: {zero_us: 1492, us_por_rad: -590.8, min_us: 544, max_us: 2400}
