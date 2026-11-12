@@ -34,8 +34,8 @@ ABERTA = 0.0
 # engrenagens; use o menor valor que ainda segura o cubo (--fechamento).
 FECHAMENTO_GRAUS = 85.0
 # mm que a ponta desce alem do que o modelo permite antes de fechar: a malha P_1 encosta no chao
-# do modelo antes da garra real. 5 mm pegou bem o cubo no chao (teste de 2026-11-12).
-DESCER_MM = 5.0
+# do modelo antes da garra real. 5 mm ja pegou o cubo no chao (teste de 2026-11-12); padrao 10 mm.
+DESCER_MM = 10.0
 RECUO = 0.06          # m: pre-pegada recuada na direcao de aproximacao
 SUBIDA = 0.05         # m: quanto sobe depois de pegar
 INCLINACOES = range(-90, 1, 5)  # graus; negativo = ponta para baixo
