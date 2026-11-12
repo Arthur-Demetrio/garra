@@ -35,7 +35,7 @@
     </group_state>
     <!-- 95 graus: prende o cubo sem o servo forcar. -->
     <group_state name="fechada" group="dedos">
-        <joint name="dedos" value="1.658"/>
+        <joint name="dedos" value="1.484"/>
     </group_state>
     <end_effector name="dedos" parent_link="tool0" group="dedos" parent_group="garra"/>
     <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->

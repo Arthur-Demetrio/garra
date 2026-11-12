@@ -25,7 +25,7 @@
     <!-- J4: servo dos dedos (DS-S006MP, pino 12). Junta provisoria, sem geometria: os dedos da malha
          continuam fixos ate o CAD dos dedos ser finalizado (ai entram as juntas "mimic").
          Valor = angulo do comando do servo (Servo.write), nao o angulo real dos dedos:
-         0 = garra aberta (0 graus), 1.658 = fechada no cubo (95 graus), 1.745 = 100 graus. -->
+         0 = garra aberta (0 graus), 1.484 = fechada no cubo (85 graus; 95 travava as engrenagens), 1.745 = 100 graus. -->
     <link name="dedos_servo"/>
     <joint name="dedos" type="revolute">
         <parent link="Base"/>

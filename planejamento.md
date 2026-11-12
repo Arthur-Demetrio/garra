@@ -72,7 +72,7 @@ A garra possui quatro eixos de movimentação, controlados por quatro servomotor
 
 J1, J2 e J3 usam servos DS3218MG de 180° nos pinos 9, 10 e 11 do Arduino Mega. Os três eixos são paralelos; com os servos em 90° (q = 0) a garra fica na vertical.
 
-O J4 usa um micro servo DS-S006MP (engrenagem metálica, 4,8 a 6 V, ~90° de curso útil) no pino 12. Medido pelo Monitor Serial: 0° = aberta, 95° = presa no cubo, ~90–100° = fechada. No ROS ele é a junta `dedos` (valor = ângulo do comando em rad, não o ângulo real dos dedos), com o controlador `garra_dedos_controller` (GripperCommand) e o grupo `dedos` do MoveIt (estados `aberta` e `fechada`). Os dedos da malha continuam fixos no modelo até o CAD dos dedos ser finalizado.
+O J4 usa um micro servo DS-S006MP (engrenagem metálica, 4,8 a 6 V, ~90° de curso útil) no pino 12. Medido pelo Monitor Serial: 0° = aberta, 95° = presa no cubo, ~90–100° = fechada. No ROS ele é a junta `dedos` (valor = ângulo do comando em rad, não o ângulo real dos dedos), com o controlador `garra_dedos_controller` (GripperCommand) e o grupo `dedos` do MoveIt (estados `aberta` e `fechada`, 85° = 1.484 rad). Os dedos da malha continuam fixos no modelo até o CAD dos dedos ser finalizado.
 
 O J4 utilizará um modelo de servo diferente dos três primeiros. Sua integração será realizada separadamente, após a identificação de suas características elétricas e mecânicas.
 
