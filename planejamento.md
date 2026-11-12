@@ -72,7 +72,7 @@ A garra possui quatro eixos de movimentação, controlados por quatro servomotor
 
 J1, J2 e J3 usam servos DS3218MG de 180° nos pinos 9, 10 e 11 do Arduino Mega. Os três eixos são paralelos; com os servos em 90° (q = 0) a garra fica na vertical.
 
-O J4 usa um micro servo DS-S006MP (engrenagem metálica, 4,8 a 6 V, ~90° de curso útil) no pino 12. Medido pelo Monitor Serial: 0° = aberta, 95° = presa no cubo, ~90–100° = fechada. No ROS ele é a junta `dedos` (valor = ângulo do comando em rad, não o ângulo real dos dedos), com o controlador `garra_dedos_controller` (GripperCommand) e o grupo `dedos` do MoveIt (estados `aberta` e `fechada`, 85° = 1.484 rad). Os dedos da malha continuam fixos no modelo até o CAD dos dedos ser finalizado.
+O J4 usa um micro servo DS-S006MP (engrenagem metálica, 4,8 a 6 V, ~90° de curso útil) no pino 12. Medido pelo Monitor Serial: 0° = aberta, ~90–100° = fechada. Fecha no cubo em 85° (em 95° forçava e travava as engrenagens). No ROS ele é a junta `dedos` (valor = ângulo do comando em rad, não o ângulo real dos dedos), com o controlador `garra_dedos_controller` (GripperCommand) e o grupo `dedos` do MoveIt (estados `aberta` e `fechada`, 85° = 1.484 rad). Os dedos da malha continuam fixos no modelo até o CAD dos dedos ser finalizado.
 
 O J4 utilizará um modelo de servo diferente dos três primeiros. Sua integração será realizada separadamente, após a identificação de suas características elétricas e mecânicas.
 
@@ -178,11 +178,11 @@ Quando a mecânica dos dedos permitir, avaliar o uso de `mimic joint` para repre
 - [x] Revisar os limites das juntas (J1–J3, conforme a calibração).
 - [x] Validar a cinemática direta (simulação, `validar_garra.py`).
 - [x] Validar a cinemática inversa (simulação, `validar_garra.py`).
-- [ ] Testar movimentos individuais.
-- [ ] Testar trajetórias envolvendo múltiplas juntas.
-- [x] Validar movimentos cartesianos (simulação, retas de 2 cm; falta na garra real).
+- [x] Testar movimentos individuais (garra real, pelo RViz).
+- [x] Testar trajetórias envolvendo múltiplas juntas (garra real, pelo RViz).
+- [x] Validar movimentos cartesianos (simulação com `validar_garra.py`; garra real com as retas de entrada e subida do `pegar_cubo.py`).
 - [x] Testar abertura e fechamento da garra (na garra real, pela action `gripper_cmd`).
-- [ ] Validar a execução com o hardware real.
+- [x] Validar a execução com o hardware real (usar **Plan & Execute** no RViz: Plan e Execute separados falham com "start point deviates").
 
 **Resultado esperado:** capacidade de planejar e executar movimentos da garra utilizando MoveIt 2, respeitando os limites mecânicos.
 
@@ -264,11 +264,11 @@ A escolha final deverá considerar as necessidades do computador central e evita
 
 ## 4.4. Integração com ros2_control
 
-- [ ] Integrar os quatro servos ao sistema de hardware.
-- [ ] Configurar os controladores necessários.
-- [ ] Validar a publicação de `/joint_states`.
-- [ ] Validar a comunicação com MoveIt 2.
-- [ ] Testar comandos utilizando interfaces ROS 2.
+- [x] Integrar os quatro servos ao sistema de hardware (`garra_hardware/GarraServoSystem`).
+- [x] Configurar os controladores necessários (`joint_trajectory_controller` e `garra_dedos_controller`).
+- [x] Validar a publicação de `/joint_states`.
+- [x] Validar a comunicação com MoveIt 2 (só o pipeline OMPL).
+- [x] Testar comandos utilizando interfaces ROS 2 (action `gripper_cmd` e serviços do MoveIt pelo `pegar_cubo.py`).
 - [ ] Verificar o comportamento em caso de desconexão.
 - [ ] Validar inicialização e encerramento dos nós.
 
@@ -359,13 +359,13 @@ Fluxo proposto:
 
 Atividades:
 
-- [ ] Definir a estratégia de aproximação.
-- [ ] Definir a orientação de coleta.
-- [ ] Configurar o planejamento cartesiano.
-- [ ] Definir a abertura inicial da garra.
-- [ ] Definir a posição de fechamento do J4.
+- [x] Definir a estratégia de aproximação (`pegar_cubo.py`: pré-pegada 6 cm recuada, reta até o cubo, descida extra de 10 mm, fecha, sobe 5 cm).
+- [x] Definir a orientação de coleta (escolhida por cubo, de -90° a 0°; no chão, -90° a -65°).
+- [x] Configurar o planejamento cartesiano.
+- [x] Definir a abertura inicial da garra (0°).
+- [x] Definir a posição de fechamento do J4 (85° = 1.484 rad; 95° travava as engrenagens).
 - [ ] Avaliar a necessidade de sensores para confirmar a coleta.
-- [ ] Testar a coleta com cubos em posições conhecidas.
+- [ ] Testar a coleta com cubos em posições conhecidas (feito no chão em X = 0,46 m de `robo_base`; falta 0,42 e 0,50 m e cubos acima do chão).
 - [ ] Testar a coleta com posições recebidas pela câmera.
 
 ## 5.4. Desenvolvimento do sistema de transporte
