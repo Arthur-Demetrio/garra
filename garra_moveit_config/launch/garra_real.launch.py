@@ -36,6 +36,11 @@ def generate_launch_description():
             'calibracao_file': os.environ.get(
                 'GARRA_CALIBRACAO', os.path.join(pacote, 'config', 'calibracao_servos.yaml')),
         })
+        # So o OMPL: o RViz nao respeita o pipeline padrao, e o STOMP desloca o 1o ponto e a execucao aborta com
+        # "start point deviates from current robot state".
+        .planning_pipelines(
+            default_planning_pipeline='ompl',
+            pipelines=['ompl'])
         .to_moveit_configs()
     )
     return LaunchDescription([
