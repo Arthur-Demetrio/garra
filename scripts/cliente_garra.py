@@ -97,10 +97,10 @@ class ClienteGarra(Node):
             raise RuntimeError('Nada publicado em /joint_states.')
         return [self._estado[j] for j in JUNTAS]
 
-    def fk(self, q):
-        """Pose do TCP em base_link para a configuracao q."""
+    def fk(self, q, frame=BASE):
+        """Pose do TCP em `frame` (padrao base_link) para a configuracao q."""
         req = GetPositionFK.Request()
-        req.header.frame_id = BASE
+        req.header.frame_id = frame
         req.fk_link_names = [TCP]
         self._estado_robo(q, req.robot_state)
         res = self._chamar(self._fk, req)
@@ -108,7 +108,7 @@ class ClienteGarra(Node):
             raise RuntimeError(f'FK falhou (codigo {res.error_code.val})')
         return res.pose_stamped[0].pose
 
-    def ik(self, pose, semente, evitar_colisao=True, timeout=0.5):
+    def ik(self, pose, semente, evitar_colisao=True, timeout=0.5, frame=BASE):
         """Juntas que levam o TCP a pose, ou None se nao houver solucao."""
         req = GetPositionIK.Request()
         ik = req.ik_request
@@ -119,7 +119,7 @@ class ClienteGarra(Node):
         ik.timeout.nanosec = int((timeout % 1) * 1e9)
         self._estado_robo(semente, ik.robot_state)
         alvo = PoseStamped()
-        alvo.header.frame_id = BASE
+        alvo.header.frame_id = frame
         alvo.pose = pose
         ik.pose_stamped = alvo
         res = self._chamar(self._ik, req)
