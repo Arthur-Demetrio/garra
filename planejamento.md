@@ -68,7 +68,7 @@ A garra possui quatro eixos de movimentação, controlados por quatro servomotor
 | J1 | `Revolucionar_46` | Movimento do primeiro segmento do braço | Em desenvolvimento |
 | J2 | `Revolucionar_49` | Movimento do segundo segmento do braço | Em desenvolvimento |
 | J3 | `Revolucionar_72` | Movimento do pulso, permitindo inclinar a garra para cima e para baixo | Em desenvolvimento |
-| J4 | `dedos` | Abertura e fechamento da garra | Integrado ao ROS; falta teste na garra real |
+| J4 | `dedos` | Abertura e fechamento da garra | Integrado ao ROS e testado na garra real (abre e pega o cubo pelo ROS) |
 
 J1, J2 e J3 usam servos DS3218MG de 180° nos pinos 9, 10 e 11 do Arduino Mega. Os três eixos são paralelos; com os servos em 90° (q = 0) a garra fica na vertical.
 
@@ -181,7 +181,7 @@ Quando a mecânica dos dedos permitir, avaliar o uso de `mimic joint` para repre
 - [ ] Testar movimentos individuais.
 - [ ] Testar trajetórias envolvendo múltiplas juntas.
 - [x] Validar movimentos cartesianos (simulação, retas de 2 cm; falta na garra real).
-- [ ] Testar abertura e fechamento da garra.
+- [x] Testar abertura e fechamento da garra (na garra real, pela action `gripper_cmd`).
 - [ ] Validar a execução com o hardware real.
 
 **Resultado esperado:** capacidade de planejar e executar movimentos da garra utilizando MoveIt 2, respeitando os limites mecânicos.
