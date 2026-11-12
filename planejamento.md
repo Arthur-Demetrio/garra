@@ -138,7 +138,7 @@ Atividades:
 - [x] Determinar limites seguros de cada servo.
 - [x] Identificar a posição de referência de cada junta.
 - [x] Determinar o sentido positivo de movimentação.
-- [ ] Medir a relação entre pulso e ângulo.
+- [x] Medir a relação entre pulso e ângulo (`scripts/medir_escala.py`: J1 -636,2, J2 -646,8, J3 -713,2 µs/rad).
 - [x] Registrar parâmetros em arquivo de configuração.
 - [ ] Validar os resultados com a montagem mecânica definitiva.
 
@@ -176,11 +176,11 @@ Quando a mecânica dos dedos permitir, avaliar o uso de `mimic joint` para repre
 - [ ] Atualizar o grupo de planejamento `garra`.
 - [ ] Configurar os quatro eixos.
 - [x] Revisar os limites das juntas (J1–J3, conforme a calibração).
-- [ ] Validar a cinemática direta.
-- [ ] Validar a cinemática inversa.
+- [x] Validar a cinemática direta (simulação, `validar_garra.py`).
+- [x] Validar a cinemática inversa (simulação, `validar_garra.py`).
 - [ ] Testar movimentos individuais.
 - [ ] Testar trajetórias envolvendo múltiplas juntas.
-- [ ] Validar movimentos cartesianos.
+- [x] Validar movimentos cartesianos (simulação, retas de 2 cm; falta na garra real).
 - [ ] Testar abertura e fechamento da garra.
 - [ ] Validar a execução com o hardware real.
 
