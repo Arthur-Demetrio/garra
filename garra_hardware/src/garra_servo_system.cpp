@@ -32,6 +32,9 @@ constexpr double TEMPO_MAX_SEM_RESPOSTA_S = 1.0;
 // entao o primeiro comando so sai depois dessa espera.
 constexpr auto ESPERA_BOOT = std::chrono::milliseconds(2500);
 constexpr auto TEMPO_MAX_HANDSHAKE = std::chrono::seconds(6);
+constexpr double PERIODO_SENSOR_S = 0.05;      // pergunta a chave dos dedos a 20 Hz
+constexpr double REPUBLICAR_SENSOR_S = 1.0;    // publica mesmo sem mudanca, como sinal de vida
+const char * TOPICO_SENSOR = "/garra/cubo_preso";
 }  // namespace
 
 hardware_interface::CallbackReturn GarraServoSystem::on_init(
@@ -187,7 +190,48 @@ hardware_interface::CallbackReturn GarraServoSystem::on_configure(const rclcpp_l
     return CallbackReturn::ERROR;
   }
   RCLCPP_INFO(LOGGER, "Firmware conectado em %s", porta_.c_str());
+
+  if (!no_sensor_) {
+    no_sensor_ = rclcpp::Node::make_shared("garra_sensor_cubo");
+    // transient_local: quem assina depois recebe o ultimo estado na hora
+    pub_sensor_ = no_sensor_->create_publisher<std_msgs::msg::Bool>(
+      TOPICO_SENSOR, rclcpp::QoS(1).reliable().transient_local());
+  }
+  sensor_ativo_ = true;
+  sensor_respondeu_ = false;
+  aguardando_sensor_ = false;
+  cubo_preso_ = -1;
   return CallbackReturn::SUCCESS;
+}
+
+void GarraServoSystem::tratar_sensor(const std::string & linha)
+{
+  if (linha == "S 0" || linha == "S 1") {
+    aguardando_sensor_ = false;
+    const int valor = linha[2] == '1' ? 1 : 0;
+    if (!sensor_respondeu_) {
+      RCLCPP_INFO(LOGGER, "Sensor de cubo dos dedos ativo em %s", TOPICO_SENSOR);
+      sensor_respondeu_ = true;
+    }
+    if (valor != cubo_preso_) {
+      cubo_preso_ = valor;
+      publicar_sensor(true);
+    }
+  }
+}
+
+void GarraServoSystem::publicar_sensor(bool forcar)
+{
+  if (!pub_sensor_ || cubo_preso_ < 0) {
+    return;
+  }
+  if (!forcar && tempo_desde_publicacao_ < REPUBLICAR_SENSOR_S) {
+    return;
+  }
+  std_msgs::msg::Bool msg;
+  msg.data = cubo_preso_ == 1;
+  pub_sensor_->publish(msg);
+  tempo_desde_publicacao_ = 0.0;
 }
 
 hardware_interface::CallbackReturn GarraServoSystem::on_cleanup(const rclcpp_lifecycle::State &)
@@ -243,10 +287,21 @@ hardware_interface::return_type GarraServoSystem::read(
   ler_linhas(linhas);
   tempo_sem_resposta_ = linhas.empty() ? tempo_sem_resposta_ + dt : 0.0;
   for (const auto & linha : linhas) {
-    if (!linha.empty() && linha[0] == 'E') {
+    if (!linha.empty() && linha[0] == 'S') {
+      tratar_sensor(linha);
+    } else if (linha == "E comando" && aguardando_sensor_ && !sensor_respondeu_) {
+      // Firmware antigo, sem o comando "S": desliga o sensor e segue sem ele.
+      sensor_ativo_ = false;
+      aguardando_sensor_ = false;
+      RCLCPP_WARN(
+        LOGGER, "Firmware sem sensor de cubo (comando S desconhecido); %s nao sera publicado",
+        TOPICO_SENSOR);
+    } else if (!linha.empty() && linha[0] == 'E') {
       RCLCPP_WARN(LOGGER, "Firmware recusou um comando: %s", linha.c_str());
     }
   }
+  tempo_desde_publicacao_ += dt;
+  publicar_sensor(false);
   if (tempo_sem_resposta_ > TEMPO_MAX_SEM_RESPOSTA_S) {
     RCLCPP_ERROR(LOGGER, "Firmware sem responder ha mais de %.1f s", TEMPO_MAX_SEM_RESPOSTA_S);
     return return_type::ERROR;
@@ -268,6 +323,14 @@ hardware_interface::return_type GarraServoSystem::write(
   const rclcpp::Time &, const rclcpp::Duration & period)
 {
   tempo_desde_envio_ += period.seconds();
+  tempo_desde_sensor_ += period.seconds();
+  if (sensor_ativo_ && tempo_desde_sensor_ >= PERIODO_SENSOR_S) {
+    tempo_desde_sensor_ = 0.0;
+    aguardando_sensor_ = true;
+    if (!enviar("S\n")) {
+      return return_type::ERROR;
+    }
+  }
   if (tempo_desde_envio_ < PERIODO_ENVIO_S) {
     return return_type::OK;
   }

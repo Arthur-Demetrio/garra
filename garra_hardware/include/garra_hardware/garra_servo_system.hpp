@@ -7,8 +7,11 @@
 #include "hardware_interface/system_interface.hpp"
 #include "hardware_interface/types/hardware_interface_return_values.hpp"
 #include "rclcpp/duration.hpp"
+#include "rclcpp/node.hpp"
+#include "rclcpp/publisher.hpp"
 #include "rclcpp/time.hpp"
 #include "rclcpp_lifecycle/state.hpp"
+#include "std_msgs/msg/bool.hpp"
 
 namespace garra_hardware
 {
@@ -54,6 +57,8 @@ private:
   bool enviar(const std::string & texto);
   void ler_linhas(std::vector<std::string> & linhas);
   int pulso_de(const Junta & junta, double angulo) const;
+  void tratar_sensor(const std::string & linha);
+  void publicar_sensor(bool forcar);
 
   std::vector<Junta> juntas_;
   std::string porta_;
@@ -61,6 +66,16 @@ private:
   std::string buffer_;
   double tempo_desde_envio_{0.0};
   double tempo_sem_resposta_{0.0};
+
+  // Chave fim de curso dos dedos (comando "S" do firmware), publicada em /garra/cubo_preso.
+  rclcpp::Node::SharedPtr no_sensor_;
+  rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr pub_sensor_;
+  bool sensor_ativo_{true};        // vira false se o firmware nao conhece o "S"
+  bool sensor_respondeu_{false};
+  bool aguardando_sensor_{false};
+  int cubo_preso_{-1};             // -1 = ainda sem leitura
+  double tempo_desde_sensor_{0.0};
+  double tempo_desde_publicacao_{0.0};
 };
 
 }  // namespace garra_hardware

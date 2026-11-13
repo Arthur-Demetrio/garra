@@ -5,9 +5,14 @@
 //   V                    -> responde "GARRA 1"
 //   M <j1> <j2> <j3> [<j4>]*HH -> pulsos em us; o J4 (dedos) e opcional. 0 = nao alterar a junta. HH = XOR, em hexadecimal,
 //                           de todos os bytes antes do '*'. Responde "K", ou "E <motivo>".
+//   S                    -> sensor de cubo nos dedos: responde "S 1" (chave fechada = cubo preso)
+//                           ou "S 0". So responde quando perguntado: nada e enviado sozinho.
 //   <motor>,<angulo>     -> comando manual do time (ex.: "1,90"): motor 1 a 4, angulo 0 a 180
 //                           no mesmo padrao do Servo.write. Para testes pelo Monitor Serial
 //                           (115200 baud, final de linha "Nova linha"). Nao usa a calibracao!
+//
+// Sensor de cubo: chave fim de curso NORMALMENTE ABERTA nos dedos, entre o pino 3 e o GND, com o
+// pull-up interno. Solta = HIGH (sem cubo); apertada pelo cubo = LOW. Leitura com debounce.
 //
 // Seguranca:
 //  - Ao ligar, todos os servos vao para 90 graus (PULSO_INICIAL), como no sketch do time. Esse
@@ -35,7 +40,13 @@ const int SERVO_WRITE_MIN = 544;
 const int SERVO_WRITE_MAX = 2400;
 const int PULSO_INICIAL = 1472;  // 90 graus no Servo.write = q=0 do modelo (vertical)
 
+const uint8_t PINO_SENSOR = 3;
+const unsigned long DEBOUNCE_MS = 20;  // a chave precisa ficar estavel esse tempo
+
 Servo servos[N_SERVOS];
+bool cubo_preso = false;           // estado ja filtrado da chave
+bool leitura_anterior = false;
+unsigned long mudou_em = 0;
 int alvo[N_SERVOS];
 int atual[N_SERVOS];
 
@@ -136,9 +147,22 @@ bool comando_manual() {
   return true;
 }
 
+void atualizar_sensor() {
+  bool leitura = digitalRead(PINO_SENSOR) == LOW;  // LOW = chave fechada = cubo
+  unsigned long agora = millis();
+  if (leitura != leitura_anterior) {
+    leitura_anterior = leitura;
+    mudou_em = agora;
+  } else if (agora - mudou_em >= DEBOUNCE_MS) {
+    cubo_preso = leitura;
+  }
+}
+
 void processar_linha() {
   if (strcmp(linha, "V") == 0) {
-    Serial.println(F("GARRA 1"));
+    Serial.println(F("GARRA 1"));  // nao mudar: o driver ROS e o calibrar_servos.py esperam isso
+  } else if (strcmp(linha, "S") == 0) {
+    Serial.println(cubo_preso ? F("S 1") : F("S 0"));
   } else if (linha[0] == 'M') {
     comando_movimento();
   } else if (comando_manual()) {
@@ -149,6 +173,8 @@ void processar_linha() {
 
 void setup() {
   Serial.begin(115200);
+  pinMode(PINO_SENSOR, INPUT_PULLUP);
+  cubo_preso = leitura_anterior = digitalRead(PINO_SENSOR) == LOW;
   for (uint8_t i = 0; i < N_SERVOS; i++) {
     // Define o pulso antes do attach para o servo nao ir ao padrao da biblioteca (1500 us).
     atual[i] = alvo[i] = PULSO_INICIAL;
@@ -158,6 +184,7 @@ void setup() {
 }
 
 void loop() {
+  atualizar_sensor();
   while (Serial.available() > 0) {
     char c = (char)Serial.read();
     if (c == '\r') continue;
