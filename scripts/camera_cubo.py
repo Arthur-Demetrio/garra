@@ -191,6 +191,8 @@ class Publicador:
 
     def enviar(self, x, y, z):
         if self.no is not None and self.rclpy.ok():
+            if not self.pub.get_subscription_count():
+                print(f'AVISO: ninguem escutando {TOPICO} (o pegar_cubo.py esta rodando?)', flush=True)
             self.pub.publish(self.Point(x=x, y=y, z=z))
             self.rclpy.spin_once(self.no, timeout_sec=0.0)
 

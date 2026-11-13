@@ -450,11 +450,27 @@ python3 scripts/pegar_cubo.py 0.46 0.021                 # executa no RViz
    python3 scripts/pegar_cubo.py 0.46 0.021 --soltar
    ```
 
-### 8.1.3 Parâmetros
+### 8.1.3 Receber a posição por tópico ROS
+
+Sem `x` e `z`, o script vira um nó que escuta `/pegar_cubo` (`geometry_msgs/msg/Point`) e pega um cubo a cada mensagem. As opções (`--soltar`, `--so-planejar`, `--fechamento`...) valem para todas as mensagens:
+
+```bash
+python3 scripts/pegar_cubo.py --soltar
+```
+
+Em outro terminal, envie a posição do centro do cubo em `robo_base`:
+
+```bash
+ros2 topic pub --once /pegar_cubo geometry_msgs/msg/Point "{x: 0.46, z: 0.021}"
+```
+
+Só `x` e `z` são usados; o `y` é ignorado enquanto o braço não tiver o motor do eixo Y. Posições que chegam durante um movimento são descartadas. `Ctrl+C` encerra.
+
+### 8.1.4 Parâmetros
 
 | Parâmetro | Padrão | Descrição |
 |---|---|---|
-| `x`, `z` | — | Centro do cubo em `robo_base` (m). No chão, `z = 0.021`. |
+| `x`, `z` | — | Centro do cubo em `robo_base` (m). No chão, `z = 0.021`. Sem eles, escuta `/pegar_cubo`. |
 | `--velocidade` | `0.2` | Escala de velocidade/aceleração (0–1). |
 | `--fechamento` | `85` | Graus do comando do J4 ao fechar. Em 95° os dedos forçam o cubo e prendem as engrenagens; use o menor valor que ainda segura. |
 | `--descer` | `10` | mm que a ponta desce além do que o modelo permite antes de fechar (a malha encosta no chão do modelo antes da garra real). 5 mm já pegou o cubo no teste de 2026-11-12. |
