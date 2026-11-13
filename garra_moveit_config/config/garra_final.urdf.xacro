@@ -71,6 +71,12 @@
          a garra exatamente no topo da base. -->
     <xacro:property name="garra_x" value="${base_x/2 - 0.050}"/>
     <xacro:property name="garra_z_malha" value="0.0054"/>
+    <!-- Plataforma do eixo Y (2026-11-13): eleva a base da garra 68,39 mm acima do topo da base.
+         Ainda sem motor: o Y fica fixo no centro. -->
+    <xacro:property name="plataforma_z" value="0.06839"/>
+    <!-- TEMPORARIO: plataforma como um bloco solido do topo da base ate o pe da garra, um pouco
+         maior que o pe dela (malha do base_link: ~0.098 x 0.075 m). Trocar pelas medidas reais. -->
+    <xacro:property name="plataforma_lado" value="0.12"/>
 
     <xacro:macro name="caixa" params="x y z sx sy sz">
         <visual>
@@ -109,6 +115,9 @@
         <!-- PENDENTE: chassi sob a placa da base (rodas, motores). Ate ser medido, fica como volume
              solido do chao ate a placa, para a garra nao planejar por baixo da base. -->
         <xacro:caixa x="0" y="0" z="${(base_topo - base_esp)/2}" sx="${base_x}" sy="${base_y}" sz="${base_topo - base_esp}"/>
+        <!-- Plataforma do eixo Y (TEMPORARIO, ver plataforma_lado) -->
+        <xacro:caixa x="${garra_x}" y="0" z="${base_topo + plataforma_z/2}"
+                     sx="${plataforma_lado}" sy="${plataforma_lado}" sz="${plataforma_z}"/>
         <!-- Andares -->
         <xacro:andar lx="${a1_x}" topo="${a1_topo}"/>
         <xacro:andar lx="${a2_x}" topo="${a2_topo}"/>
@@ -127,7 +136,7 @@
     <joint name="montagem_garra" type="fixed">
         <parent link="robo_base"/>
         <child link="base_link"/>
-        <origin xyz="${garra_x} 0 ${base_topo - garra_z_malha}" rpy="0 0 ${pi}"/>
+        <origin xyz="${garra_x} 0 ${base_topo + plataforma_z - garra_z_malha}" rpy="0 0 ${pi}"/>
     </joint>
 
     <!-- Interface ros2_control (unica definicao do sistema) -->
