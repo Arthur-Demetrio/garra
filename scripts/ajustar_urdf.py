@@ -18,12 +18,12 @@ import xml.etree.ElementTree as ET
 PADRAO = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..',
                       'garra_final_description', 'urdf', 'garra_final.urdf')
 
-# J1, J2, J3. Faixa medida em calibracao_servos.yaml (2026-11-10, escala medida com
+# J1, J2, J3. Faixa medida em calibracao_servos.yaml (2026-11-10; J1 em 2026-11-13; escala medida com
 # medir_escala.py), convertida para q e com ~0.02 rad de margem: o driver corta o pulso nos limites e, sem realimentacao, o ROS nao perceberia.
 # Refaca estes valores se recalibrar.
 # effort: torque do DS3218MG (~1.86 N.m). A velocidade real fica em joint_limits.yaml.
 LIMITES = {
-    'Revolucionar_46': (-0.79, 1.50),
+    'Revolucionar_46': (-0.63, 1.82),  # 2026-11-13: servo do J1 reposicionado
     'Revolucionar_49': (-1.47, 1.35),
     'Revolucionar_72': (-1.25, 1.30),
 }

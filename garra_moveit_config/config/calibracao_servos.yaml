@@ -1,6 +1,6 @@
 # Gerado por calibrar_servos.py (servo de 180 graus).
 juntas:
-  Revolucionar_46: {zero_us: 1472, us_por_rad: -636.2, min_us: 504, max_us: 1988}
+  Revolucionar_46: {zero_us: 1678, us_por_rad: -636.2, min_us: 504, max_us: 2091}
   Revolucionar_49: {zero_us: 1432, us_por_rad: -646.8, min_us: 544, max_us: 2400}
   Revolucionar_72: {zero_us: 1492, us_por_rad: -713.2, min_us: 544, max_us: 2400}
   # J4 (dedos, DS-S006MP): medido pelo Monitor Serial. 0 graus = aberta (544 us), 95 graus = presa no
