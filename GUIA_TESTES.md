@@ -11,6 +11,7 @@ Este documento descreve como executar os scripts de teste e calibração existen
 | `cliente_garra.py` | Biblioteca cliente usada pelos testes | Sim, quando importada e utilizada | Não por conta própria |
 | `validar_garra.py` | Teste automatizado da descrição, cinemática e planejamento | Sim | **Não. Execute apenas com a simulação.** |
 | `calibrar_servos.py` | Calibração interativa dos três servos via serial | Não | **Sim. Atua diretamente no Arduino/servos.** |
+| `pegar_cubo.py` | Pega um cubo numa posição informada e volta para `PRONTA` | Sim (`demo.launch.py` ou `garra_real.launch.py`) | **Sim, quando usado com `garra_real.launch.py`.** |
 
 `cliente_garra.py` não é um programa de teste independente. Ele implementa a classe `ClienteGarra`, que `validar_garra.py` importa para acessar os serviços e a ação do MoveIt.
 
@@ -409,6 +410,59 @@ O launch inicia o `ros2_control_node`, os controladores e o `move_group`, usando
 
 Não execute o calibrador e o launch de hardware simultaneamente: ambos precisam da mesma porta serial.
 
+## 8.1 Teste 5 — Pegar o cubo (`pegar_cubo.py`)
+
+<badge color="warning">Hardware físico — cuidado</badge>
+
+O script leva a garra até um cubo, fecha os dedos, sobe em reta e volta para `PRONTA`. Sequência: abrir dedos → pré-pegada (6 cm recuada na direção de aproximação) → reta até o cubo → descida extra (`--descer`) → fechar dedos → subir 5 cm em reta → `PRONTA`.
+
+As coordenadas são do centro do cubo no frame `robo_base` (centro da base do robô no chão; X para frente, Z para cima), em metros. Como o braço é planar, o cubo precisa estar no plano da garra (Y do TCP ≈ −0,029 m). A inclinação da garra é escolhida automaticamente (de −90° a 0°).
+
+### 8.1.1 Ensaiar na simulação
+
+Com `demo.launch.py` ativo:
+
+```bash
+cd ~/braco_ws/src/garra
+python3 scripts/pegar_cubo.py 0.46 0.021 --so-planejar   # só planeja
+python3 scripts/pegar_cubo.py 0.46 0.021                 # executa no RViz
+```
+
+### 8.1.2 Executar na garra real
+
+1. Posicione o cubo (42 mm) no chão, no plano da garra — ex.: 46 cm à frente do centro da base (`x = 0.46`; no chão, `z = 0.021`).
+2. Inicie `garra_real.launch.py` (seção 8) e confira que a garra está em uma posição segura.
+3. Planeje primeiro, sem mexer a garra:
+
+   ```bash
+   python3 scripts/pegar_cubo.py 0.46 0.021 --so-planejar
+   ```
+
+4. Se o planejamento passar, execute com a mão no interruptor da fonte dos servos:
+
+   ```bash
+   python3 scripts/pegar_cubo.py 0.46 0.021
+   ```
+
+5. Para devolver o cubo no mesmo lugar:
+
+   ```bash
+   python3 scripts/pegar_cubo.py 0.46 0.021 --soltar
+   ```
+
+### 8.1.3 Parâmetros
+
+| Parâmetro | Padrão | Descrição |
+|---|---|---|
+| `x`, `z` | — | Centro do cubo em `robo_base` (m). No chão, `z = 0.021`. |
+| `--velocidade` | `0.2` | Escala de velocidade/aceleração (0–1). |
+| `--fechamento` | `85` | Graus do comando do J4 ao fechar. Em 95° os dedos forçam o cubo e prendem as engrenagens; use o menor valor que ainda segura. |
+| `--descer` | `10` | mm que a ponta desce além do que o modelo permite antes de fechar (a malha encosta no chão do modelo antes da garra real). 5 mm já pegou o cubo no teste de 2026-11-12. |
+| `--so-planejar` | — | Planeja sem mexer a garra. |
+| `--soltar` | — | Devolve o cubo no mesmo lugar. |
+
+Se a garra não alcançar o cubo, aumente `--descer` aos poucos; se os dedos travarem ou forçarem, reduza `--fechamento`.
+
 ## 9. Diagnóstico de falhas
 
 ### 9.1 `Aguardando os servicos e a acao do MoveIt...`
@@ -479,5 +533,6 @@ Use esta ordem para reduzir o risco de testar várias camadas ao mesmo tempo:
 8. Revisar o YAML gerado e os limites físicos.
 9. Iniciar `garra_real.launch.py` com a estrutura em condição segura e velocidade/escala reduzida quando aplicável.
 10. Fazer movimentos físicos pequenos e supervisionados antes de qualquer operação completa.
+11. Testar a coleta do cubo com `pegar_cubo.py`: primeiro `--so-planejar`, depois a execução real.
 
 A validação em simulação confirma aspectos do modelo e do planejamento. Ela não comprova, por si só, que os servos estão calibrados, que a estrutura suporta os movimentos ou que a alimentação elétrica é adequada.
