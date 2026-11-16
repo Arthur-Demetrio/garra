@@ -1,0 +1,187 @@
+#!/usr/bin/env python3
+"""Decide se a garra alcanca o cubo visto pela camera; se nao alcanca, manda a base se mexer.
+
+Recebe a posicao do cubo (geometry_msgs/Point em /cubo_detectado, frame robo_base: X frente,
+Y esquerda, Z cima, em metros) e confere se ela esta na JANELA DE COLETA medida na garra real:
+  - X entre X_MIN e X_MAX (cubo no chao, medido em 2026-11-13 apos reposicionar o J1);
+  - Y a ate Y_TOLERANCIA do plano da garra (o braco e planar, Y_PLANO).
+
+  dentro da janela -> publica o Point em /pegar_cubo (o pegar_cubo.py pega o cubo);
+  fora da janela   -> publica geometry_msgs/Pose2D em /robo/mover com o deslocamento RELATIVO
+                      que a base deve fazer (frame robo_base atual) para o cubo cair no centro
+                      da janela. Depois de mandar a base, espera --espera s antes de decidir de
+                      novo (a camera precisa ver o cubo com o robo ja parado).
+
+Pose2D em /robo/mover:
+  padrao (base holonomica): x, y = quanto andar para frente/esquerda; theta = 0.
+  --girar (base diferencial): primeiro gira theta (rad, anti-horario) no lugar, depois anda x
+                              para frente; y = 0.
+
+Se a garra for recalibrada ou mudar de lugar, atualize X_MIN, X_MAX e Y_PLANO.
+
+Fluxo:
+  terminal 1: ros2 launch ... garra_real.launch.py
+  terminal 2: python3 scripts/pegar_cubo.py                              (escuta /pegar_cubo)
+  terminal 3: python3 scripts/alcance_cubo.py
+  terminal 4: python3 scripts/camera_cubo.py --topico /cubo_detectado
+
+Com o no cube_vision do repo niviton/-WORK (ros2_ws/src/cube_vision) no lugar do camera_cubo.py:
+  python3 scripts/alcance_cubo.py --vision
+  Le vision_msgs/Detection3DArray em /vision/cubes (frame camera_optical_frame) e converte para
+  robo_base pelo TF; e preciso publicar robo_base -> camera_optical_frame (static_transform_publisher)
+  e ter o pacote vision_msgs instalado (sudo apt install ros-$ROS_DISTRO-vision-msgs).
+  Com varios cubos, usa o mais perto da base (menor X); --id escolhe um ID (cubo_<id>).
+
+Teste sem camera:
+  ros2 topic pub --once /cubo_detectado geometry_msgs/msg/Point "{x: 0.60, y: 0.05, z: 0.021}"
+  ros2 topic echo /robo/mover
+"""
+
+import argparse
+import math
+import time
+
+from geometry_msgs.msg import Point, Pose2D
+import rclpy
+from rclpy.executors import ExternalShutdownException
+
+TOPICO_CUBO = '/cubo_detectado'
+TOPICO_GARRA = '/pegar_cubo'
+TOPICO_BASE = '/robo/mover'
+
+# Janela de coleta no chao (robo_base, m). Medida em 2026-11-13: 0,40-0,43 pegam; 0,38 e 0,48 nao.
+X_MIN = 0.40
+X_MAX = 0.43
+Y_PLANO = -0.029      # plano da garra (Y do TCP)
+Y_TOLERANCIA = 0.015  # mesmo valor do aviso do camera_cubo.py
+X_ALVO = (X_MIN + X_MAX) / 2
+
+
+def alcanca(x, y):
+    return X_MIN <= x <= X_MAX and abs(y - Y_PLANO) <= Y_TOLERANCIA
+
+
+def deslocamento_holonomico(x, y):
+    """Quanto a base anda (frente, esquerda) para o cubo ir para (X_ALVO, Y_PLANO)."""
+    return Pose2D(x=x - X_ALVO, y=y - Y_PLANO, theta=0.0)
+
+
+def deslocamento_girando(x, y):
+    """Gira theta no lugar e depois anda x para frente, deixando o cubo em (X_ALVO, Y_PLANO).
+
+    Girar theta leva o cubo de (r, phi) para (r, phi - theta). Para o Y final ser Y_PLANO:
+    r * sin(phi - theta) = Y_PLANO. Depois, andar para frente so muda o X.
+    """
+    r = math.hypot(x, y)
+    if r <= abs(Y_PLANO):
+        return None   # cubo em cima do centro da base: nao ha giro que resolva
+    phi = math.atan2(y, x)
+    theta = phi - math.asin(Y_PLANO / r)
+    x_girado = r * math.cos(phi - theta)
+    return Pose2D(x=x_girado - X_ALVO, y=0.0, theta=theta)
+
+
+def girar(q, v):
+    """Aplica o quaternion q (x, y, z, w) ao vetor v."""
+    qx, qy, qz, qw = q
+    tx = 2 * (qy * v[2] - qz * v[1])
+    ty = 2 * (qz * v[0] - qx * v[2])
+    tz = 2 * (qx * v[1] - qy * v[0])
+    return (v[0] + qw * tx + qy * tz - qz * ty,
+            v[1] + qw * ty + qz * tx - qx * tz,
+            v[2] + qw * tz + qx * ty - qy * tx)
+
+
+def ouvir_vision(no, recebido, id_alvo):
+    """Assina /vision/cubes (cube_vision do -WORK) e entrega Points em robo_base."""
+    from rclpy.time import Time
+    import tf2_ros
+    from vision_msgs.msg import Detection3DArray
+
+    tf_buffer = tf2_ros.Buffer()
+    no._tf_listener = tf2_ros.TransformListener(tf_buffer, no)
+
+    def detectado(msg):
+        cubos = []
+        for d in msg.detections:
+            nome = d.results[0].hypothesis.class_id if d.results else ''
+            if id_alvo is not None and nome != f'cubo_{id_alvo}':
+                continue
+            frame = d.header.frame_id or msg.header.frame_id
+            try:
+                t = tf_buffer.lookup_transform('robo_base', frame, Time()).transform
+            except tf2_ros.TransformException as e:
+                print(f'Sem TF robo_base <- {frame}: {e}', flush=True)
+                return
+            p = d.bbox.center.position
+            r = t.rotation
+            x, y, z = girar((r.x, r.y, r.z, r.w), (p.x, p.y, p.z))
+            cubos.append(Point(x=x + t.translation.x, y=y + t.translation.y, z=z + t.translation.z))
+        if cubos:
+            recebido(min(cubos, key=lambda c: c.x))
+
+    no.create_subscription(Detection3DArray, '/vision/cubes', detectado, 10)
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument('--girar', action='store_true',
+                    help='base diferencial: gira e anda para frente (sem andar de lado)')
+    ap.add_argument('--espera', type=float, default=3.0,
+                    help='s ignorando o cubo depois de mandar a base se mexer (padrao 3)')
+    ap.add_argument('--vision', action='store_true',
+                    help='le /vision/cubes do cube_vision (-WORK) em vez de /cubo_detectado')
+    ap.add_argument('--id', type=int, default=None, help='com --vision: so o cubo com este ID')
+    ap.add_argument('--z-medido', action='store_true',
+                    help='com --vision: manda o z medido; sem ele, z = 0.021 (cubo no chao)')
+    args = ap.parse_args()
+
+    rclpy.init()
+    no = rclpy.create_node('alcance_cubo')
+    pub_garra = no.create_publisher(Point, TOPICO_GARRA, 10)
+    pub_base = no.create_publisher(Pose2D, TOPICO_BASE, 10)
+    ignorar_ate = [0.0]
+
+    def recebido(p):
+        if time.monotonic() < ignorar_ate[0]:
+            return
+        if alcanca(p.x, p.y):
+            print(f'Cubo em x={p.x:.3f} y={p.y:.3f}: ao alcance -> {TOPICO_GARRA}', flush=True)
+            if not pub_garra.get_subscription_count():
+                print(f'  AVISO: ninguem escutando {TOPICO_GARRA} (o pegar_cubo.py esta rodando?)')
+            pub_garra.publish(p)
+            return
+        mover = deslocamento_girando(p.x, p.y) if args.girar else deslocamento_holonomico(p.x, p.y)
+        if mover is None:
+            print(f'Cubo em x={p.x:.3f} y={p.y:.3f}: em cima da base, nao da para alinhar.', flush=True)
+            return
+        print(f'Cubo em x={p.x:.3f} y={p.y:.3f}: fora do alcance -> {TOPICO_BASE} '
+              f'x={mover.x:+.3f} m y={mover.y:+.3f} m theta={math.degrees(mover.theta):+.1f} graus',
+              flush=True)
+        if not pub_base.get_subscription_count():
+            print(f'  AVISO: ninguem escutando {TOPICO_BASE} (a base esta rodando?)')
+        pub_base.publish(mover)
+        ignorar_ate[0] = time.monotonic() + args.espera
+
+    if args.vision:
+        def recebido_vision(p):
+            if not args.z_medido:
+                p.z = 0.021   # o z medido pela camera sai ~3 cm alto
+            recebido(p)
+        ouvir_vision(no, recebido_vision, args.id)
+    else:
+        no.create_subscription(Point, TOPICO_CUBO, recebido, 10)
+    print(f'Janela da garra: X {X_MIN:.2f}-{X_MAX:.2f} m, Y {Y_PLANO:+.3f} +- {Y_TOLERANCIA:.3f} m. '
+          f'Esperando {"/vision/cubes" if args.vision else TOPICO_CUBO}...', flush=True)
+    try:
+        rclpy.spin(no)
+    except (KeyboardInterrupt, ExternalShutdownException):
+        pass
+    finally:
+        no.destroy_node()
+        if rclpy.ok():
+            rclpy.shutdown()
+
+
+if __name__ == '__main__':
+    main()

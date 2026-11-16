@@ -9,7 +9,8 @@ Baseado na visao do repositorio niviton/-WORK (vision/cubes/detector.py e grasp.
 Funciona com o OpenCV 4.6 do ROS Jazzy (API antiga do aruco) e com o >= 4.7.
 
 Frame robo_base: centro da base do robo no chao; X frente, Y esquerda, Z cima (m).
-Publica geometry_msgs/Point em /pegar_cubo, que o pegar_cubo.py ja escuta.
+Publica geometry_msgs/Point em /pegar_cubo, que o pegar_cubo.py ja escuta (ou em --topico;
+com /cubo_detectado o alcance_cubo.py decide entre a garra e mover a base).
 
 Fluxo:
   terminal 1: ros2 launch ... garra_real.launch.py
@@ -175,8 +176,9 @@ def centro_do_cubo(rvec, tvec, R_base_cam, t_base_cam):
 
 
 class Publicador:
-    def __init__(self, sem_ros):
+    def __init__(self, sem_ros, topico=TOPICO):
         self.no = None
+        self.topico = topico
         if sem_ros:
             return
         import rclpy
@@ -184,7 +186,7 @@ class Publicador:
         rclpy.init()
         self.rclpy, self.Point = rclpy, Point
         self.no = rclpy.create_node('camera_cubo')
-        self.pub = self.no.create_publisher(Point, TOPICO, 10)
+        self.pub = self.no.create_publisher(Point, topico, 10)
 
     def ativo(self):
         return self.no is None or self.rclpy.ok()
@@ -192,7 +194,7 @@ class Publicador:
     def enviar(self, x, y, z):
         if self.no is not None and self.rclpy.ok():
             if not self.pub.get_subscription_count():
-                print(f'AVISO: ninguem escutando {TOPICO} (o pegar_cubo.py esta rodando?)', flush=True)
+                print(f'AVISO: ninguem escutando {self.topico}', flush=True)
             self.pub.publish(self.Point(x=x, y=y, z=z))
             self.rclpy.spin_once(self.no, timeout_sec=0.0)
 
@@ -225,7 +227,7 @@ def abrir_camera(indice):
 class App:
     def __init__(self, args):
         self.args = args
-        self.pub = Publicador(args.sem_ros)
+        self.pub = Publicador(args.sem_ros, args.topico)
         self.R, self.t, origem = pose_camera()
         incl = math.degrees(math.asin(-self.R[2, 2]))
         print(f'Pose da camera: {origem}; lente em {np.round(self.t * 100, 1)} cm, '
@@ -284,7 +286,7 @@ class App:
         cv2.rectangle(img, (0, h - 50), (w, h), (20, 20, 20), -1)
         alvo_txt = 'mais perto' if self.id_alvo is None else f'ID {self.id_alvo}'
         cv2.putText(img, f'[{"AUTO" if self.auto else "MANUAL"}] alvo: {alvo_txt}  {fps:.0f} fps  '
-                    f'{"SEM ROS" if self.args.sem_ros else TOPICO}  | {self.mensagem}',
+                    f'{"SEM ROS" if self.args.sem_ros else self.args.topico}  | {self.mensagem}',
                     (12, h - 18), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (230, 230, 230), 2)
 
     def rodar(self):
@@ -356,6 +358,8 @@ def main():
                     help=f'usa o z medido pela camera em vez do cubo no chao (z={Z_CHAO})')
     ap.add_argument('--auto', action='store_true',
                     help='ja comeca enviando sozinho (cubo parado 1 s e que andou > 2 cm)')
+    ap.add_argument('--topico', default=TOPICO,
+                    help=f'onde publicar (padrao {TOPICO}; use /cubo_detectado com o alcance_cubo.py)')
     ap.add_argument('--sem-ros', action='store_true', help='nao publica no ROS, so mostra/imprime')
     App(ap.parse_args()).rodar()
 
