@@ -9,8 +9,9 @@ Y esquerda, Z cima, em metros) e confere se ela esta na JANELA DE COLETA medida 
   dentro da janela -> publica o Point em /pegar_cubo (o pegar_cubo.py pega o cubo);
   fora da janela   -> publica geometry_msgs/Pose2D em /robo/mover com o deslocamento RELATIVO
                       que a base deve fazer (frame robo_base atual) para o cubo cair no centro
-                      da janela. Depois de mandar a base, espera --espera s antes de decidir de
-                      novo (a camera precisa ver o cubo com o robo ja parado).
+                      da janela (o ajuste_base.py executa). Depois de mandar a base, ignora a
+                      camera ate chegar /robo/mover/resultado (no maximo --espera s) e mais
+                      --assentar s, para medir de novo com o robo ja parado.
 
 Pose2D em /robo/mover:
   padrao (base holonomica): x, y = quanto andar para frente/esquerda; theta = 0.
@@ -23,6 +24,7 @@ Fluxo:
   terminal 1: ros2 launch ... garra_real.launch.py
   terminal 2: python3 scripts/pegar_cubo.py                              (escuta /pegar_cubo)
   terminal 3: python3 scripts/alcance_cubo.py
+  terminal 3b: python3 scripts/ajuste_base.py                         (move a base do robo)
   terminal 4: python3 scripts/camera_cubo.py --topico /cubo_detectado
 
 Com o no cube_vision do repo niviton/-WORK (ros2_ws/src/cube_vision) no lugar do camera_cubo.py:
@@ -42,12 +44,14 @@ import math
 import time
 
 from geometry_msgs.msg import Point, Pose2D
+from std_msgs.msg import String
 import rclpy
 from rclpy.executors import ExternalShutdownException
 
 TOPICO_CUBO = '/cubo_detectado'
 TOPICO_GARRA = '/pegar_cubo'
 TOPICO_BASE = '/robo/mover'
+TOPICO_RESULTADO = '/robo/mover/resultado'
 
 # Janela de coleta no chao (robo_base, m). Medida em 2026-11-13: 0,40-0,43 pegam; 0,38 e 0,48 nao.
 X_MIN = 0.40
@@ -127,8 +131,10 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--girar', action='store_true',
                     help='base diferencial: gira e anda para frente (sem andar de lado)')
-    ap.add_argument('--espera', type=float, default=3.0,
-                    help='s ignorando o cubo depois de mandar a base se mexer (padrao 3)')
+    ap.add_argument('--assentar', type=float, default=1.0,
+                    help='s esperando depois do resultado da base, antes de medir de novo (padrao 1)')
+    ap.add_argument('--espera', type=float, default=20.0,
+                    help='s maximo esperando o resultado da base (padrao 20)')
     ap.add_argument('--vision', action='store_true',
                     help='le /vision/cubes do cube_vision (-WORK) em vez de /cubo_detectado')
     ap.add_argument('--id', type=int, default=None, help='com --vision: so o cubo com este ID')
@@ -141,6 +147,12 @@ def main():
     pub_garra = no.create_publisher(Point, TOPICO_GARRA, 10)
     pub_base = no.create_publisher(Pose2D, TOPICO_BASE, 10)
     ignorar_ate = [0.0]
+
+    def resultado_base(m):
+        print(f'Base: {m.data}', flush=True)
+        ignorar_ate[0] = min(ignorar_ate[0], time.monotonic() + args.assentar)
+
+    no.create_subscription(String, TOPICO_RESULTADO, resultado_base, 10)
 
     def recebido(p):
         if time.monotonic() < ignorar_ate[0]:
