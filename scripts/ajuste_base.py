@@ -29,6 +29,7 @@ Teste (o robo ANDA 5 cm para a frente):
 
 import argparse
 import math
+import signal
 import time
 
 from geometry_msgs.msg import Pose2D, TwistStamped
@@ -165,11 +166,19 @@ class AjusteBase:
         try:
             return self.executar(p)
         finally:
-            for _ in range(3):        # zera e garante que o suavizador recebeu
-                self.enviar()
-                time.sleep(PERIODO)
-            if not self.trocar_dono(False):
-                print('ATENCAO: nao devolveu a autoridade ao nav2.', flush=True)
+            # Ctrl+C no meio do movimento: o robo PRECISA parar e devolver a autoridade. Se o ROS ja
+            # caiu, o arbitro zera sozinho em 0,5 s sem heartbeat.
+            anterior = signal.signal(signal.SIGINT, signal.SIG_IGN)
+            try:
+                for _ in range(3):        # zera e garante que o suavizador recebeu
+                    self.enviar()
+                    time.sleep(PERIODO)
+                if not self.trocar_dono(False):
+                    print('ATENCAO: nao devolveu a autoridade ao nav2.', flush=True)
+            except Exception as e:
+                print(f'ATENCAO: falha ao parar ({e}); o arbitro zera sem heartbeat em 0,5 s.', flush=True)
+            finally:
+                signal.signal(signal.SIGINT, anterior)
 
     def rodar(self):
         print(f'Esperando pedidos em {TOPICO_PEDIDO} (comandos em {self.args.topico_cmd}'
@@ -204,9 +213,9 @@ def main():
     except (KeyboardInterrupt, ExternalShutdownException):
         pass
     finally:
+        signal.signal(signal.SIGINT, signal.SIG_IGN)  # 2o Ctrl+C (ros2 launch) nao interrompe o encerramento
         a.no.destroy_node()
-        if rclpy.ok():
-            rclpy.shutdown()
+        rclpy.try_shutdown()
 
 
 if __name__ == '__main__':

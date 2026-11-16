@@ -47,6 +47,7 @@ Teste sem camera:
 
 import argparse
 import math
+import signal
 import time
 
 from geometry_msgs.msg import Point, Pose2D
@@ -243,9 +244,9 @@ def main():
     except (KeyboardInterrupt, ExternalShutdownException):
         pass
     finally:
+        signal.signal(signal.SIGINT, signal.SIG_IGN)  # 2o Ctrl+C (ros2 launch) nao interrompe o encerramento
         no.destroy_node()
-        if rclpy.ok():
-            rclpy.shutdown()
+        rclpy.try_shutdown()
 
 
 if __name__ == '__main__':

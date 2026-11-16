@@ -26,6 +26,7 @@ No topico, so x e z sao usados; o y e ignorado enquanto o braco nao tiver o moto
 
 import argparse
 import math
+import signal
 import sys
 
 from control_msgs.action import GripperCommand
@@ -315,9 +316,9 @@ def main():
     except KeyboardInterrupt:
         return 0
     finally:
+        signal.signal(signal.SIGINT, signal.SIG_IGN)  # 2o Ctrl+C (ros2 launch) nao interrompe o encerramento
         c.destroy_node()
-        if rclpy.ok():
-            rclpy.shutdown()
+        rclpy.try_shutdown()
 
 
 if __name__ == '__main__':
