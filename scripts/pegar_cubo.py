@@ -19,6 +19,8 @@ Uso (com garra_real.launch.py ou demo.launch.py rodando):
     python3 scripts/pegar_cubo.py                           # escuta /pegar_cubo e pega a cada posicao
     ros2 topic pub --once /pegar_cubo geometry_msgs/msg/Point "{x: 0.46, z: 0.021}"
 
+Cada posicao do topico gera um resultado em /pegar_cubo/resultado (std_msgs/String):
+'ok', 'sem_cubo' (a chave dos dedos nao achou o cubo) ou 'falhou: motivo'.
 No topico, so x e z sao usados; o y e ignorado enquanto o braco nao tiver o motor do eixo Y.
 """
 
@@ -31,12 +33,14 @@ from geometry_msgs.msg import Point, Pose, Quaternion
 import rclpy
 from rclpy.action import ActionClient
 from rclpy.qos import DurabilityPolicy, QoSProfile, ReliabilityPolicy
-from std_msgs.msg import Bool
+from std_msgs.msg import Bool, String
 
 from cliente_garra import ClienteGarra, PRONTA, SUCESSO
 
 FRAME = 'robo_base'
 TOPICO = '/pegar_cubo'
+# Resultado de cada posicao recebida no topico: 'ok', 'sem_cubo' ou 'falhou: motivo'.
+TOPICO_RESULTADO = '/pegar_cubo/resultado'
 # TEMPORARIO: aberta em 65 graus (o normal e 0.0).
 ABERTA = math.radians(65.0)
 # Graus do comando do J4 ao fechar no cubo. Em 95 graus os dedos forcam o cubo e prendem as
@@ -249,6 +253,7 @@ def escutar(c, coleta, args):
     """Fica no topico TOPICO e pega um cubo a cada geometry_msgs/Point recebido."""
     pendentes = []
     c.create_subscription(Point, TOPICO, pendentes.append, 10)
+    pub_res = c.create_publisher(String, TOPICO_RESULTADO, 10)
     print(f'Esperando posicoes em {TOPICO} (geometry_msgs/msg/Point, x e z em robo_base). '
           'Ctrl+C para sair. Exemplo:')
     print(f'  ros2 topic pub --once {TOPICO} geometry_msgs/msg/Point "{{x: 0.46, z: 0.021}}"')
@@ -263,9 +268,12 @@ def escutar(c, coleta, args):
         # O y e ignorado: o braco ainda e planar (sem o motor do eixo Y).
         print(f'Recebido x={p.x:.3f} z={p.z:.3f}')
         try:
-            pegar(c, coleta, p.x, p.z, args)
+            codigo = pegar(c, coleta, p.x, p.z, args)
+            res = {0: 'ok', 2: 'sem_cubo'}.get(codigo, 'falhou: fora do alcance')
         except RuntimeError as e:
             print(f'ERRO: {e}')
+            res = f'falhou: {e}'
+        pub_res.publish(String(data=res))
         print(f'Esperando a proxima posicao em {TOPICO}...')
 
 

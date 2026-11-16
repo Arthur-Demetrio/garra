@@ -1,0 +1,109 @@
+diff --git a/workspaces/robo_jazzy_ws/src/robo_navigation/scripts/executor_prova.py b/workspaces/robo_jazzy_ws/src/robo_navigation/scripts/executor_prova.py
+index 239160e..af319a8 100644
+--- a/workspaces/robo_jazzy_ws/src/robo_navigation/scripts/executor_prova.py
++++ b/workspaces/robo_jazzy_ws/src/robo_navigation/scripts/executor_prova.py
+@@ -1,11 +1,11 @@
+ #!/usr/bin/env python3
+-"""Executor de prova do RoboCup@Work Entry-Level (Brasil) - sem braco por enquanto.
++"""Executor de prova do RoboCup@Work Entry-Level (Brasil) - PEGAR pela garra, SOLTAR simulado.
+ 
+ Le o arquivo de tarefa da equipe (formato do atwork_commander: active_service_areas,
+ objects, start_state, finish_state), monta o plano de transporte (no maximo 3 objetos
+ no robo, regra 5.1) e executa pelo alinhador (/ir_para_area -> /ir_para_area/resultado).
+-Pegar e soltar ainda sao "ganchos": o robo para, espera um tempo (ou o seu Enter com
+---confirmar) e segue. Termina no FINISH.
++SOLTAR (e PEGAR com --sem-garra) ainda e "gancho": o robo para, espera um tempo (ou o seu
++Enter com --confirmar) e segue. Termina no FINISH.
+ 
+ Uso:
+     # 1) com o robo parado no START (=FINISH), grave a pose uma vez por sessao de mapa:
+@@ -15,8 +15,16 @@ Uso:
+     # 3) execute:
+     python3 executor_prova.py tarefa.yaml
+     python3 executor_prova.py tarefa.yaml --manipulacao 5 --confirmar
++    python3 executor_prova.py tarefa.yaml --sem-garra   # PEGAR simulado, sem chamar a garra
++
++PEGAR pela garra (padrao; repo Arthur-Demetrio/garra): com o robo ja parado na mesa, publica
++std_msgs/String em /coleta/pedido (JSON com area e objetos) e espera /coleta/resultado ('ok' ou 'falhou: motivo') por ate
++--tempo-coleta s. Do lado da garra, o alcance_cubo.py usa a camera: se o cubo esta fora do
++alcance, pede ao ajuste_base.py um ajuste curto da base (canal 'especial' do arbitro, ate 15 cm)
++e depois chama o pegar_cubo.py. Falha na coleta nao interrompe a prova. SOLTAR segue simulado.
+ """
+ import argparse
++import json
+ import math
+ import os
+ import sys
+@@ -224,6 +232,24 @@ def executar(tarefa, passos, args):
+             self.pub = self.create_publisher(String, '/ir_para_area', 10)
+             self.create_subscription(String, '/ir_para_area/resultado', self.ao_res, 10)
+             self.res = []
++            self.pub_coleta = self.create_publisher(String, '/coleta/pedido', 10)
++            self.create_subscription(String, '/coleta/resultado', self.ao_coleta, 10)
++            self.res_coleta = []
++
++        def ao_coleta(self, m):
++            self.res_coleta.append(m.data)
++
++        def coletar(self, area, objetos, timeout):
++            """Pede a coleta a garra (alcance_cubo.py) e espera o resultado."""
++            if not self.esperar(5.0, lambda: self.pub_coleta.get_subscription_count() > 0):
++                return None, 'ninguem escutando /coleta/pedido (alcance_cubo.py rodando?)'
++            self.res_coleta.clear()
++            self.pub_coleta.publish(String(data=json.dumps(
++                {'area': area, 'objetos': [str(o) for o in objetos]})))
++            if not self.esperar(timeout, lambda: bool(self.res_coleta)):
++                return None, 'sem resposta da garra em %.0f s' % timeout
++            r = self.res_coleta[-1]
++            return r == 'ok', r
+ 
+         def ao_res(self, m):
+             self.res.append(m.data)
+@@ -293,13 +319,22 @@ def executar(tarefa, passos, args):
+                 log.info('%s: SUCESSO %s' % (p[1], txt))
+             else:
+                 acao = 'PEGAR' if p[0] == 'pegar' else 'SOLTAR'
+-                log.info('[%d/%d] %s objeto(s) %s em %s (simulado: sem braco)' % (
+-                    i, len(passos), acao, ', '.join(str(o) for o in p[2]), p[1]))
+-                if args.confirmar:
+-                    input('   ... faca a %s na mao e aperte Enter ' % acao.lower())
++                if not args.sem_garra and acao == 'PEGAR':
++                    log.info('[%d/%d] PEGAR objeto(s) %s em %s pela garra' % (
++                        i, len(passos), ', '.join(str(o) for o in p[2]), p[1]))
++                    ok, txt = no.coletar(p[1], p[2], args.tempo_coleta)
++                    feitos.append((p, ok, txt))
++                    if not ok:
++                        log.warning('PEGAR em %s: %s %s (a prova segue)' % (
++                            p[1], 'FALHOU' if ok is False else 'SEM RESPOSTA', txt))
+                 else:
+-                    no.esperar(args.manipulacao)
+-                feitos.append((p, True, 'simulado'))
++                    log.info('[%d/%d] %s objeto(s) %s em %s (simulado: sem braco)' % (
++                        i, len(passos), acao, ', '.join(str(o) for o in p[2]), p[1]))
++                    if args.confirmar:
++                        input('   ... faca a %s na mao e aperte Enter ' % acao.lower())
++                    else:
++                        no.esperar(args.manipulacao)
++                    feitos.append((p, True, 'simulado'))
+             if tarefa['minutos'] and time.monotonic() - t0 > tarefa['minutos'] * 60:
+                 log.warning('Tempo da prova (%.0f min) estourado.' % tarefa['minutos'])
+     except KeyboardInterrupt:
+@@ -326,13 +361,17 @@ def main():
+         from_ros = remove_ros_args(sys.argv)
+     except ImportError:
+         pass
+-    ap = argparse.ArgumentParser(description='Executor de prova RoboCup@Work (sem braco).')
++    ap = argparse.ArgumentParser(description='Executor de prova RoboCup@Work.')
+     ap.add_argument('tarefa', nargs='?', help='arquivo de tarefa da equipe (YAML do commander)')
+     ap.add_argument('--marcar-start', action='store_true', help='grava a pose atual como START e FINISH')
+     ap.add_argument('--forcar', action='store_true', help='com --marcar-start: grava mesmo sem espaco para girar')
+     ap.add_argument('--so-plano', action='store_true', help='so mostra o plano, nao mexe no robo')
+     ap.add_argument('--manipulacao', type=float, default=5.0, help='segundos parado ao pegar/soltar')
+     ap.add_argument('--confirmar', action='store_true', help='espera Enter em cada pegar/soltar')
++    ap.add_argument('--sem-garra', action='store_true',
++                    help='PEGAR simulado (espera/Enter), sem chamar a garra')
++    ap.add_argument('--tempo-coleta', type=float, default=120.0,
++                    help='segundos maximos por PEGAR pela garra')
+     ap.add_argument('--tentativas', type=int, default=2)
+     ap.add_argument('--timeout', type=float, default=240.0, help='segundos maximos por deslocamento')
+     args = ap.parse_args(from_ros[1:])

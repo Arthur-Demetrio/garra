@@ -13,6 +13,12 @@ Y esquerda, Z cima, em metros) e confere se ela esta na JANELA DE COLETA medida 
                       camera ate chegar /robo/mover/resultado (no maximo --espera s) e mais
                       --assentar s, para medir de novo com o robo ja parado.
 
+So age DURANTE UMA COLETA: o executor_prova.py do robo (--garra), ja parado na mesa, publica
+std_msgs/String em /coleta/pedido; este script ajusta a base e chama a garra ate pegar, e responde
+em /coleta/resultado: 'ok' ou 'falhou: motivo' (desiste apos --max-ajustes ajustes da base ou
+--max-pegadas tentativas da garra). Fora de uma coleta, as deteccoes sao ignoradas: o robo NAO se
+mexe sozinho enquanto navega. --sempre-ativo desliga essa trava (so para testes).
+
 Pose2D em /robo/mover:
   padrao (base holonomica): x, y = quanto andar para frente/esquerda; theta = 0.
   --girar (base diferencial): primeiro gira theta (rad, anti-horario) no lugar, depois anda x
@@ -52,6 +58,9 @@ TOPICO_CUBO = '/cubo_detectado'
 TOPICO_GARRA = '/pegar_cubo'
 TOPICO_BASE = '/robo/mover'
 TOPICO_RESULTADO = '/robo/mover/resultado'
+TOPICO_GARRA_RES = '/pegar_cubo/resultado'
+TOPICO_COLETA = '/coleta/pedido'          # do executor_prova.py (--garra) do robo
+TOPICO_COLETA_RES = '/coleta/resultado'
 
 # Janela de coleta no chao (robo_base, m). Medida em 2026-11-13: 0,40-0,43 pegam; 0,38 e 0,48 nao.
 X_MIN = 0.40
@@ -135,6 +144,14 @@ def main():
                     help='s esperando depois do resultado da base, antes de medir de novo (padrao 1)')
     ap.add_argument('--espera', type=float, default=20.0,
                     help='s maximo esperando o resultado da base (padrao 20)')
+    ap.add_argument('--espera-garra', type=float, default=90.0,
+                    help='s maximo esperando o resultado do pegar_cubo.py (padrao 90)')
+    ap.add_argument('--max-ajustes', type=int, default=4,
+                    help='ajustes da base por coleta antes de desistir (padrao 4)')
+    ap.add_argument('--max-pegadas', type=int, default=2,
+                    help='tentativas da garra por coleta antes de desistir (padrao 2)')
+    ap.add_argument('--sempre-ativo', action='store_true',
+                    help='age a qualquer momento, sem esperar /coleta/pedido (so para testes!)')
     ap.add_argument('--vision', action='store_true',
                     help='le /vision/cubes do cube_vision (-WORK) em vez de /cubo_detectado')
     ap.add_argument('--id', type=int, default=None, help='com --vision: so o cubo com este ID')
@@ -146,22 +163,57 @@ def main():
     no = rclpy.create_node('alcance_cubo')
     pub_garra = no.create_publisher(Point, TOPICO_GARRA, 10)
     pub_base = no.create_publisher(Pose2D, TOPICO_BASE, 10)
-    ignorar_ate = [0.0]
+    pub_coleta = no.create_publisher(String, TOPICO_COLETA_RES, 10)
+    # ativo: so age durante uma coleta (pedida em /coleta/pedido) ou sempre, com --sempre-ativo.
+    # espera: 'base' ou 'garra' enquanto aguarda o resultado delas (a camera e ignorada).
+    st = dict(ativo=args.sempre_ativo, espera=None, ate=0.0, ajustes=0, pegadas=0, pedido='')
+
+    def terminar(resultado):
+        print(f'Coleta: {resultado}', flush=True)
+        if not args.sempre_ativo:
+            pub_coleta.publish(String(data=resultado))
+            st['ativo'] = False
+
+    def pedido_coleta(m):
+        print(f'Pedido de coleta: {m.data}', flush=True)
+        st.update(ativo=True, espera=None, ate=0.0, ajustes=0, pegadas=0, pedido=m.data)
 
     def resultado_base(m):
         print(f'Base: {m.data}', flush=True)
-        ignorar_ate[0] = min(ignorar_ate[0], time.monotonic() + args.assentar)
+        if st['espera'] == 'base':
+            st['espera'], st['ate'] = None, time.monotonic() + args.assentar
 
+    def resultado_garra(m):
+        print(f'Garra: {m.data}', flush=True)
+        if st['espera'] != 'garra':
+            return
+        st['espera'], st['ate'] = None, time.monotonic() + args.assentar
+        if m.data == 'ok':
+            terminar('ok')
+        elif st['pegadas'] >= args.max_pegadas:
+            terminar(f'falhou: garra ({m.data}) em {st["pegadas"]} tentativa(s)')
+
+    no.create_subscription(String, TOPICO_COLETA, pedido_coleta, 10)
     no.create_subscription(String, TOPICO_RESULTADO, resultado_base, 10)
+    no.create_subscription(String, TOPICO_GARRA_RES, resultado_garra, 10)
 
     def recebido(p):
-        if time.monotonic() < ignorar_ate[0]:
+        agora = time.monotonic()
+        if st['espera'] and agora > st['ate']:
+            print(f'Sem resultado da {st["espera"]} a tempo; medindo de novo.', flush=True)
+            st['espera'] = None
+        if not st['ativo'] or st['espera'] or agora < st['ate']:
             return
         if alcanca(p.x, p.y):
             print(f'Cubo em x={p.x:.3f} y={p.y:.3f}: ao alcance -> {TOPICO_GARRA}', flush=True)
             if not pub_garra.get_subscription_count():
                 print(f'  AVISO: ninguem escutando {TOPICO_GARRA} (o pegar_cubo.py esta rodando?)')
             pub_garra.publish(p)
+            st['pegadas'] += 1
+            st['espera'], st['ate'] = 'garra', agora + args.espera_garra
+            return
+        if st['ajustes'] >= args.max_ajustes:
+            terminar(f'falhou: cubo fora do alcance apos {st["ajustes"]} ajuste(s) da base')
             return
         mover = deslocamento_girando(p.x, p.y) if args.girar else deslocamento_holonomico(p.x, p.y)
         if mover is None:
@@ -171,9 +223,10 @@ def main():
               f'x={mover.x:+.3f} m y={mover.y:+.3f} m theta={math.degrees(mover.theta):+.1f} graus',
               flush=True)
         if not pub_base.get_subscription_count():
-            print(f'  AVISO: ninguem escutando {TOPICO_BASE} (a base esta rodando?)')
+            print(f'  AVISO: ninguem escutando {TOPICO_BASE} (o ajuste_base.py esta rodando?)')
         pub_base.publish(mover)
-        ignorar_ate[0] = time.monotonic() + args.espera
+        st['ajustes'] += 1
+        st['espera'], st['ate'] = 'base', agora + args.espera
 
     if args.vision:
         def recebido_vision(p):
