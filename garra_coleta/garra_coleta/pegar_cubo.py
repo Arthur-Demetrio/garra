@@ -16,11 +16,19 @@ Uso (com garra_real.launch.py ou demo.launch.py rodando):
     ros2 run garra_coleta pegar_cubo 0.46 0.021              # cubo no chao, 46 cm a frente do centro
     ros2 run garra_coleta pegar_cubo 0.46 0.021 --so-planejar  # so planeja, nao mexe a garra
     ros2 run garra_coleta pegar_cubo 0.46 0.021 --soltar       # devolve o cubo no mesmo lugar
-    ros2 run garra_coleta pegar_cubo                           # escuta /pegar_cubo e pega a cada posicao
+    ros2 run garra_coleta pegar_cubo 0.46 0.021 --entregar     # SO solta o cubo que ja esta na garra
+    ros2 run garra_coleta pegar_cubo                           # escuta /pegar_cubo e /entregar_cubo
     ros2 topic pub --once /pegar_cubo geometry_msgs/msg/Point "{x: 0.46, z: 0.021}"
+    ros2 topic pub --once /entregar_cubo geometry_msgs/msg/Point "{x: 0.46, z: 0.021}"
 
-Cada posicao do topico gera um resultado em /pegar_cubo/resultado (std_msgs/String):
-'ok', 'sem_cubo' (a chave dos dedos nao achou o cubo) ou 'falhou: motivo'.
+Entrega (--entregar ou /entregar_cubo): com o cubo ja preso nos dedos, leva-o ate (x, z) - o
+centro de onde o cubo deve ficar, ex.: z = altura da mesa + 0.021 -, pela mesma aproximacao da
+pegada (pre-pegada -> reta), abre os dedos, recua em reta e volta para pronta. Nao abre os dedos
+antes de chegar (diferente do --soltar, que pega e devolve).
+
+Cada posicao recebida gera um resultado em /pegar_cubo/resultado ou /entregar_cubo/resultado
+(std_msgs/String): 'ok', 'sem_cubo' (so na pegada: a chave dos dedos nao achou o cubo) ou
+'falhou: motivo'.
 No topico, so x e z sao usados; o y e ignorado enquanto o braco nao tiver o motor do eixo Y.
 """
 
@@ -42,6 +50,8 @@ FRAME = 'robo_base'
 TOPICO = '/pegar_cubo'
 # Resultado de cada posicao recebida no topico: 'ok', 'sem_cubo' ou 'falhou: motivo'.
 TOPICO_RESULTADO = '/pegar_cubo/resultado'
+TOPICO_ENTREGA = '/entregar_cubo'
+TOPICO_ENTREGA_RESULTADO = '/entregar_cubo/resultado'
 # TEMPORARIO: aberta em 65 graus (o normal e 0.0).
 ABERTA = math.radians(65.0)
 # Graus do comando do J4 ao fechar no cubo. Em 95 graus os dedos forcam o cubo e prendem as
@@ -251,32 +261,83 @@ def pegar(c, coleta, x, z, args):
     return 0
 
 
+def entregar(c, coleta, x, z, args):
+    """Solta o cubo que ja esta nos dedos com o centro em (x, z) de robo_base. Retorna 0 se deu certo.
+
+    Mesma aproximacao da pegada (pre-pegada recuada -> reta), sem abrir os dedos antes de chegar.
+    """
+    plano = coleta.plano_de_pegada(x, z, c.juntas_atuais())
+    if plano is None:
+        print(f'Destino x={x:.3f} z={z:.3f} fora do alcance (nenhuma inclinacao serve).')
+        return 1
+    print(f'Inclinacao escolhida: {plano["graus"]} graus')
+    descer = args.descer / 1000.0
+    if descer > 0.0:
+        teste = c.linha_cartesiana(plano['q_pega'], (0.0, 0.0, -descer), evitar_colisao=False)
+        if teste.fracao < 0.99:
+            print(f'Nao da para descer {args.descer:.0f} mm a mais (limite das juntas).')
+            return 1
+    if args.so_planejar:
+        return 0
+
+    a = math.radians(plano['graus'])
+    coleta.ir_para('pre-entrega (com o cubo)', plano['q_pre'])
+    entrada = c.linha_cartesiana(
+        c.juntas_atuais(), para_garra_base((RECUO * math.cos(a), 0.0, RECUO * math.sin(a))),
+        velocidade=args.velocidade)
+    coleta.executar('entrada (com o cubo)', entrada.trajetoria)
+    if descer > 0.0:
+        ajuste = c.linha_cartesiana(
+            c.juntas_atuais(), (0.0, 0.0, -descer), evitar_colisao=False, velocidade=args.velocidade)
+        coleta.executar('descida extra', ajuste.trajetoria)
+    coleta.mover_dedos(ABERTA)
+    print('Dedos abertos: cubo entregue.')
+    if descer > 0.0:
+        volta = c.linha_cartesiana(
+            c.juntas_atuais(), (0.0, 0.0, descer), evitar_colisao=False, velocidade=args.velocidade)
+        coleta.executar('saida da descida extra', volta.trajetoria)
+    recuo = c.linha_cartesiana(
+        c.juntas_atuais(), para_garra_base((-RECUO * math.cos(a), 0.0, -RECUO * math.sin(a))),
+        velocidade=args.velocidade)
+    coleta.executar('recuo', recuo.trajetoria)
+    coleta.ir_para('pronta', PRONTA)
+    print('Pronto.')
+    return 0
+
+
 def escutar(c, coleta, args):
-    """Fica no topico TOPICO e pega um cubo a cada geometry_msgs/Point recebido."""
-    pendentes = []
-    c.create_subscription(Point, TOPICO, pendentes.append, 10)
-    pub_res = c.create_publisher(String, TOPICO_RESULTADO, 10)
-    print(f'Esperando posicoes em {TOPICO} (geometry_msgs/msg/Point, x e z em robo_base). '
-          'Ctrl+C para sair. Exemplo:')
+    """Pega um cubo a cada Point em TOPICO e entrega a cada Point em TOPICO_ENTREGA."""
+    pendentes = []      # (acao, Point)
+    c.create_subscription(Point, TOPICO, lambda p: pendentes.append(('pegar', p)), 10)
+    c.create_subscription(Point, TOPICO_ENTREGA, lambda p: pendentes.append(('entregar', p)), 10)
+    pubs = {'pegar': c.create_publisher(String, TOPICO_RESULTADO, 10),
+            'entregar': c.create_publisher(String, TOPICO_ENTREGA_RESULTADO, 10)}
+    print(f'Esperando posicoes em {TOPICO} (pegar) e {TOPICO_ENTREGA} (entregar) '
+          '(geometry_msgs/msg/Point, x e z em robo_base). Ctrl+C para sair. Exemplo:')
     print(f'  ros2 topic pub --once {TOPICO} geometry_msgs/msg/Point "{{x: 0.46, z: 0.021}}"')
     while rclpy.ok():
         rclpy.spin_once(c, timeout_sec=0.1)
         if not pendentes:
             continue
-        p = pendentes.pop(0)
+        acao, p = pendentes.pop(0)
         if pendentes:
-            print(f'Descartando {len(pendentes)} posicao(oes) recebida(s) durante o movimento.')
+            print(f'Descartando {len(pendentes)} pedido(s) recebido(s) durante o movimento.')
+            for a, _ in pendentes:
+                pubs[a].publish(String(data='falhou: descartado (garra ocupada)'))
             pendentes.clear()
         # O y e ignorado: o braco ainda e planar (sem o motor do eixo Y).
-        print(f'Recebido x={p.x:.3f} z={p.z:.3f}')
+        print(f'Recebido ({acao}) x={p.x:.3f} z={p.z:.3f}')
         try:
-            codigo = pegar(c, coleta, p.x, p.z, args)
-            res = {0: 'ok', 2: 'sem_cubo'}.get(codigo, 'falhou: fora do alcance')
+            if acao == 'pegar':
+                codigo = pegar(c, coleta, p.x, p.z, args)
+                res = {0: 'ok', 2: 'sem_cubo'}.get(codigo, 'falhou: fora do alcance')
+            else:
+                res = 'ok' if entregar(c, coleta, p.x, p.z, args) == 0 else 'falhou: fora do alcance'
         except RuntimeError as e:
             print(f'ERRO: {e}')
             res = f'falhou: {e}'
-        pub_res.publish(String(data=res))
-        print(f'Esperando a proxima posicao em {TOPICO}...')
+        pubs[acao].publish(String(data=res))
+        print('Esperando o proximo pedido...')
 
 
 
@@ -301,11 +362,15 @@ def main():
                          f'chao (o modelo e conservador perto do chao); padrao {DESCER_MM:.0f}, max 20')
     ap.add_argument('--so-planejar', action='store_true', help='planeja sem mexer a garra')
     ap.add_argument('--soltar', action='store_true', help='devolve o cubo no mesmo lugar')
+    ap.add_argument('--entregar', action='store_true',
+                    help='so solta em (x, z) o cubo que ja esta nos dedos (nao pega)')
     ap.add_argument('--sem-sensor', action='store_true',
                     help=f'nao confere a chave dos dedos ({TOPICO_SENSOR}) depois de fechar')
     args = ap.parse_args(argumentos_sem_ros())
     if (args.x is None) != (args.z is None):
         ap.error('informe x e z juntos, ou nenhum dos dois para escutar o topico')
+    if args.entregar and (args.x is None or args.soltar):
+        ap.error('--entregar precisa de x e z e nao combina com --soltar')
     if not 0.0 <= args.descer <= 20.0:
         ap.error('--descer deve ficar entre 0 e 20 mm')
     if not 0.0 <= args.fechamento <= 100.0:
@@ -319,6 +384,8 @@ def main():
         if args.x is None:
             escutar(c, coleta, args)
             return 0
+        if args.entregar:
+            return entregar(c, coleta, args.x, args.z, args)
         return pegar(c, coleta, args.x, args.z, args)
     except RuntimeError as e:
         print(f'ERRO: {e}')

@@ -474,6 +474,7 @@ Só `x` e `z` são usados; o `y` é ignorado enquanto o braço não tiver o moto
 | `--velocidade` | `0.2` | Escala de velocidade/aceleração (0–1). |
 | `--fechamento` | `85` | Graus do comando do J4 ao fechar. Em 95° os dedos forçam o cubo e prendem as engrenagens; use o menor valor que ainda segura. |
 | `--descer` | `0` | mm que a ponta desce além do que o modelo permite antes de fechar. Era 10 mm com a calibração antiga; desde as escalas de 2026-11-16 a garra real fica até ~1,5 cm abaixo do modelo com o braço esticado. |
+| `--entregar` | — | Só solta em (x, z) o cubo que já está nos dedos: pré-pegada → reta → abre os dedos → recua → `PRONTA`. Não abre os dedos antes de chegar (o `--soltar` pega e devolve). Pelo tópico: `/entregar_cubo`. |
 | `--so-planejar` | — | Planeja sem mexer a garra. |
 | `--soltar` | — | Devolve o cubo no mesmo lugar. |
 

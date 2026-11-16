@@ -119,7 +119,7 @@ A pasta `firmware/ino atual/` contém uma versão anterior e deve ser tratada co
 | `garra_coleta/garra_coleta/cliente_garra.py` | Biblioteca cliente ROS 2 para chamar serviços/ações do MoveIt: FK, IK, verificação de colisão, planejamento e execução de trajetórias. É importada pelos demais scripts; não é um teste executável isoladamente. |
 | `scripts/validar_garra.py` | Validação automatizada da descrição e do planejamento em simulação. Verifica TCP, autocolisão, IK, limites, trajetórias cartesianas e planejamento. |
 | `scripts/calibrar_servos.py` | Ferramenta interativa que comunica diretamente com o Arduino para medir zero, sentido e limites de pulso dos três servos e gerar `calibracao_servos.yaml`. |
-| `garra_coleta/garra_coleta/pegar_cubo.py` | Pega o cubo numa posição de `robo_base` (argumentos ou tópico `/pegar_cubo`) e publica o resultado em `/pegar_cubo/resultado`. |
+| `garra_coleta/garra_coleta/pegar_cubo.py` | Pega o cubo numa posição de `robo_base` (argumentos ou tópico `/pegar_cubo`) e entrega o cubo que já está nos dedos (`--entregar` ou tópico `/entregar_cubo`); publica o resultado em `/pegar_cubo/resultado` e `/entregar_cubo/resultado`. |
 | `garra_coleta/garra_coleta/alcance_cubo.py` | Durante uma coleta (`/coleta/pedido`), decide entre chamar a garra (`/pegar_cubo`) e pedir um ajuste da base (`/robo/mover`); responde em `/coleta/resultado`. |
 | `garra_coleta/garra_coleta/ajuste_base.py` | Executa o ajuste curto da base pedido em `/robo/mover`, pelo canal `especial` do árbitro do robô (até 15 cm, 0,05 m/s). |
 | `garra_coleta/garra_coleta/camera_cubo.py` | Webcam + AprilTag: acha os cubos e publica a posição em `robo_base`. |
