@@ -3,7 +3,7 @@
 A pose vem do camera_cubo.py (calibrar_camera.py > robot_config_webcam.yaml do -WORK > trena),
 entao acompanha a calibracao sozinha.
 
-    ros2 launch garra_moveit_config tf_camera.launch.py
+    ros2 launch garra_coleta tf_camera.launch.py
 """
 
 import os

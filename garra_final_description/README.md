@@ -10,7 +10,7 @@
 | Links | 19 |
 | Joints | 18 (11 movable) |
 | Assemblies | 2 |
-| Root link | `base_link` |
+| Root link | `garra_base` (exportado como `base_link`; renomeado pelo `scripts/ajustar_urdf.py`) |
 
 ## Table of Contents
 
@@ -91,7 +91,7 @@ base_link
 
 | Joint | Type | Parent → Child | Axis | Limits |
 |-------|------|---------------|------|--------|
-| `R_gido` | fixed | `base_link` → `shoulder_motor` | (0,0,1) | — |
+| `R_gido` | fixed | `garra_base` → `shoulder_motor` | (0,0,1) | — |
 | `R_gido_47` | fixed | `garra_final_showder_servo_horn` → `M_dulo_1` | (0,0,1) | — |
 | `R_gido_48` | fixed | `M_dulo_1` → `MOTOR_1` | (0,0,1) | — |
 | `R_gido_50` | fixed | `garra_final_showder_servo_horn_2` → `M_dulo_2` | (0,0,1) | — |

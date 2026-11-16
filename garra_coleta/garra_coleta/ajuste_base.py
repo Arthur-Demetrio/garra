@@ -21,14 +21,15 @@ Resultado em /robo/mover/resultado (std_msgs/String): 'ok ...' ou 'falhou: motiv
 Limites (padrao): 0,05 m/s, 0,30 rad/s, ate 15 cm por eixo e 30 graus por pedido, 15 s por pedido.
 
 Uso:
-  python3 scripts/ajuste_base.py
-  python3 scripts/ajuste_base.py --sem-arbitro --topico-cmd /cmd_vel   # teste em simulacao
+  ros2 run garra_coleta ajuste_base
+  ros2 run garra_coleta ajuste_base --sem-arbitro --topico-cmd /cmd_vel   # teste em simulacao
 Teste (o robo ANDA 5 cm para a frente):
   ros2 topic pub --once /robo/mover geometry_msgs/msg/Pose2D "{x: 0.05, y: 0.0, theta: 0.0}"
 """
 
 import argparse
 import math
+import sys
 import signal
 import time
 
@@ -193,6 +194,15 @@ class AjusteBase:
             self.pedido = None
 
 
+
+def argumentos_sem_ros():
+    """sys.argv sem os --ros-args que o ros2 launch/run acrescentam."""
+    try:
+        from rclpy.utilities import remove_ros_args
+        return remove_ros_args(sys.argv)[1:]
+    except ImportError:
+        return sys.argv[1:]
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--vel', type=float, default=0.05, help='m/s maximo (padrao 0.05)')
@@ -204,7 +214,7 @@ def main():
                     help='onde publicar a velocidade (padrao /cmd_vel_nav_especial)')
     ap.add_argument('--sem-arbitro', action='store_true',
                     help='nao chama /navegacao/especial (so para simulacao)')
-    args = ap.parse_args()
+    args = ap.parse_args(argumentos_sem_ros())
 
     rclpy.init()
     a = AjusteBase(args)

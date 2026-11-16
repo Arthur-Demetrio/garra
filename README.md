@@ -55,23 +55,31 @@ garra/
 │   │   └── calibracao_servos.yaml
 │   ├── launch/
 │   │   ├── garra_real.launch.py
+│   │   └── ...
+│   └── ...
+├── garra_coleta/                # pacote da coleta (nós + launchers), o que o robô inclui
+│   ├── garra_coleta/
+│   │   ├── cliente_garra.py         # biblioteca cliente do MoveIt
+│   │   ├── pegar_cubo.py
+│   │   ├── alcance_cubo.py
+│   │   ├── ajuste_base.py
+│   │   └── camera_cubo.py
+│   ├── launch/
 │   │   ├── coleta.launch.py         # atalho: sobe a coleta inteira
 │   │   ├── pegar_cubo.launch.py
 │   │   ├── ajuste_base.launch.py
 │   │   ├── alcance_cubo.launch.py
 │   │   ├── camera_cubo.launch.py
 │   │   ├── tf_camera.launch.py
-│   │   ├── coleta_comum.py          # funções comuns dos launchers da coleta
-│   │   └── ...
-│   └── ...
-├── scripts/
-│   ├── cliente_garra.py
+│   │   └── coleta_comum.py          # funções comuns dos launchers
+│   ├── config/                      # calibração da webcam e pose da câmera do -WORK
+│   ├── package.xml
+│   └── setup.py
+├── scripts/                         # ferramentas (validação, calibração, testes)
 │   ├── validar_garra.py
 │   ├── calibrar_servos.py
-│   ├── pegar_cubo.py
-│   ├── alcance_cubo.py
-│   ├── ajuste_base.py
-│   ├── camera_cubo.py
+│   ├── calibrar_camera.py
+│   ├── mover_junta.py
 │   └── nao_usados/              # scripts históricos, fora dos procedimentos
 ├── integracao_robo/             # patch do executor_prova.py do robô (Robo-WORK)
 ├── servo_imgs/                  # imagens e vídeo de apoio à calibração
@@ -89,6 +97,7 @@ Os diretórios `build/`, `install/` e `log/` são gerados pelo `colcon` e não d
 | `garra_final_description` | Descrição do robô: URDF/Xacro, malhas, juntas, links, publicação de TF e launch de visualização. |
 | `garra_moveit_config` | Configuração do MoveIt 2: grupo de planejamento, cinemática, limites, controladores, RViz e launch para simulação/hardware. |
 | `garra_hardware` | Implementação da interface de hardware `ros2_control` para comunicação serial com o Arduino Mega. |
+| `garra_coleta` | Coleta de cubos: nós `pegar_cubo`, `alcance_cubo`, `ajuste_base` e `camera_cubo` (`ros2 run garra_coleta <nó>`), TF da câmera e launchers. |
 
 ### 2.2 Firmware
 
@@ -107,13 +116,13 @@ A pasta `firmware/ino atual/` contém uma versão anterior e deve ser tratada co
 
 | Arquivo | Finalidade |
 |---|---|
-| `scripts/cliente_garra.py` | Biblioteca cliente ROS 2 para chamar serviços/ações do MoveIt: FK, IK, verificação de colisão, planejamento e execução de trajetórias. É importada pelos demais scripts; não é um teste executável isoladamente. |
+| `garra_coleta/garra_coleta/cliente_garra.py` | Biblioteca cliente ROS 2 para chamar serviços/ações do MoveIt: FK, IK, verificação de colisão, planejamento e execução de trajetórias. É importada pelos demais scripts; não é um teste executável isoladamente. |
 | `scripts/validar_garra.py` | Validação automatizada da descrição e do planejamento em simulação. Verifica TCP, autocolisão, IK, limites, trajetórias cartesianas e planejamento. |
 | `scripts/calibrar_servos.py` | Ferramenta interativa que comunica diretamente com o Arduino para medir zero, sentido e limites de pulso dos três servos e gerar `calibracao_servos.yaml`. |
-| `scripts/pegar_cubo.py` | Pega o cubo numa posição de `robo_base` (argumentos ou tópico `/pegar_cubo`) e publica o resultado em `/pegar_cubo/resultado`. |
-| `scripts/alcance_cubo.py` | Durante uma coleta (`/coleta/pedido`), decide entre chamar a garra (`/pegar_cubo`) e pedir um ajuste da base (`/robo/mover`); responde em `/coleta/resultado`. |
-| `scripts/ajuste_base.py` | Executa o ajuste curto da base pedido em `/robo/mover`, pelo canal `especial` do árbitro do robô (até 15 cm, 0,05 m/s). |
-| `scripts/camera_cubo.py` | Webcam + AprilTag: acha os cubos e publica a posição em `robo_base`. |
+| `garra_coleta/garra_coleta/pegar_cubo.py` | Pega o cubo numa posição de `robo_base` (argumentos ou tópico `/pegar_cubo`) e publica o resultado em `/pegar_cubo/resultado`. |
+| `garra_coleta/garra_coleta/alcance_cubo.py` | Durante uma coleta (`/coleta/pedido`), decide entre chamar a garra (`/pegar_cubo`) e pedir um ajuste da base (`/robo/mover`); responde em `/coleta/resultado`. |
+| `garra_coleta/garra_coleta/ajuste_base.py` | Executa o ajuste curto da base pedido em `/robo/mover`, pelo canal `especial` do árbitro do robô (até 15 cm, 0,05 m/s). |
+| `garra_coleta/garra_coleta/camera_cubo.py` | Webcam + AprilTag: acha os cubos e publica a posição em `robo_base`. |
 
 Os scripts da coleta têm launchers próprios; veja a [seção 7.5](#75-coleta-automática-de-cubos).
 
@@ -126,7 +135,7 @@ A configuração usada pelos scripts e pelo MoveIt é:
 | Elemento | Nome |
 |---|---|
 | Grupo de planejamento | `garra` |
-| Link de referência da base | `base_link` |
+| Link de referência da base | `garra_base` (no robô, `base_link` é o chassi) |
 | TCP (ponta/ferramenta) | `tool0` |
 | Junta 1 | `Revolucionar_46` |
 | Junta 2 | `Revolucionar_49` |
@@ -298,9 +307,9 @@ Fluxo: o executor do robô (`executor_prova.py`, com o patch de `integracao_robo
 Com o MoveIt da garra já rodando, tudo de uma vez:
 
 ```bash
-ros2 launch garra_moveit_config coleta.launch.py
-ros2 launch garra_moveit_config coleta.launch.py garra:=real            # inclui o garra_real.launch.py
-ros2 launch garra_moveit_config coleta.launch.py camera:=vision         # cube_vision do -WORK no lugar do camera_cubo.py
+ros2 launch garra_coleta coleta.launch.py
+ros2 launch garra_coleta coleta.launch.py garra:=real            # inclui o garra_real.launch.py
+ros2 launch garra_coleta coleta.launch.py camera:=vision         # cube_vision do -WORK no lugar do camera_cubo.py
 ```
 
 Ou cada parte em um terminal:
@@ -311,16 +320,16 @@ Ou cada parte em um terminal:
 | `pegar_cubo.launch.py` | `pegar_cubo.py` escutando `/pegar_cubo` | `velocidade`, `fechamento`, `descer`, `so_planejar`, `sem_sensor` |
 | `ajuste_base.launch.py` | `ajuste_base.py` | `vel`, `vel_giro`, `max_desloc`, `max_giro`, `timeout`, `topico_cmd`, `sem_arbitro` |
 | `alcance_cubo.launch.py` | `alcance_cubo.py` | `vision`, `id`, `girar`, `sempre_ativo`, `max_ajustes`, `max_pegadas` |
-| `camera_cubo.launch.py` | `camera_cubo.py` publicando em `/cubo_detectado` (abre uma janela) | `topico`, `auto`, `camera`, `id` |
+| `camera_cubo.launch.py` | `camera_cubo.py` publicando em `/cubo_detectado` (abre uma janela) | `topico`, `auto`, `indice` (webcam), `id`, `apoio` (altura da superfície dos cubos) |
 | `tf_camera.launch.py` | TF estática `robo_base` → `camera_optical_frame` | — |
 
-Use `ros2 launch garra_moveit_config <launcher> --show-args` para ver todos os argumentos e padrões.
+Use `ros2 launch garra_coleta <launcher> --show-args` para ver todos os argumentos e padrões.
 
 Observações:
 
 - O `tf_camera.launch.py` calcula a pose com o mesmo código do `camera_cubo.py` (`calibrar_camera.py` > `robot_config_webcam.yaml` do -WORK > trena); ele é necessário para o `cube_vision`, que publica no frame da câmera.
 - Com `camera:=vision`, suba o `cube_vision` em outro terminal, com o ambiente virtual da câmera (OpenCV ≥ 4.8) ativo.
-- Os launchers rodam os arquivos de `scripts/` ao lado do `install/` do workspace; para outro local, defina `GARRA_SCRIPTS`.
+- Os nós e launchers são do pacote `garra_coleta`: depois de mudar o código, rode `colcon build` de novo. A montagem calibrada da câmera (`calibrar_camera.py`) fica em `~/.config/garra/camera_montagem.json` e vale sem recompilar.
 - `sempre_ativo:=true` faz o `alcance_cubo.py` agir sem `/coleta/pedido`: use só em testes, porque a base pode se mexer a qualquer momento.
 - Para testar sem o robô: `ros2 topic pub --once /coleta/pedido std_msgs/msg/String "{data: 'teste'}"` com a câmera vendo um cubo.
 
@@ -360,13 +369,13 @@ Problemas comuns:
 - `garra_moveit_config/config/joint_limits.yaml` — limites articulares para planejamento.
 - `garra_moveit_config/config/ros2_controllers.yaml` — configuração dos controladores ROS 2.
 - `garra_moveit_config/launch/garra_real.launch.py` — inicialização com hardware físico.
-- `garra_moveit_config/launch/coleta.launch.py` — coleta automática de cubos (inclui os launchers individuais da seção 7.5).
+- `garra_coleta/launch/coleta.launch.py` — coleta automática de cubos (inclui os launchers individuais da seção 7.5).
 - `garra_moveit_config/config/calibracao_servos.yaml` — conversão entre ângulo de junta e pulso do servo.
 - `garra_hardware/src/garra_servo_system.cpp` — interface de hardware `ros2_control`.
 - `firmware/garra_servos/garra_servos.ino` — firmware do Arduino.
 - `scripts/validar_garra.py` — validação da simulação.
 - `scripts/calibrar_servos.py` — calibração física.
-- `scripts/pegar_cubo.py`, `scripts/alcance_cubo.py`, `scripts/ajuste_base.py`, `scripts/camera_cubo.py` — coleta de cubos.
+- `garra_coleta/garra_coleta/pegar_cubo.py`, `garra_coleta/garra_coleta/alcance_cubo.py`, `garra_coleta/garra_coleta/ajuste_base.py`, `garra_coleta/garra_coleta/camera_cubo.py` — coleta de cubos.
 - `integracao_robo/` — patch e instruções para o executor do robô chamar a garra.
 
 ## 10. Observações de manutenção

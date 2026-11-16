@@ -10,7 +10,7 @@ Na tela aparece o x/y/z (cm, robo_base) de cada cubo com esses valores.
 A inclinacao e a altura saem dos tags; a posicao x/y da camera nao. Para acertar x/y, ponha um cubo
 num ponto medido com a trena, aperte K e digite "x y" em cm (frente e esquerda do centro da base).
 
-Teclas:  S salva em camera_montagem.json (o camera_cubo.py passa a usar)
+Teclas:  S salva em ~/.config/garra/camera_montagem.json (o camera_cubo.py passa a usar)
          K corrige x/y da camera com um cubo medido     R zera as medidas     Q sai
 
 Uso:  python3 scripts/calibrar_camera.py            (feche antes o camera_cubo.py e o Cheese)
@@ -20,11 +20,15 @@ import argparse
 import collections
 import json
 import math
+import os
+import sys
 
 import cv2
 import numpy as np
 
-import camera_cubo as cc
+# garra_coleta do codigo-fonte (funciona sem colcon build)
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'garra_coleta'))
+from garra_coleta import camera_cubo as cc  # noqa: E402
 
 JANELA_LEITURAS = 150    # leituras de tag usadas na media (desliza no tempo)
 
@@ -143,8 +147,9 @@ def main():
                 break
             if k == ord('s'):
                 m = cal.montagem_atual()
+                cc.ARQ_MONTAGEM.parent.mkdir(parents=True, exist_ok=True)
                 cc.ARQ_MONTAGEM.write_text(json.dumps(m, indent=2))
-                cal.mensagem = f'Salvo em {cc.ARQ_MONTAGEM.name}.'
+                cal.mensagem = f'Salvo em {cc.ARQ_MONTAGEM}.'
                 print(f'Salvo: {m}', flush=True)
             elif k == ord('r'):
                 cal.normais.clear()

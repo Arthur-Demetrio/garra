@@ -1,22 +1,10 @@
 """Funcoes comuns dos launchers da coleta (nao e um launch; importado pelos *.launch.py daqui)."""
 
-import os
-import sys
-
-from ament_index_python.packages import get_package_share_directory
-from launch.actions import DeclareLaunchArgument, ExecuteProcess
+from launch.actions import DeclareLaunchArgument
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 
 SIM = {'true', '1', 'sim'}
-
-
-def pasta_scripts():
-    """scripts/ do repo: GARRA_SCRIPTS ou <workspace>/scripts, ao lado de install/."""
-    pacote = get_package_share_directory('garra_moveit_config')
-    # install/garra_moveit_config/share/garra_moveit_config -> raiz do workspace
-    raiz = os.path.abspath(os.path.join(pacote, '..', '..', '..', '..'))
-    return os.environ.get('GARRA_SCRIPTS', os.path.join(raiz, 'scripts'))
 
 
 def argumentos(padroes):
@@ -28,18 +16,15 @@ def valores(context, padroes):
     return {n: LaunchConfiguration(n).perform(context) for n, _, _ in padroes}
 
 
-def script(nome, *args):
-    """Roda scripts/<nome> com o python3 do sistema (saida direto no terminal)."""
-    return ExecuteProcess(
-        cmd=['python3', '-u', os.path.join(pasta_scripts(), nome), *args],
-        name=nome.removesuffix('.py'), output='screen', emulate_tty=True,
-        sigterm_timeout='5', sigkill_timeout='5')
+def no(executavel, *args):
+    """Roda um no do garra_coleta (args no estilo de linha de comando: --opcao valor)."""
+    return Node(package='garra_coleta', executable=executavel, name=executavel, arguments=list(args),
+                output='screen', emulate_tty=True, sigterm_timeout='5', sigkill_timeout='5')
 
 
 def tf_camera():
     """static_transform_publisher robo_base -> camera_optical_frame com a pose do camera_cubo.py."""
-    sys.path.insert(0, pasta_scripts())
-    import camera_cubo
+    from garra_coleta import camera_cubo
     from scipy.spatial.transform import Rotation
     R, t, origem = camera_cubo.pose_camera()
     qx, qy, qz, qw = Rotation.from_matrix(R).as_quat()

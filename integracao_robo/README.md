@@ -8,10 +8,10 @@ Por padrão o passo PEGAR deixa de ser simulado (`--sem-garra` volta ao simulado
 
 1. o robô chega na mesa (alinhador) e fica parado;
 2. o executor publica `std_msgs/String` em `/coleta/pedido` (JSON com `area` e `objetos`);
-3. o `scripts/alcance_cubo.py` deste repositório olha a câmera:
-   - cubo fora do alcance → `/robo/mover` → `scripts/ajuste_base.py` move a base até 15 cm pelo canal
+3. o `garra_coleta/garra_coleta/alcance_cubo.py` deste repositório olha a câmera:
+   - cubo fora do alcance → `/robo/mover` → `garra_coleta/garra_coleta/ajuste_base.py` move a base até 15 cm pelo canal
      `especial` do árbitro e responde em `/robo/mover/resultado`;
-   - cubo ao alcance → `/pegar_cubo` → `scripts/pegar_cubo.py` pega e responde em `/pegar_cubo/resultado`;
+   - cubo ao alcance → `/pegar_cubo` → `garra_coleta/garra_coleta/pegar_cubo.py` pega e responde em `/pegar_cubo/resultado`;
 4. o `alcance_cubo.py` responde em `/coleta/resultado`: `ok` ou `falhou: motivo`;
 5. o executor segue a prova mesmo se a coleta falhar (o SOLTAR continua simulado).
 
@@ -26,9 +26,9 @@ git apply /caminho/para/garra/integracao_robo/executor_prova_garra.patch
 Processos do lado da garra (além do launch da garra e da câmera):
 
 ```bash
-python3 scripts/pegar_cubo.py
-python3 scripts/ajuste_base.py
-python3 scripts/alcance_cubo.py          # ou --vision com o cube_vision
+ros2 run garra_coleta pegar_cubo
+ros2 run garra_coleta ajuste_base
+ros2 run garra_coleta alcance_cubo          # ou --vision com o cube_vision
 python3 executor_prova.py tarefa.yaml
 ```
 

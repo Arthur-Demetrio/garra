@@ -1,10 +1,10 @@
-"""scripts/alcance_cubo.py: decide entre pegar o cubo (/pegar_cubo) e mover a base (/robo/mover).
+"""alcance_cubo: decide entre pegar o cubo (/pegar_cubo) e mover a base (/robo/mover).
 
 So age durante uma coleta (/coleta/pedido), a menos que sempre_ativo:=true (SO PARA TESTES).
 Com vision:=true le o cube_vision (/vision/cubes) e precisa do tf_camera.launch.py.
 
-    ros2 launch garra_moveit_config alcance_cubo.launch.py
-    ros2 launch garra_moveit_config alcance_cubo.launch.py vision:=true
+    ros2 launch garra_coleta alcance_cubo.launch.py
+    ros2 launch garra_coleta alcance_cubo.launch.py vision:=true
 """
 
 import os
@@ -14,7 +14,7 @@ from launch import LaunchDescription
 from launch.actions import OpaqueFunction
 
 sys.path.insert(0, os.path.dirname(__file__))
-from coleta_comum import SIM, argumentos, script, valores  # noqa: E402
+from coleta_comum import SIM, argumentos, no, valores  # noqa: E402
 
 ARGS = [
     ('vision', 'false', 'le /vision/cubes do cube_vision em vez de /cubo_detectado'),
@@ -32,7 +32,7 @@ def montar(context):
     extra += [f'--{n.replace("_", "-")}' for n in ('vision', 'girar', 'sempre_ativo') if a[n] in SIM]
     if a['id']:
         extra += ['--id', a['id']]
-    return [script('alcance_cubo.py', *extra)]
+    return [no('alcance_cubo', *extra)]
 
 
 def generate_launch_description():

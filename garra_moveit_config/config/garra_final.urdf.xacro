@@ -66,8 +66,8 @@
     <xacro:property name="s2_y" value="0.240"/>
 
     <!-- Montagem da garra: 0.05 m atras da borda dianteira, no centro, sobre a base.
-         A frente da garra e -X do base_link, por isso yaw = pi.
-         O fundo da malha do base_link fica 5.4 mm acima da origem; descontado para apoiar
+         A frente da garra e -X do garra_base, por isso yaw = pi.
+         O fundo da malha do garra_base fica 5.4 mm acima da origem; descontado para apoiar
          a garra exatamente no topo da base. -->
     <xacro:property name="garra_x" value="${base_x/2 - 0.050}"/>
     <xacro:property name="garra_z_malha" value="0.0054"/>
@@ -75,7 +75,7 @@
          Ainda sem motor: o Y fica fixo no centro. -->
     <xacro:property name="plataforma_z" value="0.06839"/>
     <!-- TEMPORARIO: plataforma como um bloco solido do topo da base ate o pe da garra, um pouco
-         maior que o pe dela (malha do base_link: ~0.098 x 0.075 m). Trocar pelas medidas reais. -->
+         maior que o pe dela (malha do garra_base: ~0.098 x 0.075 m). Trocar pelas medidas reais. -->
     <xacro:property name="plataforma_lado" value="0.12"/>
 
     <xacro:macro name="caixa" params="x y z sx sy sz">
@@ -135,7 +135,7 @@
 
     <joint name="montagem_garra" type="fixed">
         <parent link="robo_base"/>
-        <child link="base_link"/>
+        <child link="garra_base"/>
         <origin xyz="${garra_x} 0 ${base_topo + plataforma_z - garra_z_malha}" rpy="0 0 ${pi}"/>
     </joint>
 

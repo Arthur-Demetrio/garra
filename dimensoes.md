@@ -168,7 +168,7 @@ Transformação inicialmente prevista para a montagem:
 <origin xyz="0.225 0.0 0.100" rpy="0 0 0"/>
 ```
 
-**Atenção:** essa transformação considera que a origem do `base_link` da garra coincide com o centro de sua base física e que sua orientação está alinhada aos eixos do robô. Isso precisa ser verificado no modelo e na montagem real antes de definir o URDF integrado.
+**Atenção:** essa transformação considera que a origem do `garra_base` da garra (antigo `base_link`) coincide com o centro de sua base física e que sua orientação está alinhada aos eixos do robô. Isso precisa ser verificado no modelo e na montagem real antes de definir o URDF integrado.
 
 ## 5. Considerações para o URDF integrado
 
@@ -200,7 +200,7 @@ Para a análise de colisões no MoveIt 2:
 | Suportes do primeiro andar | Posições laterais (Y) |
 | Suportes do primeiro andar | Altura física |
 | Suportes do segundo andar | Altura física |
-| Garra | Confirmação da origem e orientação do `base_link` em relação à base física |
+| Garra | Confirmação da origem e orientação do `garra_base` em relação à base física |
 
 As posições calculadas dos suportes são referências geométricas para o modelo e devem ser conferidas com a estrutura física antes da validação final.
 

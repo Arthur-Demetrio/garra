@@ -8,19 +8,22 @@ Move o robo simulado. NAO rode contra a garra fisica. Sai com codigo 0 se tudo p
 """
 
 import math
+import os
 import random
 import sys
 
 import rclpy
 
-from cliente_garra import ClienteGarra, HOME, JUNTAS, LIMITES, PRONTA, SUCESSO
+# garra_coleta do codigo-fonte (funciona sem colcon build)
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'garra_coleta'))
+from garra_coleta.cliente_garra import ClienteGarra, HOME, JUNTAS, LIMITES, PRONTA, SUCESSO  # noqa: E402
 
 
 TOL_POSICAO = 0.001   # m: erro aceito da IK
 TOL_RETA = 0.001      # m: desvio aceito em relacao a reta pedida
 TOL_FINAL = 0.03      # rad: erro de junta aceito ao fim de uma execucao
 MIN_IK = 0.95         # o KDL e aleatorio e pode estourar o tempo perto dos limites
-TCP_HOME = (-0.0710, 0.0290, 0.4245)  # m, em base_link: pose do CAD (servos em 90 graus), dedos fixos
+TCP_HOME = (-0.0710, 0.0290, 0.4245)  # m, em garra_base: pose do CAD (servos em 90 graus), dedos fixos
 
 
 class Relatorio:

@@ -13,10 +13,10 @@ A inclinacao da garra e escolhida sozinha: o script testa de -90 (para baixo) a 
 (horizontal) e usa o meio da faixa que funciona para o cubo pedido.
 
 Uso (com garra_real.launch.py ou demo.launch.py rodando):
-    python3 scripts/pegar_cubo.py 0.46 0.021              # cubo no chao, 46 cm a frente do centro
-    python3 scripts/pegar_cubo.py 0.46 0.021 --so-planejar  # so planeja, nao mexe a garra
-    python3 scripts/pegar_cubo.py 0.46 0.021 --soltar       # devolve o cubo no mesmo lugar
-    python3 scripts/pegar_cubo.py                           # escuta /pegar_cubo e pega a cada posicao
+    ros2 run garra_coleta pegar_cubo 0.46 0.021              # cubo no chao, 46 cm a frente do centro
+    ros2 run garra_coleta pegar_cubo 0.46 0.021 --so-planejar  # so planeja, nao mexe a garra
+    ros2 run garra_coleta pegar_cubo 0.46 0.021 --soltar       # devolve o cubo no mesmo lugar
+    ros2 run garra_coleta pegar_cubo                           # escuta /pegar_cubo e pega a cada posicao
     ros2 topic pub --once /pegar_cubo geometry_msgs/msg/Point "{x: 0.46, z: 0.021}"
 
 Cada posicao do topico gera um resultado em /pegar_cubo/resultado (std_msgs/String):
@@ -36,7 +36,7 @@ from rclpy.action import ActionClient
 from rclpy.qos import DurabilityPolicy, QoSProfile, ReliabilityPolicy
 from std_msgs.msg import Bool, String
 
-from cliente_garra import ClienteGarra, PRONTA, SUCESSO
+from garra_coleta.cliente_garra import ClienteGarra, PRONTA, SUCESSO
 
 FRAME = 'robo_base'
 TOPICO = '/pegar_cubo'
@@ -47,9 +47,10 @@ ABERTA = math.radians(65.0)
 # Graus do comando do J4 ao fechar no cubo. Em 95 graus os dedos forcam o cubo e prendem as
 # engrenagens; use o menor valor que ainda segura o cubo (--fechamento).
 FECHAMENTO_GRAUS = 85.0
-# mm que a ponta desce alem do que o modelo permite antes de fechar: a malha P_1 encosta no chao
-# do modelo antes da garra real. 5 mm ja pegou o cubo no chao (teste de 2026-11-12); padrao 10 mm.
-DESCER_MM = 10.0
+# mm que a ponta desce alem do que o modelo permite antes de fechar. Era 10 mm para compensar a
+# calibracao antiga (garra real acima do modelo). Com as escalas de 2026-11-16 a garra real fica ate
+# ~1,5 cm ABAIXO do modelo com o braco esticado: padrao 0, para nao empurrar os dedos no chao.
+DESCER_MM = 0.0
 RECUO = 0.06          # m: pre-pegada recuada na direcao de aproximacao
 SUBIDA = 0.05         # m: quanto sobe depois de pegar
 INCLINACOES = range(-90, 1, 5)  # graus; negativo = ponta para baixo
@@ -95,8 +96,8 @@ def pose(x, y, z, inclinacao):
     return p
 
 
-def para_base_link(d):
-    """Deslocamento de robo_base para base_link (girado 180 graus em Z)."""
+def para_garra_base(d):
+    """Deslocamento de robo_base para garra_base (girado 180 graus em Z)."""
     return (-d[0], -d[1], d[2])
 
 
@@ -144,7 +145,7 @@ class Coleta:
             if q_pre is None:
                 continue
             entrada = self.c.linha_cartesiana(
-                q_pre, para_base_link((RECUO * ax, 0.0, RECUO * az)), velocidade=self.v)
+                q_pre, para_garra_base((RECUO * ax, 0.0, RECUO * az)), velocidade=self.v)
             if entrada.fracao < 0.99:
                 continue
             saida = self.c.linha_cartesiana(
@@ -201,7 +202,7 @@ def pegar(c, coleta, x, z, args):
     # Replaneja a entrada a partir de onde a garra parou, para o ponto inicial bater.
     a = math.radians(plano['graus'])
     entrada = c.linha_cartesiana(
-        c.juntas_atuais(), para_base_link((RECUO * math.cos(a), 0.0, RECUO * math.sin(a))),
+        c.juntas_atuais(), para_garra_base((RECUO * math.cos(a), 0.0, RECUO * math.sin(a))),
         velocidade=args.velocidade)
     coleta.executar('entrada', entrada.trajetoria)
     if descer > 0.0:
@@ -242,7 +243,7 @@ def pegar(c, coleta, x, z, args):
             coleta.executar('saida da descida extra', volta.trajetoria)
         recuo = c.linha_cartesiana(
             c.juntas_atuais(),
-            para_base_link((-RECUO * math.cos(a), 0.0, -RECUO * math.sin(a))),
+            para_garra_base((-RECUO * math.cos(a), 0.0, -RECUO * math.sin(a))),
             velocidade=args.velocidade)
         coleta.executar('recuo', recuo.trajetoria)
     coleta.ir_para('pronta', PRONTA)
@@ -278,6 +279,15 @@ def escutar(c, coleta, args):
         print(f'Esperando a proxima posicao em {TOPICO}...')
 
 
+
+def argumentos_sem_ros():
+    """sys.argv sem os --ros-args que o ros2 launch/run acrescentam."""
+    try:
+        from rclpy.utilities import remove_ros_args
+        return remove_ros_args(sys.argv)[1:]
+    except ImportError:
+        return sys.argv[1:]
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('x', type=float, nargs='?',
@@ -293,7 +303,7 @@ def main():
     ap.add_argument('--soltar', action='store_true', help='devolve o cubo no mesmo lugar')
     ap.add_argument('--sem-sensor', action='store_true',
                     help=f'nao confere a chave dos dedos ({TOPICO_SENSOR}) depois de fechar')
-    args = ap.parse_args()
+    args = ap.parse_args(argumentos_sem_ros())
     if (args.x is None) != (args.z is None):
         ap.error('informe x e z juntos, ou nenhum dos dois para escutar o topico')
     if not 0.0 <= args.descer <= 20.0:

@@ -28,13 +28,13 @@ Se a garra for recalibrada ou mudar de lugar, atualize X_MIN, X_MAX e Y_PLANO.
 
 Fluxo:
   terminal 1: ros2 launch ... garra_real.launch.py
-  terminal 2: python3 scripts/pegar_cubo.py                              (escuta /pegar_cubo)
-  terminal 3: python3 scripts/alcance_cubo.py
-  terminal 3b: python3 scripts/ajuste_base.py                         (move a base do robo)
-  terminal 4: python3 scripts/camera_cubo.py --topico /cubo_detectado
+  terminal 2: ros2 run garra_coleta pegar_cubo                              (escuta /pegar_cubo)
+  terminal 3: ros2 run garra_coleta alcance_cubo
+  terminal 3b: ros2 run garra_coleta ajuste_base                         (move a base do robo)
+  terminal 4: ros2 run garra_coleta camera_cubo --topico /cubo_detectado
 
 Com o no cube_vision do repo niviton/-WORK (ros2_ws/src/cube_vision) no lugar do camera_cubo.py:
-  python3 scripts/alcance_cubo.py --vision
+  ros2 run garra_coleta alcance_cubo --vision
   Le vision_msgs/Detection3DArray em /vision/cubes (frame camera_optical_frame) e converte para
   robo_base pelo TF; e preciso publicar robo_base -> camera_optical_frame (static_transform_publisher)
   e ter o pacote vision_msgs instalado (sudo apt install ros-$ROS_DISTRO-vision-msgs).
@@ -47,6 +47,7 @@ Teste sem camera:
 
 import argparse
 import math
+import sys
 import signal
 import time
 
@@ -137,6 +138,15 @@ def ouvir_vision(no, recebido, id_alvo):
     no.create_subscription(Detection3DArray, '/vision/cubes', detectado, 10)
 
 
+
+def argumentos_sem_ros():
+    """sys.argv sem os --ros-args que o ros2 launch/run acrescentam."""
+    try:
+        from rclpy.utilities import remove_ros_args
+        return remove_ros_args(sys.argv)[1:]
+    except ImportError:
+        return sys.argv[1:]
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--girar', action='store_true',
@@ -158,7 +168,7 @@ def main():
     ap.add_argument('--id', type=int, default=None, help='com --vision: so o cubo com este ID')
     ap.add_argument('--z-medido', action='store_true',
                     help='com --vision: manda o z medido; sem ele, z = 0.021 (cubo no chao)')
-    args = ap.parse_args()
+    args = ap.parse_args(argumentos_sem_ros())
 
     rclpy.init()
     no = rclpy.create_node('alcance_cubo')

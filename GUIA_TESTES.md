@@ -218,7 +218,7 @@ Esse arquivo não deve ser executado diretamente. Ele fornece a classe `ClienteG
 A classe utiliza:
 
 - grupo de planejamento: `garra`;
-- base: `base_link`;
+- base: `garra_base`;
 - TCP: `tool0`;
 - juntas: `Revolucionar_46`, `Revolucionar_49` e `Revolucionar_72`.
 
@@ -424,8 +424,8 @@ Com `demo.launch.py` ativo:
 
 ```bash
 cd ~/braco_ws/src/garra
-python3 scripts/pegar_cubo.py 0.46 0.021 --so-planejar   # só planeja
-python3 scripts/pegar_cubo.py 0.46 0.021                 # executa no RViz
+ros2 run garra_coleta pegar_cubo 0.46 0.021 --so-planejar   # só planeja
+ros2 run garra_coleta pegar_cubo 0.46 0.021                 # executa no RViz
 ```
 
 ### 8.1.2 Executar na garra real
@@ -435,19 +435,19 @@ python3 scripts/pegar_cubo.py 0.46 0.021                 # executa no RViz
 3. Planeje primeiro, sem mexer a garra:
 
    ```bash
-   python3 scripts/pegar_cubo.py 0.46 0.021 --so-planejar
+   ros2 run garra_coleta pegar_cubo 0.46 0.021 --so-planejar
    ```
 
 4. Se o planejamento passar, execute com a mão no interruptor da fonte dos servos:
 
    ```bash
-   python3 scripts/pegar_cubo.py 0.46 0.021
+   ros2 run garra_coleta pegar_cubo 0.46 0.021
    ```
 
 5. Para devolver o cubo no mesmo lugar:
 
    ```bash
-   python3 scripts/pegar_cubo.py 0.46 0.021 --soltar
+   ros2 run garra_coleta pegar_cubo 0.46 0.021 --soltar
    ```
 
 ### 8.1.3 Receber a posição por tópico ROS
@@ -455,7 +455,7 @@ python3 scripts/pegar_cubo.py 0.46 0.021                 # executa no RViz
 Sem `x` e `z`, o script vira um nó que escuta `/pegar_cubo` (`geometry_msgs/msg/Point`) e pega um cubo a cada mensagem. As opções (`--soltar`, `--so-planejar`, `--fechamento`...) valem para todas as mensagens:
 
 ```bash
-python3 scripts/pegar_cubo.py --soltar
+ros2 run garra_coleta pegar_cubo --soltar
 ```
 
 Em outro terminal, envie a posição do centro do cubo em `robo_base`:
@@ -473,11 +473,11 @@ Só `x` e `z` são usados; o `y` é ignorado enquanto o braço não tiver o moto
 | `x`, `z` | — | Centro do cubo em `robo_base` (m). No chão, `z = 0.021`. Sem eles, escuta `/pegar_cubo`. |
 | `--velocidade` | `0.2` | Escala de velocidade/aceleração (0–1). |
 | `--fechamento` | `85` | Graus do comando do J4 ao fechar. Em 95° os dedos forçam o cubo e prendem as engrenagens; use o menor valor que ainda segura. |
-| `--descer` | `10` | mm que a ponta desce além do que o modelo permite antes de fechar (a malha encosta no chão do modelo antes da garra real). 5 mm já pegou o cubo no teste de 2026-11-12. |
+| `--descer` | `0` | mm que a ponta desce além do que o modelo permite antes de fechar. Era 10 mm com a calibração antiga; desde as escalas de 2026-11-16 a garra real fica até ~1,5 cm abaixo do modelo com o braço esticado. |
 | `--so-planejar` | — | Planeja sem mexer a garra. |
 | `--soltar` | — | Devolve o cubo no mesmo lugar. |
 
-Se a garra não alcançar o cubo, aumente `--descer` aos poucos; se os dedos travarem ou forçarem, reduza `--fechamento`.
+Se a garra não alcançar o cubo, aumente `--descer` aos poucos (5 mm por vez); se os dedos travarem ou forçarem, reduza `--fechamento`.
 
 ## 9. Diagnóstico de falhas
 

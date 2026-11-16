@@ -3,9 +3,11 @@
 
 Baseado na visao do repositorio niviton/-WORK (vision/cubes/detector.py e grasp.py):
   - camera_calib_webcam.yaml: calibracao da webcam em 1920x1080 (RMS 0,51 px), do -WORK;
-  - o tag (quadrado preto de 32 mm) fica no topo do cubo de 42 mm: solvePnP da a pose do tag e
-    o centro do cubo fica meia aresta para dentro;
-  - a pose da camera no robo vem de MONTAGEM (medida com trena em 2026-11-13).
+  - o tag (quadrado preto de 32 mm) fica no topo do cubo de 42 mm. A posicao sai do PIXEL do centro
+    do tag cruzado com a altura conhecida do topo do cubo (chao, ou --apoio para mesa). O metodo
+    antigo, pela pose 3D do tag (solvePnP), fica em --pnp: a distancia dele sai ~11% maior;
+  - a pose da camera no robo vem de ~/.config/garra/camera_montagem.json (calibrar_camera.py;
+    recalibrada em 2026-11-16) ou, sem ele, do robot_config_webcam.yaml / MONTAGEM.
 Funciona com o OpenCV 4.6 do ROS Jazzy (API antiga do aruco) e com o >= 4.7.
 
 Frame robo_base: centro da base do robo no chao; X frente, Y esquerda, Z cima (m).
@@ -14,20 +16,22 @@ com /cubo_detectado o alcance_cubo.py decide entre a garra e mover a base).
 
 Fluxo:
   terminal 1: ros2 launch ... garra_real.launch.py
-  terminal 2: python3 scripts/pegar_cubo.py              (escuta /pegar_cubo)
-  terminal 3: python3 scripts/camera_cubo.py             (aperte P para pegar)
+  terminal 2: ros2 run garra_coleta pegar_cubo              (escuta /pegar_cubo)
+  terminal 3: ros2 run garra_coleta camera_cubo             (aperte P para pegar)
 
 Teclado (na janela): P manda o cubo escolhido   A liga/desliga envio automatico
                      0-9 escolhe o ID do cubo (o mais perto se nenhum)   Q sair
 
 Uso:
-  python3 scripts/camera_cubo.py --sem-ros            (so ver a camera e as coordenadas)
-  python3 scripts/camera_cubo.py --id 3          (so o cubo com tag 3)
+  ros2 run garra_coleta camera_cubo --sem-ros            (so ver a camera e as coordenadas)
+  ros2 run garra_coleta camera_cubo --id 3          (so o cubo com tag 3)
 """
 
 import argparse
 import json
 import math
+import os
+import sys
 import time
 from pathlib import Path
 
@@ -35,8 +39,21 @@ import cv2
 import numpy as np
 import yaml
 
-AQUI = Path(__file__).parent
-CALIB = AQUI / 'camera_calib_webcam.yaml'
+
+
+def pasta_config():
+    """config/ do pacote: GARRA_CONFIG, a pasta do codigo-fonte ou o share/ instalado."""
+    if os.environ.get('GARRA_CONFIG'):
+        return Path(os.environ['GARRA_CONFIG'])
+    fonte = Path(__file__).resolve().parents[1] / 'config'
+    if fonte.is_dir():
+        return fonte
+    from ament_index_python.packages import get_package_share_directory
+    return Path(get_package_share_directory('garra_coleta')) / 'config'
+
+
+CONFIG = pasta_config()
+CALIB = CONFIG / 'camera_calib_webcam.yaml'
 TOPICO = '/pegar_cubo'
 TAG = 0.032              # m, lado do quadrado PRETO do AprilTag
 CUBO = 0.042             # m, aresta do cubo
@@ -52,11 +69,13 @@ Y_TOLERANCIA = 0.015
 # confira a inclinacao primeiro.)
 MONTAGEM = dict(x=-0.44, y=0.0, z=0.54, inclinacao=41.0, guinada=0.0)
 # Valores calibrados pelo calibrar_camera.py (tecla S) substituem os da trena.
-ARQ_MONTAGEM = AQUI / 'camera_montagem.json'
+# Fica fora do pacote para valer sem recompilar e sobreviver ao colcon build.
+ARQ_MONTAGEM = Path(os.environ.get('GARRA_MONTAGEM',
+                                   Path.home() / '.config' / 'garra' / 'camera_montagem.json'))
 MONTAGEM_CALIBRADA = dict(MONTAGEM, **json.loads(ARQ_MONTAGEM.read_text())) if ARQ_MONTAGEM.exists() else None
 # Pose calibrada no -WORK (extrinsic_height: tags na mesa + altura 57 cm). O frame dela tem origem no
 # chao LOGO ABAIXO da camera (x = para onde ela aponta); somando CAMERA_EM vira robo_base.
-ARQ_GIT = AQUI / 'robot_config_webcam.yaml'
+ARQ_GIT = CONFIG / 'robot_config_webcam.yaml'
 CAMERA_EM = np.array([MONTAGEM['x'], MONTAGEM['y'], 0.0])   # ponto sob a camera, em robo_base
 
 
@@ -168,8 +187,32 @@ class DetectorTags:
         return saida
 
 
+def centro_pelo_pixel(cantos, K, dist, R_base_cam, t_base_cam, apoio=0.0):
+    """Centro do cubo em robo_base pelo PIXEL do centro do tag e pela altura conhecida do topo do cubo.
+
+    O tag fica no centro da face de cima: o raio da camera pelo centro do tag (cruzamento das
+    diagonais, correto em perspectiva) encontra o plano z = apoio + CUBO no centro dessa face, e o
+    centro do cubo fica meia aresta abaixo. So depende da pose calibrada da camera; nao usa a
+    distancia do solvePnP, que em 2026-11-16 saiu ~11% maior que a real (erro de varios cm em x/y).
+    apoio: altura da superficie onde o cubo esta (0 = chao; mesa: altura do tampo).
+    """
+    p0, p1, p2, p3 = np.asarray(cantos, float).reshape(4, 2)
+    d1, d2 = p2 - p0, p3 - p1                       # diagonais 0-2 e 1-3
+    s = np.cross(p1 - p0, d2) / np.cross(d1, d2)
+    centro = p0 + s * d1
+    n = cv2.undistortPoints(centro.reshape(1, 1, 2), K, dist).ravel()
+    raio = R_base_cam @ np.array([n[0], n[1], 1.0])
+    topo = apoio + CUBO
+    if raio[2] >= 0:
+        return None                                  # raio nao desce ate o plano (acima do horizonte)
+    p = t_base_cam + raio * (topo - t_base_cam[2]) / raio[2]
+    return np.array([p[0], p[1], apoio + CUBO / 2])
+
+
 def centro_do_cubo(rvec, tvec, R_base_cam, t_base_cam):
-    """Centro do cubo em robo_base: meia aresta atras da face do tag (-z do tag)."""
+    """Centro do cubo em robo_base pela pose 3D do tag (solvePnP): meia aresta atras da face do tag.
+
+    Metodo antigo (--pnp): mede o z, mas a distancia sai ~11% maior; prefira centro_pelo_pixel."""
     R_tag, _ = cv2.Rodrigues(rvec)
     centro_cam = tvec + R_tag @ np.array([0.0, 0.0, -CUBO / 2])
     return R_base_cam @ centro_cam + t_base_cam
@@ -247,7 +290,10 @@ class App:
 
     def posicao_final(self, cubo):
         x, y, z = (float(v) for v in cubo['xyz'])
-        return x, y, (z if self.args.z_medido else Z_CHAO)
+        # pixel: z ja e o da superficie informada; pnp: z medido so com --z-medido.
+        if self.args.pnp and not self.args.z_medido:
+            z = Z_CHAO
+        return x, y, z
 
     def enviar(self, cubo):
         x, y, z = self.posicao_final(cubo)
@@ -318,9 +364,12 @@ class App:
                 fps = 0.9 * fps + 0.1 / max(agora - t_ant, 1e-3)
                 t_ant = agora
 
-                cubos = [dict(id=i, cantos=c, rvec=r, tvec=t,
-                              xyz=centro_do_cubo(r, t, self.R, self.t))
-                         for i, c, r, t in det.detectar(frame)]
+                cubos = []
+                for i, c, r, t in det.detectar(frame):
+                    xyz = (centro_do_cubo(r, t, self.R, self.t) if self.args.pnp else
+                           centro_pelo_pixel(c, det.K, det.dist, self.R, self.t, self.args.apoio))
+                    if xyz is not None:
+                        cubos.append(dict(id=i, cantos=c, rvec=r, tvec=t, xyz=xyz))
                 alvo = self.escolher(cubos)
                 self.automatico(alvo)
                 self.desenhar(frame, cubos, alvo, det, fps)
@@ -349,19 +398,32 @@ class App:
             self.pub.fechar()
 
 
+
+def argumentos_sem_ros():
+    """sys.argv sem os --ros-args que o ros2 launch/run acrescentam."""
+    try:
+        from rclpy.utilities import remove_ros_args
+        return remove_ros_args(sys.argv)[1:]
+    except ImportError:
+        return sys.argv[1:]
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--camera', type=int, default=None,
                     help='indice /dev/videoN; sem ele, procura a "Web Camera"')
     ap.add_argument('--id', type=int, default=None, help='ID do AprilTag do cubo; sem ele, o mais perto')
+    ap.add_argument('--apoio', type=float, default=0.0,
+                    help='altura (m) da superficie onde estao os cubos: 0 = chao (padrao); mesa = tampo')
+    ap.add_argument('--pnp', action='store_true',
+                    help='metodo antigo: posicao pela pose 3D do tag (distancia ~11%% maior)')
     ap.add_argument('--z-medido', action='store_true',
-                    help=f'usa o z medido pela camera em vez do cubo no chao (z={Z_CHAO})')
+                    help=f'com --pnp: usa o z medido em vez do cubo no chao (z={Z_CHAO})')
     ap.add_argument('--auto', action='store_true',
                     help='ja comeca enviando sozinho (cubo parado 1 s e que andou > 2 cm)')
     ap.add_argument('--topico', default=TOPICO,
                     help=f'onde publicar (padrao {TOPICO}; use /cubo_detectado com o alcance_cubo.py)')
     ap.add_argument('--sem-ros', action='store_true', help='nao publica no ROS, so mostra/imprime')
-    App(ap.parse_args()).rodar()
+    App(ap.parse_args(argumentos_sem_ros())).rodar()
 
 
 if __name__ == '__main__':

@@ -1,7 +1,7 @@
-"""scripts/pegar_cubo.py escutando /pegar_cubo (precisa do MoveIt da garra rodando).
+"""pegar_cubo escutando /pegar_cubo (precisa do MoveIt da garra rodando).
 
-    ros2 launch garra_moveit_config pegar_cubo.launch.py
-    ros2 launch garra_moveit_config pegar_cubo.launch.py velocidade:=0.1 so_planejar:=true
+    ros2 launch garra_coleta pegar_cubo.launch.py
+    ros2 launch garra_coleta pegar_cubo.launch.py velocidade:=0.1 so_planejar:=true
 """
 
 import os
@@ -11,7 +11,7 @@ from launch import LaunchDescription
 from launch.actions import OpaqueFunction
 
 sys.path.insert(0, os.path.dirname(__file__))
-from coleta_comum import SIM, argumentos, script, valores  # noqa: E402
+from coleta_comum import SIM, argumentos, no, valores  # noqa: E402
 
 ARGS = [
     ('velocidade', '0.2', 'escala de velocidade da garra (0-1)'),
@@ -29,7 +29,7 @@ def montar(context):
         if a[nome]:
             extra += [f'--{nome}', a[nome]]
     extra += [f'--{n.replace("_", "-")}' for n in ('so_planejar', 'sem_sensor') if a[n] in SIM]
-    return [script('pegar_cubo.py', *extra)]
+    return [no('pegar_cubo', *extra)]
 
 
 def generate_launch_description():

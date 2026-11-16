@@ -10,7 +10,7 @@
     <!--CHAINS: When a chain is specified, all the links along the chain (including endpoints) are included in the group. Additionally, all the joints that are parents to included links are also included. This means that joints along the chain and the parent joint of the base link are included in the group-->
     <!--SUBGROUPS: Groups can also be formed by referencing to already defined group names-->
     <group name="garra">
-        <chain base_link="base_link" tip_link="tool0"/>
+        <chain base_link="garra_base" tip_link="tool0"/>
     </group>
     <!--GROUP STATES: Purpose: Define a named state for a particular group, in terms of joint values. This is useful to define states like 'folded arms'-->
     <group_state name="home" group="garra">
@@ -18,7 +18,7 @@
         <joint name="Revolucionar_49" value="0"/>
         <joint name="Revolucionar_72" value="0"/>
     </group_state>
-    <!-- Pose de espera (scripts/cliente_garra.py, PRONTA): TCP ~25 cm do chao, 20 cm a frente da base
+    <!-- Pose de espera (garra_coleta/garra_coleta/cliente_garra.py, PRONTA): TCP ~25 cm do chao, 20 cm a frente da base
          da garra, inclinado 45 graus para baixo, no meio da regiao de coleta.
          "home" (q=0) e o comando de 90 graus nos tres servos: braco e garra na vertical. -->
     <group_state name="pronta" group="garra">
@@ -44,7 +44,7 @@
     <!-- Matriz refeita para a exportacao com J3 paralelo a J1/J2 e colisao pelas malhas visuais.
          Os dedos estao fixos (J4 ainda nao integrado): cada grupo abaixo e um corpo rigido. So ficam desabilitados
          pares do mesmo corpo, os adjacentes pela junta e os contatos de encaixe do CAD (secao seguinte). -->
-    <disable_collisions link1="base_link" link2="shoulder_motor" reason="Rigid"/>
+    <disable_collisions link1="garra_base" link2="shoulder_motor" reason="Rigid"/>
     <disable_collisions link1="garra_final_showder_servo_horn" link2="M_dulo_1" reason="Rigid"/>
     <disable_collisions link1="garra_final_showder_servo_horn" link2="MOTOR_1" reason="Rigid"/>
     <disable_collisions link1="M_dulo_1" link2="MOTOR_1" reason="Rigid"/>
@@ -113,7 +113,7 @@
     <disable_collisions link1="M_dulo_1" link2="shoulder_motor" reason="CADContact"/>
     <disable_collisions link1="Base" link2="MOTOR_1_1" reason="CADContact"/>
     <!-- Estrutura do robo: so os links fixos da base da garra sao liberados. -->
-    <disable_collisions link1="robo_base" link2="base_link" reason="Adjacent"/>
+    <disable_collisions link1="robo_base" link2="garra_base" reason="Adjacent"/>
     <disable_collisions link1="robo_base" link2="shoulder_motor" reason="Rigid"/>
 </robot>
 

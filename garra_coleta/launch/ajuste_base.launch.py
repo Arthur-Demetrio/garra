@@ -1,7 +1,7 @@
-"""scripts/ajuste_base.py: executa /robo/mover pelo canal 'especial' do arbitro do robo.
+"""ajuste_base: executa /robo/mover pelo canal 'especial' do arbitro do robo.
 
-    ros2 launch garra_moveit_config ajuste_base.launch.py
-    ros2 launch garra_moveit_config ajuste_base.launch.py sem_arbitro:=true topico_cmd:=/cmd_vel  # simulacao
+    ros2 launch garra_coleta ajuste_base.launch.py
+    ros2 launch garra_coleta ajuste_base.launch.py sem_arbitro:=true topico_cmd:=/cmd_vel  # simulacao
 """
 
 import os
@@ -11,7 +11,7 @@ from launch import LaunchDescription
 from launch.actions import OpaqueFunction
 
 sys.path.insert(0, os.path.dirname(__file__))
-from coleta_comum import SIM, argumentos, script, valores  # noqa: E402
+from coleta_comum import SIM, argumentos, no, valores  # noqa: E402
 
 ARGS = [
     ('vel', '0.05', 'm/s maximo'),
@@ -31,7 +31,7 @@ def montar(context):
         extra += [f'--{n.replace("_", "-")}', a[n]]
     if a['sem_arbitro'] in SIM:
         extra.append('--sem-arbitro')
-    return [script('ajuste_base.py', *extra)]
+    return [no('ajuste_base', *extra)]
 
 
 def generate_launch_description():

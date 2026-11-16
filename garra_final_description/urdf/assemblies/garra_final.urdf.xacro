@@ -4,7 +4,7 @@
   <xacro:macro name="garra_final" params="prefix">
 
     <!-- Links -->
-    <link name="${prefix}base_link">
+    <link name="${prefix}garra_base">
       <inertial>
         <origin xyz="0.000333 0.000000 0.041536" rpy="0 0 0"/>
         <mass value="0.122493"/>
@@ -204,7 +204,7 @@
 
     <!-- Joints (internal to assembly) -->
     <joint name="${prefix}R_gido" type="fixed">
-      <parent link="${prefix}base_link"/>
+      <parent link="${prefix}garra_base"/>
       <child link="${prefix}shoulder_motor"/>
       <origin xyz="-0.002399 0.000644 0.000258" rpy="0.000000 0.011578 0.000000"/>
     </joint>

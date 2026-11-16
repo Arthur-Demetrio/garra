@@ -19,8 +19,9 @@ import sys
 
 import rclpy
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from cliente_garra import ClienteGarra, HOME, JUNTAS, LIMITES, PRONTA, SUCESSO  # noqa: E402
+# garra_coleta do codigo-fonte (funciona sem colcon build)
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'garra_coleta'))
+from garra_coleta.cliente_garra import ClienteGarra, HOME, JUNTAS, LIMITES, PRONTA, SUCESSO  # noqa: E402
 
 NOMES = {'J1': 0, 'J2': 1, 'J3': 2}
 POSES = {'home': HOME, 'pronta': PRONTA}

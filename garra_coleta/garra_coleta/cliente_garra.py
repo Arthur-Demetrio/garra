@@ -30,10 +30,10 @@ from sensor_msgs.msg import JointState
 
 JUNTAS = ['Revolucionar_46', 'Revolucionar_49', 'Revolucionar_72']
 # Iguais aos do URDF (scripts/ajustar_urdf.py), que vem da calibracao dos servos.
-LIMITES = [(-0.63, 1.82), (-1.47, 1.35), (-1.25, 1.30)]
+LIMITES = [(-0.69, 2.00), (-1.74, 1.59), (-1.57, 1.64)]  # 2026-11-16: escalas refeitas
 GRUPO = 'garra'
 TCP = 'tool0'
-BASE = 'base_link'
+BASE = 'garra_base'
 
 HOME = [0.0, 0.0, 0.0]
 # Pose de espera: TCP ~25 cm do chao, 20 cm a frente da base da garra, inclinado 45 graus para baixo,
@@ -98,7 +98,7 @@ class ClienteGarra(Node):
         return [self._estado[j] for j in JUNTAS]
 
     def fk(self, q, frame=BASE):
-        """Pose do TCP em `frame` (padrao base_link) para a configuracao q."""
+        """Pose do TCP em `frame` (padrao garra_base) para a configuracao q."""
         req = GetPositionFK.Request()
         req.header.frame_id = frame
         req.fk_link_names = [TCP]

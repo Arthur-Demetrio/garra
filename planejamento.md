@@ -319,7 +319,7 @@ camera_link
     |
     | Transformação TF2
     v
-base_link
+base_link (robô) -> robo_base -> garra_base
     |
     v
 Referencial de planejamento da garra
