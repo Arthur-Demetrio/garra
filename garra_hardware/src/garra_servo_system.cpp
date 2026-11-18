@@ -35,6 +35,9 @@ constexpr auto TEMPO_MAX_HANDSHAKE = std::chrono::seconds(6);
 constexpr double PERIODO_SENSOR_S = 0.05;      // pergunta a chave dos dedos a 20 Hz
 constexpr double REPUBLICAR_SENSOR_S = 1.0;    // publica mesmo sem mudanca, como sinal de vida
 const char * TOPICO_SENSOR = "/garra/cubo_preso";
+const char * TOPICO_PLATAFORMA = "/garra/plataforma_y";
+constexpr double TEMPO_MAX_PEDIDO_Y_S = 0.3;   // sem mensagem nesse tempo -> para a plataforma
+constexpr double PERIODO_ENVIO_Y_S = 0.2;      // reenvia antes do timeout de 500 ms do firmware
 }  // namespace
 
 hardware_interface::CallbackReturn GarraServoSystem::on_init(
@@ -196,7 +199,15 @@ hardware_interface::CallbackReturn GarraServoSystem::on_configure(const rclcpp_l
     // transient_local: quem assina depois recebe o ultimo estado na hora
     pub_sensor_ = no_sensor_->create_publisher<std_msgs::msg::Bool>(
       TOPICO_SENSOR, rclcpp::QoS(1).reliable().transient_local());
+    sub_plataforma_ = no_sensor_->create_subscription<std_msgs::msg::Int8>(
+      TOPICO_PLATAFORMA, rclcpp::QoS(1).best_effort(),
+      [this](const std_msgs::msg::Int8 & msg) {
+        plataforma_pedido_ = std::clamp<int>(msg.data, -1, 1);
+        tempo_desde_pedido_y_ = 0.0;
+      });
   }
+  plataforma_pedido_ = 0;
+  plataforma_enviado_ = 0;
   sensor_ativo_ = true;
   sensor_respondeu_ = false;
   aguardando_sensor_ = false;
@@ -254,6 +265,11 @@ hardware_interface::CallbackReturn GarraServoSystem::on_activate(const rclcpp_li
 hardware_interface::CallbackReturn GarraServoSystem::on_deactivate(const rclcpp_lifecycle::State &)
 {
   // Nao ha comando de soltar: os servos seguram a ultima posicao para o braco nao cair.
+  // A plataforma Y, essa sim, para.
+  plataforma_pedido_ = plataforma_enviado_ = 0;
+  if (fd_ >= 0) {
+    enviar("Y P\n");
+  }
   return CallbackReturn::SUCCESS;
 }
 
@@ -286,8 +302,14 @@ hardware_interface::return_type GarraServoSystem::read(
   std::vector<std::string> linhas;
   ler_linhas(linhas);
   tempo_sem_resposta_ = linhas.empty() ? tempo_sem_resposta_ + dt : 0.0;
+  if (no_sensor_) {
+    rclcpp::spin_some(no_sensor_);   // recebe /garra/plataforma_y
+  }
   for (const auto & linha : linhas) {
-    if (!linha.empty() && linha[0] == 'S') {
+    if (linha == "Y TIMEOUT") {
+      RCLCPP_WARN(LOGGER, "Plataforma Y parada pelo timeout do firmware");
+      plataforma_enviado_ = 0;
+    } else if (!linha.empty() && linha[0] == 'S') {
       tratar_sensor(linha);
     } else if (linha == "E comando" && aguardando_sensor_ && !sensor_respondeu_) {
       // Firmware antigo, sem o comando "S": desliga o sensor e segue sem ele.
@@ -324,6 +346,23 @@ hardware_interface::return_type GarraServoSystem::write(
 {
   tempo_desde_envio_ += period.seconds();
   tempo_desde_sensor_ += period.seconds();
+  tempo_desde_pedido_y_ += period.seconds();
+  tempo_desde_envio_y_ += period.seconds();
+  if (tempo_desde_pedido_y_ > TEMPO_MAX_PEDIDO_Y_S) {
+    plataforma_pedido_ = 0;
+  }
+  // Manda na hora quando muda; enquanto anda, reenvia para o firmware nao parar por timeout.
+  if (
+    plataforma_pedido_ != plataforma_enviado_ ||
+    (plataforma_pedido_ != 0 && tempo_desde_envio_y_ >= PERIODO_ENVIO_Y_S))
+  {
+    const char * cmd = plataforma_pedido_ < 0 ? "Y E\n" : plataforma_pedido_ > 0 ? "Y D\n" : "Y P\n";
+    plataforma_enviado_ = plataforma_pedido_;
+    tempo_desde_envio_y_ = 0.0;
+    if (!enviar(cmd)) {
+      return return_type::ERROR;
+    }
+  }
   if (sensor_ativo_ && tempo_desde_sensor_ >= PERIODO_SENSOR_S) {
     tempo_desde_sensor_ = 0.0;
     aguardando_sensor_ = true;

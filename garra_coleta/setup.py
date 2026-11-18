@@ -26,6 +26,7 @@ setup(
             'alcance_cubo = garra_coleta.alcance_cubo:main',
             'ajuste_base = garra_coleta.ajuste_base:main',
             'camera_cubo = garra_coleta.camera_cubo:main',
+            'plataforma_y = garra_coleta.plataforma_y:main',
         ],
     },
 )

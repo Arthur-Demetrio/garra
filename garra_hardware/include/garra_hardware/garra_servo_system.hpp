@@ -9,9 +9,11 @@
 #include "rclcpp/duration.hpp"
 #include "rclcpp/node.hpp"
 #include "rclcpp/publisher.hpp"
+#include "rclcpp/subscription.hpp"
 #include "rclcpp/time.hpp"
 #include "rclcpp_lifecycle/state.hpp"
 #include "std_msgs/msg/bool.hpp"
+#include "std_msgs/msg/int8.hpp"
 
 namespace garra_hardware
 {
@@ -76,6 +78,14 @@ private:
   int cubo_preso_{-1};             // -1 = ainda sem leitura
   double tempo_desde_sensor_{0.0};
   double tempo_desde_publicacao_{0.0};
+
+  // Plataforma do eixo Y (comando "Y" do firmware): /garra/plataforma_y, std_msgs/Int8
+  // -1 = esquerda, 0 = para, +1 = direita. Para sozinha se o topico ficar quieto.
+  rclcpp::Subscription<std_msgs::msg::Int8>::SharedPtr sub_plataforma_;
+  int plataforma_pedido_{0};       // ultimo valor recebido no topico
+  int plataforma_enviado_{0};      // ultimo valor mandado ao firmware
+  double tempo_desde_pedido_y_{0.0};
+  double tempo_desde_envio_y_{0.0};
 };
 
 }  // namespace garra_hardware

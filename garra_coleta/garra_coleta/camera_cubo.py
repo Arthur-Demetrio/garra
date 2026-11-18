@@ -19,6 +19,10 @@ Fluxo:
   terminal 2: ros2 run garra_coleta pegar_cubo              (escuta /pegar_cubo)
   terminal 3: ros2 run garra_coleta camera_cubo             (aperte P para pegar)
 
+Plataforma Y: com --tag-plataforma ID (e --altura-plataforma), esse tag nao e tratado como cubo;
+a posicao dele (pelo pixel, no plano z = altura do tag) sai em /garra/plataforma_y/posicao a cada
+quadro, para o plataforma_y.py fechar a malha.
+
 Teclado (na janela): P manda o cubo escolhido   A liga/desliga envio automatico
                      0-9 escolhe o ID do cubo (o mais perto se nenhum)   Q sair
 
@@ -55,6 +59,7 @@ def pasta_config():
 CONFIG = pasta_config()
 CALIB = CONFIG / 'camera_calib_webcam.yaml'
 TOPICO = '/pegar_cubo'
+TOPICO_PLATAFORMA = '/garra/plataforma_y/posicao'
 TAG = 0.032              # m, lado do quadrado PRETO do AprilTag
 CUBO = 0.042             # m, aresta do cubo
 Z_CHAO = CUBO / 2        # centro do cubo apoiado no chao
@@ -196,17 +201,23 @@ def centro_pelo_pixel(cantos, K, dist, R_base_cam, t_base_cam, apoio=0.0):
     distancia do solvePnP, que em 2026-11-16 saiu ~11% maior que a real (erro de varios cm em x/y).
     apoio: altura da superficie onde o cubo esta (0 = chao; mesa: altura do tampo).
     """
+    topo = ponto_no_plano(cantos, K, dist, R_base_cam, t_base_cam, apoio + CUBO)
+    if topo is None:
+        return None
+    return np.array([topo[0], topo[1], apoio + CUBO / 2])
+
+
+def ponto_no_plano(cantos, K, dist, R_base_cam, t_base_cam, z):
+    """Centro do tag em robo_base, sabendo que ele esta no plano horizontal de altura z (m)."""
     p0, p1, p2, p3 = np.asarray(cantos, float).reshape(4, 2)
     d1, d2 = p2 - p0, p3 - p1                       # diagonais 0-2 e 1-3
     s = np.cross(p1 - p0, d2) / np.cross(d1, d2)
     centro = p0 + s * d1
     n = cv2.undistortPoints(centro.reshape(1, 1, 2), K, dist).ravel()
     raio = R_base_cam @ np.array([n[0], n[1], 1.0])
-    topo = apoio + CUBO
     if raio[2] >= 0:
         return None                                  # raio nao desce ate o plano (acima do horizonte)
-    p = t_base_cam + raio * (topo - t_base_cam[2]) / raio[2]
-    return np.array([p[0], p[1], apoio + CUBO / 2])
+    return t_base_cam + raio * (z - t_base_cam[2]) / raio[2]
 
 
 def centro_do_cubo(rvec, tvec, R_base_cam, t_base_cam):
@@ -230,6 +241,7 @@ class Publicador:
         self.rclpy, self.Point = rclpy, Point
         self.no = rclpy.create_node('camera_cubo')
         self.pub = self.no.create_publisher(Point, topico, 10)
+        self.pub_plataforma = self.no.create_publisher(Point, TOPICO_PLATAFORMA, 10)
 
     def ativo(self):
         return self.no is None or self.rclpy.ok()
@@ -239,6 +251,11 @@ class Publicador:
             if not self.pub.get_subscription_count():
                 print(f'AVISO: ninguem escutando {self.topico}', flush=True)
             self.pub.publish(self.Point(x=x, y=y, z=z))
+            self.rclpy.spin_once(self.no, timeout_sec=0.0)
+
+    def plataforma(self, x, y, z):
+        if self.no is not None and self.rclpy.ok():
+            self.pub_plataforma.publish(self.Point(x=x, y=y, z=z))
             self.rclpy.spin_once(self.no, timeout_sec=0.0)
 
     def fechar(self):
@@ -366,6 +383,15 @@ class App:
 
                 cubos = []
                 for i, c, r, t in det.detectar(frame):
+                    if i == self.args.tag_plataforma:
+                        p = ponto_no_plano(c, det.K, det.dist, self.R, self.t, self.args.altura_plataforma)
+                        if p is not None:
+                            self.pub.plataforma(*(float(v) for v in p))
+                            cv2.polylines(frame, [c.astype(int)], True, (255, 0, 255), 3)
+                            cv2.putText(frame, f'PLATAFORMA y={p[1] * 100:.1f} cm',
+                                        tuple(int(v) for v in c[0] - [0, 14]),
+                                        cv2.FONT_HERSHEY_SIMPLEX, 0.9, (255, 0, 255), 2)
+                        continue
                     xyz = (centro_do_cubo(r, t, self.R, self.t) if self.args.pnp else
                            centro_pelo_pixel(c, det.K, det.dist, self.R, self.t, self.args.apoio))
                     if xyz is not None:
@@ -422,6 +448,10 @@ def main():
                     help='ja comeca enviando sozinho (cubo parado 1 s e que andou > 2 cm)')
     ap.add_argument('--topico', default=TOPICO,
                     help=f'onde publicar (padrao {TOPICO}; use /cubo_detectado com o alcance_cubo.py)')
+    ap.add_argument('--tag-plataforma', type=int, default=None,
+                    help=f'ID do AprilTag preso na plataforma Y; publica a posicao em {TOPICO_PLATAFORMA}')
+    ap.add_argument('--altura-plataforma', type=float, default=0.20,
+                    help='altura (m) do tag da plataforma em relacao ao chao (medir com a trena)')
     ap.add_argument('--sem-ros', action='store_true', help='nao publica no ROS, so mostra/imprime')
     App(ap.parse_args(argumentos_sem_ros())).rodar()
 
