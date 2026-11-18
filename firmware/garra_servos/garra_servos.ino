@@ -7,12 +7,14 @@
 //                           de todos os bytes antes do '*'. Responde "K", ou "E <motivo>".
 //   S                    -> sensor de cubo nos dedos: responde "S 1" (chave fechada = cubo preso)
 //                           ou "S 0". So responde quando perguntado: nada e enviado sozinho.
-//   Y <E|D|P|?>          -> plataforma do eixo Y (servo de rotacao continua no pino 13):
-//                           E = esquerda (1400 us), D = direita (1600 us), P = para (1500 us),
+//   Y <E|D|P|?>          -> plataforma do eixo Y (servo de rotacao continua no pino 8):
+//                           E = esquerda (1420 us), D = direita (1620 us), P = para (1520 us),
 //                           ? = so consulta. Responde "Y ESQUERDA", "Y DIREITA" ou "Y PARADO".
 //                           Se andar TIMEOUT_Y_MS sem receber outro comando Y, para sozinha e
 //                           envia "Y TIMEOUT" (unica mensagem nao pedida). Para andar continuo,
 //                           reenviar o comando a cada < 500 ms.
+//                           Parar = neutro por FREIO_Y_MS e depois SEM SINAL (detach): o
+//                           neutro desse servo varia e, so com ele, a plataforma anda devagar.
 //   <motor>,<angulo>     -> comando manual do time (ex.: "1,90"): motor 1 a 4, angulo 0 a 180
 //                           no mesmo padrao do Servo.write. Para testes pelo Monitor Serial
 //                           (115200 baud, final de linha "Nova linha"). Nao usa a calibracao!
@@ -48,11 +50,16 @@ const int PULSO_INICIAL = 1472;  // 90 graus no Servo.write = q=0 do modelo (ver
 
 // Plataforma Y: DS3218 modificado para rotacao continua (pulso = velocidade, nao posicao).
 // Nao entra na rampa de velocidade dos outros servos: o pulso e aplicado direto.
-const uint8_t PINO_Y = 13;
-const int PULSO_Y_ESQUERDA = 1400;
-const int PULSO_Y_PARADO = 1500;
-const int PULSO_Y_DIREITA = 1600;
+// Pino 8 (nao 13: o bootloader pisca o LED do 13 no reset e a plataforma dava um tranco).
+const uint8_t PINO_Y = 8;
+// Neutro medido em 2026-11-18 (1520, nao 1500); esquerda/direita a +-100 us dele.
+const int PULSO_Y_PARADO = 1520;
+const int PULSO_Y_ESQUERDA = PULSO_Y_PARADO - 100;
+const int PULSO_Y_DIREITA = PULSO_Y_PARADO + 100;
 const unsigned long TIMEOUT_Y_MS = 500;
+// O DS3218 e digital e repete o ultimo pulso quando o sinal some: ao parar, manda o neutro
+// por esse tempo e so entao corta o sinal (testado com firmware/plataforma_sem_sinal).
+const unsigned long FREIO_Y_MS = 300;
 
 const uint8_t PINO_SENSOR = 3;
 const unsigned long DEBOUNCE_MS = 20;  // a chave precisa ficar estavel esse tempo
@@ -61,6 +68,8 @@ Servo servos[N_SERVOS];
 Servo servo_y;
 int pulso_y = PULSO_Y_PARADO;
 unsigned long ultimo_comando_y = 0;
+bool freando_y = false;
+unsigned long freio_y_ate = 0;
 bool cubo_preso = false;           // estado ja filtrado da chave
 bool leitura_anterior = false;
 unsigned long mudou_em = 0;
@@ -181,9 +190,27 @@ const __FlashStringHelper *estado_y() {
   return F("Y PARADO");
 }
 
+void cortar_sinal_y() {
+  freando_y = false;
+  if (servo_y.attached()) servo_y.detach();
+  pinMode(PINO_Y, OUTPUT);
+  digitalWrite(PINO_Y, LOW);  // sem pulso: o servo desliga o motor
+}
+
 void aplicar_y(int pulso) {
   pulso_y = pulso;
-  servo_y.writeMicroseconds(pulso_y);
+  if (pulso == PULSO_Y_PARADO) {
+    if (servo_y.attached() && !freando_y) {
+      servo_y.writeMicroseconds(PULSO_Y_PARADO);   // freia; o loop corta o sinal depois
+      freando_y = true;
+      freio_y_ate = millis() + FREIO_Y_MS;
+    }
+    return;
+  }
+  freando_y = false;
+  servo_y.writeMicroseconds(pulso);
+  if (!servo_y.attached()) servo_y.attach(PINO_Y, PULSO_MIN, PULSO_MAX);
+  servo_y.writeMicroseconds(pulso);
 }
 
 // "Y E", "Y D", "Y P" ou "Y ?" (o espaco e opcional).
@@ -231,9 +258,8 @@ void setup() {
     servos[i].writeMicroseconds(PULSO_INICIAL);
     servos[i].attach(PINOS[i], PULSO_MIN, PULSO_MAX);
   }
-  // Plataforma Y comeca parada.
-  servo_y.writeMicroseconds(PULSO_Y_PARADO);
-  servo_y.attach(PINO_Y, PULSO_MIN, PULSO_MAX);
+  // Plataforma Y comeca parada, sem sinal.
+  cortar_sinal_y();
 }
 
 void loop() {
@@ -261,6 +287,9 @@ void loop() {
   if (pulso_y != PULSO_Y_PARADO && agora - ultimo_comando_y > TIMEOUT_Y_MS) {
     aplicar_y(PULSO_Y_PARADO);
     Serial.println(F("Y TIMEOUT"));
+  }
+  if (freando_y && (long)(agora - freio_y_ate) >= 0) {
+    cortar_sinal_y();
   }
 
   if (agora - ultimo_passo >= PERIODO_MS) {
