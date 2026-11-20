@@ -20,6 +20,12 @@ do ponto. Chegou quando o erro fica abaixo de --tolerancia com a plataforma para
 Uso (garra_real.launch.py e camera_cubo --tag-plataforma N rodando):
   ros2 run garra_coleta plataforma_y
   ros2 topic pub --once /garra/plataforma_y/alvo std_msgs/msg/Float64 "{data: 0.05}"
+  ros2 run garra_coleta plataforma_y --seguir-cubo   # segue o y do cubo visto (/cubo_visto)
+
+Perto das bordas (a menos de --zona-borda de --y-min/--y-max) anda devagar. Para encostar numa borda
+com o teste da chave (homing, feito pelo firmware):
+  ros2 topic pub --once /garra/plataforma_y/home std_msgs/msg/String "{data: E}"   # ou D
+  ros2 topic echo /garra/plataforma_y/home/resultado                               # "E OK"
 
 Teste do sentido: ros2 run garra_coleta plataforma_y --testar-sentido  (anda 0,5 s para a DIREITA
 e mostra quanto o y mudou; se o y aumentou, use --direita-aumenta-y).
@@ -37,6 +43,7 @@ TOPICO_COMANDO = '/garra/plataforma_y'
 TOPICO_POSICAO = '/garra/plataforma_y/posicao'
 TOPICO_ALVO = '/garra/plataforma_y/alvo'
 TOPICO_RESULTADO = '/garra/plataforma_y/resultado'
+TOPICO_CUBO = '/cubo_visto'   # camera_cubo: cubo alvo a cada quadro (modo --seguir-cubo)
 PERIODO_S = 0.05      # 20 Hz: bem abaixo dos 300 ms do driver
 
 
@@ -55,11 +62,47 @@ class PlataformaY:
         self.pulso_ate = 0.0      # fase de pulso: anda ate aqui, depois pausa ate pausa_ate
         self.pausa_ate = 0.0
         self.comando = 0
+        self.cubo_em = 0.0
+        self.saltos = 0
+        self.cubo_hist = []       # (t, y) recentes do cubo, para so aceitar um alvo estavel
+        if args.seguir_cubo:
+            no.create_subscription(Point, TOPICO_CUBO, self._cubo, 10)
+            no.get_logger().info(f'Seguindo o y do cubo em {TOPICO_CUBO}')
         no.create_timer(PERIODO_S, self._passo)
 
+    def _cubo(self, p):
+        """Modo seguir: MEMORIZA o y do cubo e alinha com ele, sem precisar continuar vendo o cubo
+        (a garra passa na frente dele e da camera). Leituras do cubo durante o movimento sao
+        ignoradas; um alvo novo so e aceito com a plataforma parada e o cubo estavel por
+        --estavel-s (o mesmo y, +-5 mm), e se ele estiver a mais de --histerese do plano da garra."""
+        agora = time.monotonic()
+        self.cubo_em = agora
+        if self.alvo is not None:
+            return                                   # alinhando: alvo ja memorizado
+        self.cubo_hist = [(t, y) for t, y in self.cubo_hist if agora - t <= self.a.estavel_s]
+        self.cubo_hist.append((agora, p.y))
+        ys = [y for _, y in self.cubo_hist]
+        if agora - self.cubo_hist[0][0] < self.a.estavel_s * 0.8 or max(ys) - min(ys) > 0.005:
+            return                                   # cubo ainda nao estavel (ou leitura pulando)
+        y = sum(ys) / len(ys)
+        if self.y is None or abs(y - self.y) <= self.a.histerese:
+            return                                   # ja alinhado
+        alvo = min(max(y, self.a.y_min), self.a.y_max)
+        self.alvo, self.inicio, self.parado_desde = alvo, agora, None
+        self.saltos = 0
+        self.no.get_logger().info(f'Cubo em y={y:.3f} (plano da garra em {self.y:.3f}): alinhando em {alvo:.3f}')
+
     def _posicao(self, p):
-        self.y = p.y + self.a.deslocamento
-        self.visto_em = time.monotonic()
+        agora = time.monotonic()
+        y = p.y + self.a.deslocamento
+        # A plataforma anda ~2 cm/s: um salto maior que --max-salto entre leituras seguidas e leitura
+        # falsa (tag meio tampado pela garra). Descarta; se so vierem leituras assim por mais de
+        # --sem-camera-s, o _passo para por "camera nao ve o tag".
+        if (self.y is not None and agora - self.visto_em < self.a.sem_camera_s
+                and abs(y - self.y) > self.a.max_salto):
+            self.saltos += 1
+            return
+        self.y, self.visto_em = y, agora
 
     def _alvo(self, msg):
         y = msg.data
@@ -84,6 +127,15 @@ class PlataformaY:
         direita = 1 if self.a.direita_aumenta_y else -1
         return direita if erro > 0 else -direita
 
+    def _velocidade(self, erro):
+        """Sentido do _sentido; devagar (+-2, "Y L E/D" no firmware) a menos de --zona-borda do
+        limite para onde esta indo, para nao chegar rapido na borda nem na chave."""
+        cmd = self._sentido(erro)
+        limite = self.a.y_max if erro > 0 else self.a.y_min
+        if self.a.zona_borda > 0 and abs(limite - self.y) < self.a.zona_borda:
+            return 2 * cmd
+        return cmd
+
     def _passo(self):
         agora = time.monotonic()
         if self.alvo is None:
@@ -103,12 +155,13 @@ class PlataformaY:
             if self.parado_desde is None:
                 self.parado_desde = agora
             elif agora - self.parado_desde >= self.a.assentar_s:
-                self._fim(f'ok y={self.y:.4f}')
+                self._fim(f'ok y={self.y:.4f}' + (f' ({self.saltos} leituras falsas descartadas)' if self.saltos else ''))
+                self.cubo_hist = []
             return
         self.parado_desde = None
 
         if abs(erro) > self.a.zona_lenta:
-            self._mandar(self._sentido(erro))
+            self._mandar(self._velocidade(erro))
             return
         # Perto: pulso curto, pausa para a camera medir, de novo.
         if agora < self.pulso_ate:
@@ -162,9 +215,22 @@ def main():
     ap.add_argument('--assentar-s', type=float, default=0.3, help='tempo parado dentro da tolerancia')
     ap.add_argument('--sem-camera-s', type=float, default=0.3)
     ap.add_argument('--tempo-max-s', type=float, default=15.0)
-    ap.add_argument('--y-min', type=float, default=-0.25, help='limite do curso (m, robo_base)')
-    ap.add_argument('--y-max', type=float, default=0.25)
+    # TEMPORARIO (2026-11-20, sem homing ate a peca nova da chave): 20 mm antes dos contatos medidos,
+    # chaves em -12,3 cm (direita, calculado) e 13,7 cm (esquerda, medido), com a camera recalibrada
+    # e o tag a 25,7 cm (curso de 26 cm conferido na trena). Trocar pelo homing depois.
+    ap.add_argument('--y-min', type=float, default=-0.103, help='limite do curso, direita (m, robo_base)')
+    ap.add_argument('--y-max', type=float, default=0.117, help='limite do curso, esquerda (m, robo_base)')
+    ap.add_argument('--zona-borda', type=float, default=0.02,
+                    help='a menos disso de --y-min/--y-max anda devagar (m); 0 desliga')
     ap.add_argument('--testar-sentido', action='store_true')
+    ap.add_argument('--seguir-cubo', action='store_true',
+                    help=f'alinha o plano da garra com o y do cubo visto ({TOPICO_CUBO}), sem parar')
+    ap.add_argument('--estavel-s', type=float, default=1.0,
+                    help='com --seguir-cubo: tempo que o cubo precisa ficar parado para virar alvo (s)')
+    ap.add_argument('--max-salto', type=float, default=0.015,
+                    help='salto maximo do y do tag entre leituras; maior = leitura falsa (m)')
+    ap.add_argument('--histerese', type=float, default=0.01,
+                    help='com --seguir-cubo: so realinha se o cubo andar mais que isso (m)')
     args = ap.parse_args(remove_ros_args(sys.argv)[1:])
 
     rclpy.init()

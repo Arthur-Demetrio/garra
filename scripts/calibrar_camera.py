@@ -8,7 +8,8 @@ Abre a camera numa janela e, a cada imagem, usa os tags deitados no chao (tag pa
 Na tela aparece o x/y/z (cm, robo_base) de cada cubo com esses valores.
 
 A inclinacao e a altura saem dos tags; a posicao x/y da camera nao. Para acertar x/y, ponha um cubo
-num ponto medido com a trena, aperte K e digite "x y" em cm (frente e esquerda do centro da base).
+num ponto medido com a trena, aperte K e digite "x y" em cm: x = distancia a frente da BORDA DIANTEIRA
+da base, y = esquerda do centro (o script soma cc.BORDA_DIANTEIRA ao x).
 
 Teclas:  S salva em ~/.config/garra/camera_montagem.json (o camera_cubo.py passa a usar)
          K corrige x/y da camera com um cubo medido     R zera as medidas     Q sai
@@ -35,7 +36,8 @@ JANELA_LEITURAS = 150    # leituras de tag usadas na media (desliza no tempo)
 
 class Calibracao:
     def __init__(self):
-        self.montagem = dict(cc.MONTAGEM)
+        # Parte da calibracao salva (se houver), para o K e o S nao voltarem para a trena.
+        self.montagem = dict(cc.MONTAGEM_CALIBRADA or cc.MONTAGEM)
         self.normais = collections.deque(maxlen=JANELA_LEITURAS)
         self.tvecs = collections.deque(maxlen=JANELA_LEITURAS)
         self.mensagem = 'Deixe cubos com o tag para cima, sem nada na frente.'
@@ -53,6 +55,8 @@ class Calibracao:
         n = np.median(N, 0)
         n /= np.linalg.norm(n)
         bons = N @ n > math.cos(math.radians(15))     # descarta tag de lado / leitura espelhada
+        if bons.sum() < 10:
+            return None    # leituras discordantes (tag fora do chao?): sem estimativa, em vez de nan
         n = N[bons].mean(0)
         n /= np.linalg.norm(n)
         incl = math.degrees(math.asin(-n[2]))
@@ -72,11 +76,14 @@ def desenhar(img, det, tags, cal):
     m = cal.montagem_atual()
     R, t = cc.rotacao_camera(m), np.array([m['x'], m['y'], m['z']])
     for i, c, r, tv in tags:
-        p = cc.centro_do_cubo(r, tv, R, t)
+        # Mesmo metodo do camera_cubo.py (pixel + altura do cubo), nao o solvePnP (~11% longe).
+        p = cc.centro_pelo_pixel(c, det.K, det.dist, R, t)
+        if p is None:
+            continue
         cv2.polylines(img, [c.astype(int)], True, (0, 255, 0), 3)
         cv2.drawFrameAxes(img, det.K, det.dist, r, tv, 0.03)
         org = tuple(int(v) for v in c[0] - [0, 14])
-        cv2.putText(img, f'ID {i}  x={p[0] * 100:.1f} y={p[1] * 100:.1f} z={p[2] * 100:.1f} cm',
+        cv2.putText(img, f'ID {i}  da borda: x={cc.da_borda(p[0]) * 100:.1f} y={p[1] * 100:.1f} cm',
                     org, cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
 
     est = cal.estimar()
@@ -96,18 +103,25 @@ def desenhar(img, det, tags, cal):
         cv2.putText(img, txt, (14, 38 + 40 * k), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (230, 230, 230), 2)
 
 
-def corrigir_xy(cal, tags):
+def corrigir_xy(cal, tags, det):
     if len(tags) != 1:
         cal.mensagem = 'Para K deixe exatamente UM cubo visivel.'
         return
     try:
-        x, y = (float(v) / 100 for v in input('Posicao real do cubo "x y" em cm (frente, esquerda): ').split())
+        x, y = (float(v) / 100 for v in input(
+            'Posicao real do cubo "x y" em cm (x a frente da BORDA DIANTEIRA, y esquerda do centro): ').split())
+        x = cc.para_robo_base(x)
     except (ValueError, EOFError):
-        cal.mensagem = 'Ignorado: digite dois numeros, ex: 46 -3'
+        cal.mensagem = 'Ignorado: digite dois numeros, ex: 19 -3'
         return
     m = cal.montagem_atual()
-    _, _, r, tv = tags[0]
-    p = cc.centro_do_cubo(r, tv, cc.rotacao_camera(m), np.array([m['x'], m['y'], m['z']]))
+    _, c, _, _ = tags[0]
+    # Tem de ser o MESMO metodo do camera_cubo.py: corrigir com o solvePnP (distancia ~11% maior)
+    # e medir pelo pixel desloca todas as posicoes.
+    p = cc.centro_pelo_pixel(c, det.K, det.dist, cc.rotacao_camera(m), np.array([m['x'], m['y'], m['z']]))
+    if p is None:
+        cal.mensagem = 'Cubo acima do horizonte da camera; ignorado.'
+        return
     cal.montagem['x'] += x - p[0]
     cal.montagem['y'] += y - p[1]
     cal.mensagem = f'x/y da camera corrigidos em ({(x - p[0]) * 100:+.1f}, {(y - p[1]) * 100:+.1f}) cm.'
@@ -117,6 +131,8 @@ def corrigir_xy(cal, tags):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--camera', type=int, default=None, help='indice /dev/videoN; sem ele, procura a webcam')
+    ap.add_argument('--ignorar', type=int, nargs='*', default=[11],
+                    help='IDs de tags que NAO estao em cubos no chao (padrao: 11, o da plataforma Y)')
     args = ap.parse_args()
 
     indice = cc.achar_webcam() if args.camera is None else args.camera
@@ -128,6 +144,7 @@ def main():
     print(f'Camera {indice}: {w}x{h}', flush=True)
     det = cc.DetectorTags(*cc.carregar_calibracao(w, h))
     cal = Calibracao()
+    ignorar = set(args.ignorar)
 
     janela = 'Calibrar camera'
     cv2.namedWindow(janela, cv2.WINDOW_NORMAL)
@@ -138,7 +155,8 @@ def main():
             if not ok:
                 print('A camera parou de mandar imagens.', flush=True)
                 break
-            tags = det.detectar(frame)
+            # So tags de cubos no chao: o da plataforma Y (e outros fora do chao) estragam a media.
+            tags = [tg for tg in det.detectar(frame) if tg[0] not in ignorar]
             cal.adicionar(tags)
             desenhar(frame, det, tags, cal)
             cv2.imshow(janela, frame)
@@ -156,7 +174,7 @@ def main():
                 cal.tvecs.clear()
                 cal.mensagem = 'Medidas zeradas.'
             elif k == ord('k'):
-                corrigir_xy(cal, tags)
+                corrigir_xy(cal, tags, det)
     except KeyboardInterrupt:
         pass
     finally:

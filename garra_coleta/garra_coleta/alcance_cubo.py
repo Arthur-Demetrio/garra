@@ -3,7 +3,7 @@
 
 Recebe a posicao do cubo (geometry_msgs/Point em /cubo_detectado, frame robo_base: X frente,
 Y esquerda, Z cima, em metros) e confere se ela esta na JANELA DE COLETA medida na garra real:
-  - X entre X_MIN e X_MAX (cubo no chao, medido em 2026-11-13 apos reposicionar o J1);
+  - X entre X_MIN e X_MAX (cubo no chao; 0.40-0.49 com a calibracao de 2026-11-16);
   - Y a ate Y_TOLERANCIA do plano da garra (o braco e planar, Y_PLANO).
 
   dentro da janela -> publica o Point em /pegar_cubo (o pegar_cubo.py pega o cubo);
@@ -64,9 +64,9 @@ TOPICO_GARRA_RES = '/pegar_cubo/resultado'
 TOPICO_COLETA = '/coleta/pedido'          # do executor_prova.py (--garra) do robo
 TOPICO_COLETA_RES = '/coleta/resultado'
 
-# Janela de coleta no chao (robo_base, m). Medida em 2026-11-13: 0,40-0,43 pegam; 0,38 e 0,48 nao.
+# Janela de coleta no chao (robo_base, m). Calibracao de 2026-11-16: 0,40-~0,49 (pegada real em 0,465). Alem de -90 graus quase bateu no robo (2026-11-17): nao usar.
 X_MIN = 0.40
-X_MAX = 0.43
+X_MAX = 0.49
 Y_PLANO = -0.029      # plano da garra (Y do TCP)
 Y_TOLERANCIA = 0.015  # mesmo valor do aviso do camera_cubo.py
 X_ALVO = (X_MIN + X_MAX) / 2
@@ -261,3 +261,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+

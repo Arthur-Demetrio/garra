@@ -5,7 +5,7 @@ O calibrar_servos.py mede zero, sentido e faixa, mas a escala vem do valor nomin
 
 Fale direto com o firmware: NAO rode com o ROS usando a mesma porta.
 
-    python3 scripts/medir_escala.py [--porta /dev/ttyUSB0] [--angulo 0.8]
+    python3 scripts/medir_escala.py [--porta /dev/serial/by-path/pci-0000:00:14.0-usb-0:3.3:1.0-port0] [--angulo 0.8]
 
 Para cada junta escolhida, com as outras no zero (q=0, vertical):
   1. a junta vai ao zero: encoste o celular (app de inclinometro/nivel) no segmento logo depois
@@ -48,7 +48,7 @@ def esperar(pulso_de, pulso_para):
 def main():
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('--porta', default='/dev/ttyUSB0')
+    parser.add_argument('--porta', default='/dev/serial/by-path/pci-0000:00:14.0-usb-0:3.3:1.0-port0')
     parser.add_argument('--arquivo', default=SAIDA_PADRAO)
     parser.add_argument('--angulo', type=float, default=0.8,
                         help='angulo do teste em rad, positivo = para a frente (padrao 0.8)')

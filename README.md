@@ -5,7 +5,7 @@ Projeto de uma garra robótica planar de **três juntas rotativas**, modelada a 
 O sistema foi organizado para permitir desenvolvimento e testes em duas etapas:
 
 - **Simulação:** visualizar o modelo no RViz 2, calcular cinemática, verificar colisões e planejar/executar trajetórias com controladores simulados.
-- **Hardware físico:** enviar comandos aos três servos por meio de um Arduino Mega conectado por USB serial.
+- **Hardware físico:** enviar comandos aos servos do braço (J1–J3), dos dedos (J4) e da plataforma do eixo Y por meio de um Arduino Mega conectado por USB serial.
 
 > **Atenção:** os testes automatizados de `scripts/validar_garra.py` são destinados à simulação. Não os execute com a garra física conectada/acionada. Antes de operar o hardware, faça a calibração individual dos servos e confira os limites mecânicos e a alimentação.
 
@@ -31,8 +31,10 @@ garra/
 ├── firmware/
 │   ├── garra_servos/
 │   │   └── garra_servos.ino
-│   └── ino atual/
-│       └── ...                  # versão anterior do firmware
+│   ├── ino atual/
+│   │   └── ...                  # versão anterior do firmware
+│   ├── plataforma/              # teste avulso do servo da plataforma Y (ajuste de pulso)
+│   └── plataforma_sem_sinal/    # teste avulso da plataforma Y (E/D/P, para cortando o sinal)
 ├── garra_final_description/
 │   ├── urdf/
 │   │   └── garra_final.urdf.xacro
@@ -48,6 +50,8 @@ garra/
 │   └── package.xml
 ├── garra_moveit_config/
 │   ├── config/
+│   │   ├── garra_final.urdf.xacro   # garra + estrutura do robô (frame robo_base)
+│   │   ├── garra_final.srdf
 │   │   ├── kinematics.yaml
 │   │   ├── joint_limits.yaml
 │   │   ├── ros2_controllers.yaml
@@ -63,7 +67,8 @@ garra/
 │   │   ├── pegar_cubo.py
 │   │   ├── alcance_cubo.py
 │   │   ├── ajuste_base.py
-│   │   └── camera_cubo.py
+│   │   ├── camera_cubo.py
+│   │   └── plataforma_y.py
 │   ├── launch/
 │   │   ├── coleta.launch.py         # atalho: sobe a coleta inteira
 │   │   ├── pegar_cubo.launch.py
@@ -79,10 +84,15 @@ garra/
 │   ├── validar_garra.py
 │   ├── calibrar_servos.py
 │   ├── calibrar_camera.py
+│   ├── medir_escala.py
+│   ├── testar_sensor.py
+│   ├── ajustar_urdf.py
 │   ├── mover_junta.py
 │   └── nao_usados/              # scripts históricos, fora dos procedimentos
 ├── integracao_robo/             # patch do executor_prova.py do robô (Robo-WORK)
 ├── servo_imgs/                  # imagens e vídeo de apoio à calibração
+├── dimensoes.md                 # medidas do robô móvel (base, andares, montagem da garra)
+├── planejamento.md
 ├── .gitignore
 ├── README.md
 └── GUIA_TESTES.md
@@ -97,18 +107,25 @@ Os diretórios `build/`, `install/` e `log/` são gerados pelo `colcon` e não d
 | `garra_final_description` | Descrição do robô: URDF/Xacro, malhas, juntas, links, publicação de TF e launch de visualização. |
 | `garra_moveit_config` | Configuração do MoveIt 2: grupo de planejamento, cinemática, limites, controladores, RViz e launch para simulação/hardware. |
 | `garra_hardware` | Implementação da interface de hardware `ros2_control` para comunicação serial com o Arduino Mega. |
-| `garra_coleta` | Coleta de cubos: nós `pegar_cubo`, `alcance_cubo`, `ajuste_base` e `camera_cubo` (`ros2 run garra_coleta <nó>`), TF da câmera e launchers. |
+| `garra_coleta` | Coleta de cubos: nós `pegar_cubo`, `alcance_cubo`, `ajuste_base`, `camera_cubo` e `plataforma_y` (`ros2 run garra_coleta <nó>`), TF da câmera e launchers. |
 
 ### 2.2 Firmware
 
-O firmware principal está em `firmware/garra_servos/garra_servos.ino`. Ele controla três servos e recebe comandos pela serial a **115200 baud**.
+O firmware principal está em `firmware/garra_servos/garra_servos.ino`. Ele recebe comandos pela serial a **115200 baud**.
 
 - Arduino Mega;
-- pinos 9, 10 e 11 para os três servos do braço (J1–J3) e pino 12 para o servo dos dedos (J4, DS-S006MP);
-- pulsos de comando entre 500 e 2500 µs;
-- protocolo de texto com verificação XOR;
-- resposta `GARRA 1` ao comando de identificação `V`;
-- resposta `K` quando um comando de movimento é aceito.
+- pinos 9, 10 e 11 para os servos do braço (J1–J3, DS3218MG) e pino 12 para o servo dos dedos (J4, DS-S006MP);
+- pino 8: servo de rotação contínua da plataforma do eixo Y;
+- pino 3: chave fim de curso dos dedos (normalmente aberta, para o GND, com pull-up interno);
+- pulsos de comando entre 500 e 2500 µs.
+
+| Comando | Resposta | Uso |
+|---|---|---|
+| `V` | `GARRA 1` | Identificação (handshake do driver). |
+| `M <j1> <j2> <j3> [<j4>]*HH` | `K` ou `E <motivo>` | Pulsos em µs (0 = não altera); `HH` = XOR em hexadecimal dos bytes antes do `*`. |
+| `S` | `S 1` (cubo preso) / `S 0` | Lê a chave dos dedos; o driver publica em `/garra/cubo_preso`. |
+| `Y <E\|D\|P\|?>` | `Y ESQUERDA` / `Y DIREITA` / `Y PARADO` | Plataforma Y. Para sozinha após 500 ms sem novo comando (`Y TIMEOUT`). |
+| `<motor>,<ângulo>` | — | Teste manual pelo Monitor Serial (ex.: `1,90`); ignora a calibração. |
 
 A pasta `firmware/ino atual/` contém uma versão anterior e deve ser tratada como referência histórica; para a montagem descrita no projeto, utilize o firmware em `firmware/garra_servos/`.
 
@@ -122,7 +139,13 @@ A pasta `firmware/ino atual/` contém uma versão anterior e deve ser tratada co
 | `garra_coleta/garra_coleta/pegar_cubo.py` | Pega o cubo numa posição de `robo_base` (argumentos ou tópico `/pegar_cubo`) e entrega o cubo que já está nos dedos (`--entregar` ou tópico `/entregar_cubo`); publica o resultado em `/pegar_cubo/resultado` e `/entregar_cubo/resultado`. |
 | `garra_coleta/garra_coleta/alcance_cubo.py` | Durante uma coleta (`/coleta/pedido`), decide entre chamar a garra (`/pegar_cubo`) e pedir um ajuste da base (`/robo/mover`); responde em `/coleta/resultado`. |
 | `garra_coleta/garra_coleta/ajuste_base.py` | Executa o ajuste curto da base pedido em `/robo/mover`, pelo canal `especial` do árbitro do robô (até 15 cm, 0,05 m/s). |
-| `garra_coleta/garra_coleta/camera_cubo.py` | Webcam + AprilTag: acha os cubos e publica a posição em `robo_base`. |
+| `garra_coleta/garra_coleta/camera_cubo.py` | Webcam + AprilTag: acha os cubos e publica a posição em `robo_base`. A posição sai do pixel do centro do tag cruzado com a altura conhecida do cubo (`--pnp` usa o método antigo, ~11% mais longe). Na tela, o x aparece medido da borda dianteira (ver [seção 7.6](#76-câmera-medidas-e-calibração)). |
+| `garra_coleta/garra_coleta/plataforma_y.py` | Leva a plataforma do eixo Y até um `y` pedido em `/garra/plataforma_y/alvo`, em malha fechada pela câmera (`camera_cubo --tag-plataforma N`); comanda `/garra/plataforma_y` (Int8 −1/0/+1) e responde em `/garra/plataforma_y/resultado`. `--testar-sentido` confere o sentido. |
+| `scripts/calibrar_camera.py` | Calibra ao vivo a pose da webcam (inclinação e altura pelos tags; x/y com um cubo medido na trena, tecla K) e salva em `~/.config/garra/camera_montagem.json`. Usa o mesmo método de posição do `camera_cubo.py`. |
+| `scripts/mover_junta.py` | Move juntas pelo MoveIt sem o RViz (`J1 0.5`, `home`, `pronta`; `--graus`). |
+| `scripts/medir_escala.py` | Mede a escala real de cada servo com um inclinômetro, direto pela serial (sem ROS). |
+| `scripts/testar_sensor.py` | Mostra o estado da chave dos dedos pela serial (sem ROS; feche o `garra_real.launch.py`). |
+| `scripts/ajustar_urdf.py` | Ajusta a URDF depois de uma nova exportação do CAD (limites, eixos, `garra_base`). |
 
 Os scripts da coleta têm launchers próprios; veja a [seção 7.5](#75-coleta-automática-de-cubos).
 
@@ -145,49 +168,13 @@ A garra é planar: os três eixos de junta são paralelos. O movimento do TCP oc
 
 As posições articulares são expressas em radianos e as posições cartesianas em metros.
 
+Frame `robo_base` (raiz da árvore, usado pela coleta): centro da base do robô no chão; X para a frente, Y para a esquerda, Z para cima. A base tem 0,55 m em X, então a **borda dianteira fica em X = 0,275 m**. O `garra_base` fica em X = 0,225 m, girado 180° em Z. O plano da garra (Y do TCP) é Y ≈ −0,029 m.
+
 ## 4. Preparação do ambiente
-
-### 4.1 Dependências
-
-Com ROS 2 Jazzy instalado, instale as ferramentas de compilação e dependências usuais:
-
-```bash
-sudo apt update
-sudo apt install -y \
-  python3-colcon-common-extensions \
-  python3-rosdep \
-  python3-vcstool \
-  git
-```
-
-Instale também os pacotes ROS utilizados pelo projeto. Se o `rosdep` ainda não estiver inicializado na máquina:
-
-```bash
-sudo rosdep init
-rosdep update
-```
-
-`sudo rosdep init` só precisa ser executado uma vez por instalação. Se informar que a inicialização já foi feita, prossiga.
-
-### 4.2 Clonar no workspace
-
-O repositório contém os pacotes ROS diretamente na raiz. Recomenda-se colocá-lo dentro de `src/` de um workspace:
-
-```bash
-mkdir -p ~/braco_ws/src
-cd ~/braco_ws/src
-git clone https://github.com/Arthur-Demetrio/garra.git
-```
-
-A estrutura resultante será `~/braco_ws/src/garra/`.
-
-### 4.3 Resolver dependências e compilar
 
 ```bash
 source /opt/ros/jazzy/setup.bash
-cd ~/braco_ws
-
-rosdep install --from-paths src --ignore-src -r -y
+cd ~/work/garra
 
 colcon build --symlink-install
 source install/setup.bash
@@ -197,10 +184,17 @@ Se a compilação terminar corretamente, o workspace estará disponível no term
 
 ```bash
 source /opt/ros/jazzy/setup.bash
-source ~/braco_ws/install/setup.bash
+source ~/work/garra/install/setup.bash
 ```
 
-Se o workspace estiver em outro caminho, ajuste o segundo comando.
+O repositório é o próprio workspace (`build/`, `install/` e `log/` ficam na raiz). Se ele estiver em outro caminho, ajuste o segundo comando. Os dois `source` são necessários em **todo terminal novo** antes de qualquer `ros2` ou script; para não esquecer, dá para colocá-los no `~/.bashrc`:
+
+```bash
+echo 'source /opt/ros/jazzy/setup.bash' >> ~/.bashrc
+echo 'source ~/work/garra/install/setup.bash' >> ~/.bashrc
+```
+
+Depois de um `colcon build`, rode `source ~/work/garra/install/setup.bash` de novo nos terminais já abertos.
 
 ## 5. Executar a visualização
 
@@ -208,7 +202,7 @@ Para abrir a descrição da garra no RViz 2:
 
 ```bash
 source /opt/ros/jazzy/setup.bash
-source ~/braco_ws/install/setup.bash
+source ~/work/garra/install/setup.bash
 
 ros2 launch garra_final_description display.launch.py
 ```
@@ -221,7 +215,7 @@ Em outro terminal:
 
 ```bash
 source /opt/ros/jazzy/setup.bash
-source ~/braco_ws/install/setup.bash
+source ~/work/garra/install/setup.bash
 
 ros2 launch garra_moveit_config demo.launch.py
 ```
@@ -264,7 +258,10 @@ Depois, encerre a sessão e entre novamente (ou reinicie o computador) para apli
 A calibração deve ser feita antes de iniciar o hardware com MoveIt. Exemplo:
 
 ```bash
-cd ~/braco_ws/src/garra
+source /opt/ros/jazzy/setup.bash
+source ~/work/garra/install/setup.bash
+
+cd ~/work/garra
 python3 scripts/calibrar_servos.py --versao 180 --porta /dev/ttyUSB0
 ```
 
@@ -276,11 +273,11 @@ O arquivo de calibração atualmente versionado contém valores provisórios, li
 
 ### 7.4 Iniciar o MoveIt com a garra física
 
-Depois de gravar o firmware, calibrar os três servos e conferir a montagem:
+Depois de gravar o firmware, calibrar os servos (J1–J3 e dedos) e conferir a montagem:
 
 ```bash
 source /opt/ros/jazzy/setup.bash
-source ~/braco_ws/install/setup.bash
+source ~/work/garra/install/setup.bash
 
 export GARRA_PORTA=/dev/ttyUSB0
 ros2 launch garra_moveit_config garra_real.launch.py
@@ -289,6 +286,9 @@ ros2 launch garra_moveit_config garra_real.launch.py
 Para iniciar sem RViz:
 
 ```bash
+source /opt/ros/jazzy/setup.bash
+source ~/work/garra/install/setup.bash
+
 ros2 launch garra_moveit_config garra_real.launch.py use_rviz:=false
 ```
 
@@ -307,6 +307,9 @@ Fluxo: o executor do robô (`executor_prova.py`, com o patch de `integracao_robo
 Com o MoveIt da garra já rodando, tudo de uma vez:
 
 ```bash
+source /opt/ros/jazzy/setup.bash
+source ~/work/garra/install/setup.bash
+
 ros2 launch garra_coleta coleta.launch.py
 ros2 launch garra_coleta coleta.launch.py garra:=real            # inclui o garra_real.launch.py
 ros2 launch garra_coleta coleta.launch.py camera:=vision         # cube_vision do -WORK no lugar do camera_cubo.py
@@ -316,7 +319,7 @@ Ou cada parte em um terminal:
 
 | Launcher | O que roda | Argumentos principais |
 |---|---|---|
-| `coleta.launch.py` | Inclui os launchers abaixo | `garra:=nenhuma\|real\|demo`, `camera:=camera_cubo\|vision\|nenhuma`, `base`, `girar`, `sempre_ativo`, `id`, `velocidade` |
+| `coleta.launch.py` | Inclui os launchers abaixo | `garra:=nenhuma\|real\|demo`, `camera:=camera_cubo\|vision\|nenhuma`, `base`, `girar`, `sempre_ativo`, `id`, `velocidade`, `apoio` |
 | `pegar_cubo.launch.py` | `pegar_cubo.py` escutando `/pegar_cubo` | `velocidade`, `fechamento`, `descer`, `so_planejar`, `sem_sensor` |
 | `ajuste_base.launch.py` | `ajuste_base.py` | `vel`, `vel_giro`, `max_desloc`, `max_giro`, `timeout`, `topico_cmd`, `sem_arbitro` |
 | `alcance_cubo.launch.py` | `alcance_cubo.py` | `vision`, `id`, `girar`, `sempre_ativo`, `max_ajustes`, `max_pegadas` |
@@ -332,10 +335,53 @@ Observações:
 - Os nós e launchers são do pacote `garra_coleta`: depois de mudar o código, rode `colcon build` de novo. A montagem calibrada da câmera (`calibrar_camera.py`) fica em `~/.config/garra/camera_montagem.json` e vale sem recompilar.
 - `sempre_ativo:=true` faz o `alcance_cubo.py` agir sem `/coleta/pedido`: use só em testes, porque a base pode se mexer a qualquer momento.
 - Para testar sem o robô: `ros2 topic pub --once /coleta/pedido std_msgs/msg/String "{data: 'teste'}"` com a câmera vendo um cubo.
+- O `pegar_cubo.py` usa só x e z. Um cubo fora do plano da garra (Y ≈ −2,9 cm ± 1,5 cm) é recusado pelo `alcance_cubo.py`, mas não por quem publica direto em `/pegar_cubo`.
+
+### 7.6 Câmera, medidas e calibração
+
+**Convenção de medida:** toda medida feita com a trena parte da **borda dianteira da base**. O código converte para `robo_base` somando a distância do centro do robô à borda dianteira:
+
+```
+x_robo_base = x_medido_da_borda + 0,275 m        (constante BORDA_DIANTEIRA em camera_cubo.py)
+y = esquerda (+) / direita (−) da linha central do robô
+```
+
+O `calibrar_camera.py` (tecla K) pede o x a partir da borda, e as janelas do `calibrar_camera.py` e do `camera_cubo.py` mostram o x a partir da borda (o `camera_cubo.py` mostra também o x de `robo_base`). Se a base mudar de tamanho, atualize só `BORDA_DIANTEIRA`.
+
+**Janela de coleta** (calibração de 2026-11-16), no chão:
+
+| | `robo_base` | Medido da borda dianteira |
+|---|---|---|
+| X | 0,40 – 0,49 m | 12,5 – 21,5 cm |
+| Y | −0,029 ± 0,015 m | −2,9 ± 1,5 cm |
+
+**Calibrar a câmera** (feche antes o `camera_cubo.py` e qualquer programa usando a webcam):
+
+```bash
+source /opt/ros/jazzy/setup.bash
+source ~/work/garra/install/setup.bash
+
+cd ~/work/garra
+python3 scripts/calibrar_camera.py
+```
+
+1. Deixe alguns cubos no chão, com o tag para cima, até a inclinação e a altura estabilizarem.
+2. Deixe **um** cubo visível num ponto medido (bom ponto: 19 cm à frente da borda, y = −3 cm), aperte **K** e digite `19 -3`.
+3. Aperte **S** para salvar em `~/.config/garra/camera_montagem.json`.
+4. Confira com `ros2 run garra_coleta camera_cubo --sem-ros` em dois ou três outros pontos medidos: o x/y da tela deve bater com a trena.
+
+**Plataforma do eixo Y:** com `camera_cubo --tag-plataforma N --altura-plataforma <m>`, o tag `N` (preso na plataforma) não é tratado como cubo; a posição dele sai em `/garra/plataforma_y/posicao` e o `plataforma_y.py` usa essa leitura para levar o plano da garra até o `y` pedido. Esses argumentos ainda não estão no `camera_cubo.launch.py`: rode pelo `ros2 run`.
+
+Prioridade da pose da câmera: `camera_montagem.json` > `config/robot_config_webcam.yaml` (-WORK) > valores da trena em `MONTAGEM` (`camera_cubo.py`).
+
+> **Atenção:** calibrações salvas antes de 2026-11-19 usavam o solvePnP na tecla K (distância ~11% maior), enquanto o `camera_cubo.py` mede pelo pixel. Isso desloca todas as posições (a pose RViz da pegada fica longe do cubo real). Refaça a calibração. O caminho `camera:=vision` (`cube_vision` do -WORK) ainda calcula a posição pelo solvePnP e pode ter o mesmo desvio.
 
 ## 8. Diagnóstico rápido
 
 ```bash
+source /opt/ros/jazzy/setup.bash
+source ~/work/garra/install/setup.bash
+
 # Nós ativos
 ros2 node list
 
@@ -375,6 +421,8 @@ Problemas comuns:
 - `firmware/garra_servos/garra_servos.ino` — firmware do Arduino.
 - `scripts/validar_garra.py` — validação da simulação.
 - `scripts/calibrar_servos.py` — calibração física.
+- `scripts/calibrar_camera.py` e `~/.config/garra/camera_montagem.json` — pose calibrada da webcam.
+- `dimensoes.md` — medidas do robô móvel usadas no URDF e na conversão da borda dianteira.
 - `garra_coleta/garra_coleta/pegar_cubo.py`, `garra_coleta/garra_coleta/alcance_cubo.py`, `garra_coleta/garra_coleta/ajuste_base.py`, `garra_coleta/garra_coleta/camera_cubo.py` — coleta de cubos.
 - `integracao_robo/` — patch e instruções para o executor do robô chamar a garra.
 

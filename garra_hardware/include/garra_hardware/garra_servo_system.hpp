@@ -14,6 +14,7 @@
 #include "rclcpp_lifecycle/state.hpp"
 #include "std_msgs/msg/bool.hpp"
 #include "std_msgs/msg/int8.hpp"
+#include "std_msgs/msg/string.hpp"
 
 namespace garra_hardware
 {
@@ -80,12 +81,18 @@ private:
   double tempo_desde_publicacao_{0.0};
 
   // Plataforma do eixo Y (comando "Y" do firmware): /garra/plataforma_y, std_msgs/Int8
-  // -1 = esquerda, 0 = para, +1 = direita. Para sozinha se o topico ficar quieto.
+  // -1 = esquerda, 0 = para, +1 = direita; -2/+2 = esquerda/direita DEVAGAR ("Y L E/D").
+  // Para sozinha se o topico ficar quieto.
   rclcpp::Subscription<std_msgs::msg::Int8>::SharedPtr sub_plataforma_;
   int plataforma_pedido_{0};       // ultimo valor recebido no topico
   int plataforma_enviado_{0};      // ultimo valor mandado ao firmware
   double tempo_desde_pedido_y_{0.0};
   double tempo_desde_envio_y_{0.0};
+  // Homing da plataforma: /garra/plataforma_y/home (String "E" ou "D") -> "Y H E/D" no firmware;
+  // o fim ("Y HOME E OK", "... ERRO", "... CANCELADO") sai em /garra/plataforma_y/home/resultado.
+  rclcpp::Subscription<std_msgs::msg::String>::SharedPtr sub_home_;
+  rclcpp::Publisher<std_msgs::msg::String>::SharedPtr pub_home_;
+  char home_pedido_{0};            // 'E' ou 'D' esperando para ser enviado (0 = nada)
 };
 
 }  // namespace garra_hardware

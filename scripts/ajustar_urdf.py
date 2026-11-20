@@ -25,9 +25,9 @@ PADRAO = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..',
 # Refaca estes valores se recalibrar.
 # effort: torque do DS3218MG (~1.86 N.m). A velocidade real fica em joint_limits.yaml.
 LIMITES = {
-    'Revolucionar_46': (-0.69, 2.00),  # 2026-11-16: escalas refeitas (J1 -580, J2 -550, J3 -570 us/rad)
-    'Revolucionar_49': (-1.74, 1.59),
-    'Revolucionar_72': (-1.57, 1.64),
+    'Revolucionar_46': (-0.69, 2.29),  # 2026-11-20: zeros = pose do modelo em q=0
+    'Revolucionar_49': (-1.55, 1.79),
+    'Revolucionar_72': (-1.99, 1.22),
 }
 # Eixo de cada junta no frame dela, quando a exportacao erra o sentido. Fixo (nao inverte), para o
 # script continuar idempotente. J3: positivo dobra a garra para a frente (-X do garra_base), como J1.

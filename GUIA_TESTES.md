@@ -2,6 +2,8 @@
 
 Este documento descreve como executar os scripts de teste e calibração existentes em `scripts/`, considerando **Linux Mint + ROS 2 Jazzy + MoveIt 2**.
 
+> **Medidas com a trena:** sempre a partir da **borda dianteira** da base. Para o código (`robo_base`, centro do robô), some 27,5 cm: `x_robo_base = x_da_borda + 0,275`. Ex.: cubo a 18,5 cm da borda → `x = 0.46`. Y é medido da linha central do robô (+ para a esquerda).
+
 > Os procedimentos abaixo cobrem somente os scripts ativos documentados neste guia. O conteúdo de `scripts/nao_usados/` foi deliberadamente excluído.
 
 ## 1. Scripts considerados
@@ -12,6 +14,8 @@ Este documento descreve como executar os scripts de teste e calibração existen
 | `validar_garra.py` | Teste automatizado da descrição, cinemática e planejamento | Sim | **Não. Execute apenas com a simulação.** |
 | `calibrar_servos.py` | Calibração interativa dos três servos via serial | Não | **Sim. Atua diretamente no Arduino/servos.** |
 | `pegar_cubo.py` | Pega um cubo numa posição informada e volta para `PRONTA` | Sim (`demo.launch.py` ou `garra_real.launch.py`) | **Sim, quando usado com `garra_real.launch.py`.** |
+| `calibrar_camera.py` | Calibração ao vivo da pose da webcam (tags dos cubos + um cubo medido na trena) | Não | Não (só a câmera) |
+| `camera_cubo.py` | Acha os cubos pela webcam e publica a posição | Não para ver (`--sem-ros`); para pegar, sim | Indiretamente (publica para o `pegar_cubo.py`) |
 
 `cliente_garra.py` não é um programa de teste independente. Ele implementa a classe `ClienteGarra`, que `validar_garra.py` importa para acessar os serviços e a ação do MoveIt.
 
@@ -21,7 +25,7 @@ Abra um terminal e carregue o ROS 2 e o workspace:
 
 ```bash
 source /opt/ros/jazzy/setup.bash
-source ~/braco_ws/install/setup.bash
+source ~/work/garra/install/setup.bash
 ```
 
 Se o repositório/workspace estiver em outro local, ajuste o caminho do `install/setup.bash`.
@@ -41,15 +45,18 @@ jazzy
 Confirme também que o pacote está disponível:
 
 ```bash
+source /opt/ros/jazzy/setup.bash
+source ~/work/garra/install/setup.bash
+
 ros2 pkg list | grep -E 'garra_final_description|garra_moveit_config|garra_hardware'
 ```
 
 Se os pacotes não aparecerem, volte à raiz do workspace e compile:
 
 ```bash
-cd ~/braco_ws
+cd ~/work/garra
 source /opt/ros/jazzy/setup.bash
-rosdep install --from-paths src --ignore-src -r -y
+rosdep install --from-paths . --ignore-src -r -y
 colcon build --symlink-install
 source install/setup.bash
 ```
@@ -59,6 +66,9 @@ source install/setup.bash
 O exportador gera as juntas como `continuous`, sem limites, com os dedos livres e com um bloco `<ros2_control>` próprio. Antes de compilar, ajuste o URDF exportado:
 
 ```bash
+source /opt/ros/jazzy/setup.bash
+source ~/work/garra/install/setup.bash
+
 python3 scripts/ajustar_urdf.py
 ```
 
@@ -69,6 +79,9 @@ O script torna J1–J3 `revolute` com limites, prende os dedos (até o J4 ser in
 Esse teste não usa um script Python de `scripts/`; é a primeira verificação recomendada antes de executar os testes automatizados.
 
 ```bash
+source /opt/ros/jazzy/setup.bash
+source ~/work/garra/install/setup.bash
+
 ros2 launch garra_final_description display.launch.py
 ```
 
@@ -88,7 +101,7 @@ Em um segundo terminal, carregue os ambientes e inicie o MoveIt:
 
 ```bash
 source /opt/ros/jazzy/setup.bash
-source ~/braco_ws/install/setup.bash
+source ~/work/garra/install/setup.bash
 
 ros2 launch garra_moveit_config demo.launch.py
 ```
@@ -99,7 +112,7 @@ Em um terceiro terminal, confira os serviços:
 
 ```bash
 source /opt/ros/jazzy/setup.bash
-source ~/braco_ws/install/setup.bash
+source ~/work/garra/install/setup.bash
 
 ros2 service list | grep -E \
   'compute_fk|compute_ik|check_state_validity|compute_cartesian_path|plan_kinematic_path'
@@ -108,6 +121,9 @@ ros2 service list | grep -E \
 Também é possível conferir a ação de execução:
 
 ```bash
+source /opt/ros/jazzy/setup.bash
+source ~/work/garra/install/setup.bash
+
 ros2 action list | grep execute_trajectory
 ```
 
@@ -144,7 +160,7 @@ O script executa uma sequência de verificações da garra **em simulação**:
 Com `demo.launch.py` ainda ativo em outro terminal:
 
 ```bash
-cd ~/braco_ws
+cd ~/work/garra
 source /opt/ros/jazzy/setup.bash
 source install/setup.bash
 
@@ -154,6 +170,9 @@ python3 src/garra/scripts/validar_garra.py
 Se você estiver executando a partir da raiz do próprio repositório (e não do workspace), o comando equivalente é:
 
 ```bash
+source /opt/ros/jazzy/setup.bash
+source ~/work/garra/install/setup.bash
+
 python3 scripts/validar_garra.py
 ```
 
@@ -294,13 +313,19 @@ Encerre a sessão e entre novamente para aplicar a alteração.
 Para servos de 180 graus:
 
 ```bash
-cd ~/braco_ws/src/garra
+source /opt/ros/jazzy/setup.bash
+source ~/work/garra/install/setup.bash
+
+cd ~/work/garra
 python3 scripts/calibrar_servos.py --versao 180 --porta /dev/ttyUSB0
 ```
 
 Para servos de 270 graus:
 
 ```bash
+source /opt/ros/jazzy/setup.bash
+source ~/work/garra/install/setup.bash
+
 python3 scripts/calibrar_servos.py --versao 270 --porta /dev/ttyUSB0
 ```
 
@@ -315,6 +340,9 @@ Parâmetros:
 Para ver a ajuda:
 
 ```bash
+source /opt/ros/jazzy/setup.bash
+source ~/work/garra/install/setup.bash
+
 python3 scripts/calibrar_servos.py --help
 ```
 
@@ -394,7 +422,7 @@ Somente depois de concluir a calibração, conferir o firmware e verificar a mec
 
 ```bash
 source /opt/ros/jazzy/setup.bash
-source ~/braco_ws/install/setup.bash
+source ~/work/garra/install/setup.bash
 
 export GARRA_PORTA=/dev/ttyUSB0
 ros2 launch garra_moveit_config garra_real.launch.py
@@ -403,6 +431,9 @@ ros2 launch garra_moveit_config garra_real.launch.py
 Sem RViz:
 
 ```bash
+source /opt/ros/jazzy/setup.bash
+source ~/work/garra/install/setup.bash
+
 ros2 launch garra_moveit_config garra_real.launch.py use_rviz:=false
 ```
 
@@ -423,30 +454,42 @@ As coordenadas são do centro do cubo no frame `robo_base` (centro da base do ro
 Com `demo.launch.py` ativo:
 
 ```bash
-cd ~/braco_ws/src/garra
+source /opt/ros/jazzy/setup.bash
+source ~/work/garra/install/setup.bash
+
+cd ~/work/garra
 ros2 run garra_coleta pegar_cubo 0.46 0.021 --so-planejar   # só planeja
 ros2 run garra_coleta pegar_cubo 0.46 0.021                 # executa no RViz
 ```
 
 ### 8.1.2 Executar na garra real
 
-1. Posicione o cubo (42 mm) no chão, no plano da garra — ex.: 46 cm à frente do centro da base (`x = 0.46`; no chão, `z = 0.021`).
+1. Posicione o cubo (42 mm) no chão, no plano da garra (y ≈ −3 cm) — ex.: **18,5 cm à frente da borda dianteira** (18,5 + 27,5 = 46 cm do centro → `x = 0.46`; no chão, `z = 0.021`). A garra alcança de 12,5 a 21,5 cm da borda (`x` de 0.40 a 0.49).
 2. Inicie `garra_real.launch.py` (seção 8) e confira que a garra está em uma posição segura.
 3. Planeje primeiro, sem mexer a garra:
 
    ```bash
+   source /opt/ros/jazzy/setup.bash
+   source ~/work/garra/install/setup.bash
+
    ros2 run garra_coleta pegar_cubo 0.46 0.021 --so-planejar
    ```
 
 4. Se o planejamento passar, execute com a mão no interruptor da fonte dos servos:
 
    ```bash
+   source /opt/ros/jazzy/setup.bash
+   source ~/work/garra/install/setup.bash
+
    ros2 run garra_coleta pegar_cubo 0.46 0.021
    ```
 
 5. Para devolver o cubo no mesmo lugar:
 
    ```bash
+   source /opt/ros/jazzy/setup.bash
+   source ~/work/garra/install/setup.bash
+
    ros2 run garra_coleta pegar_cubo 0.46 0.021 --soltar
    ```
 
@@ -455,12 +498,18 @@ ros2 run garra_coleta pegar_cubo 0.46 0.021                 # executa no RViz
 Sem `x` e `z`, o script vira um nó que escuta `/pegar_cubo` (`geometry_msgs/msg/Point`) e pega um cubo a cada mensagem. As opções (`--soltar`, `--so-planejar`, `--fechamento`...) valem para todas as mensagens:
 
 ```bash
+source /opt/ros/jazzy/setup.bash
+source ~/work/garra/install/setup.bash
+
 ros2 run garra_coleta pegar_cubo --soltar
 ```
 
 Em outro terminal, envie a posição do centro do cubo em `robo_base`:
 
 ```bash
+source /opt/ros/jazzy/setup.bash
+source ~/work/garra/install/setup.bash
+
 ros2 topic pub --once /pegar_cubo geometry_msgs/msg/Point "{x: 0.46, z: 0.021}"
 ```
 
@@ -470,15 +519,72 @@ Só `x` e `z` são usados; o `y` é ignorado enquanto o braço não tiver o moto
 
 | Parâmetro | Padrão | Descrição |
 |---|---|---|
-| `x`, `z` | — | Centro do cubo em `robo_base` (m). No chão, `z = 0.021`. Sem eles, escuta `/pegar_cubo`. |
+| `x`, `z` | — | Centro do cubo em `robo_base` (m): `x` = medida da borda dianteira + 0,275. No chão, `z = 0.021`. Sem eles, escuta `/pegar_cubo`. |
 | `--velocidade` | `0.2` | Escala de velocidade/aceleração (0–1). |
-| `--fechamento` | `85` | Graus do comando do J4 ao fechar. Em 95° os dedos forçam o cubo e prendem as engrenagens; use o menor valor que ainda segura. |
+| `--fechamento` | `90` | Graus do comando do J4 ao fechar. Em 95° os dedos forçam o cubo e prendem as engrenagens; use o menor valor que ainda segura. |
 | `--descer` | `0` | mm que a ponta desce além do que o modelo permite antes de fechar. Era 10 mm com a calibração antiga; desde as escalas de 2026-11-16 a garra real fica até ~1,5 cm abaixo do modelo com o braço esticado. |
 | `--entregar` | — | Só solta em (x, z) o cubo que já está nos dedos: pré-pegada → reta → abre os dedos → recua → `PRONTA`. Não abre os dedos antes de chegar (o `--soltar` pega e devolve). Pelo tópico: `/entregar_cubo`. |
 | `--so-planejar` | — | Planeja sem mexer a garra. |
 | `--soltar` | — | Devolve o cubo no mesmo lugar. |
 
 Se a garra não alcançar o cubo, aumente `--descer` aos poucos (5 mm por vez); se os dedos travarem ou forçarem, reduza `--fechamento`.
+
+## 8.2 Teste 6 — Câmera (`calibrar_camera.py` e `camera_cubo.py`)
+
+<badge color="info">Só a câmera</badge>
+
+Feche o `camera_cubo.py`, o Cheese e o navegador antes: a webcam só abre num programa por vez.
+
+### 8.2.1 Calibrar a pose da câmera
+
+```bash
+source /opt/ros/jazzy/setup.bash
+source ~/work/garra/install/setup.bash
+
+cd ~/work/garra
+python3 scripts/calibrar_camera.py
+```
+
+1. Espalhe alguns cubos no chão, tag para cima, até a inclinação (~41°) e a altura (~54 cm) estabilizarem na tela.
+2. Deixe **um** cubo visível num ponto medido — bom ponto: **19 cm à frente da borda dianteira, y = −3 cm** —, aperte **K** e digite `19 -3` (x da borda, em cm; o script soma os 27,5 cm).
+3. Aperte **S** para salvar em `~/.config/garra/camera_montagem.json`. Vale na hora, sem `colcon build`.
+
+> Calibrações salvas antes de 2026-11-19 usavam o solvePnP na tecla K (~11% mais longe) e deslocam todas as posições: refaça.
+
+### 8.2.2 Conferir as medidas
+
+```bash
+source /opt/ros/jazzy/setup.bash
+source ~/work/garra/install/setup.bash
+
+ros2 run garra_coleta camera_cubo --sem-ros
+```
+
+Coloque o cubo em dois ou três pontos medidos com a trena (ex.: 13, 17 e 21 cm da borda). O `da borda: x=… y=…` da janela deve bater com a trena em ~1 cm. Se só o ponto da calibração bater, refaça a calibração com o cubo perto do centro da janela de coleta.
+
+### 8.2.3 Câmera → garra
+
+Com `garra_real.launch.py` (ou `demo.launch.py`) e o `pegar_cubo` escutando (seção 8.1.3):
+
+```bash
+source /opt/ros/jazzy/setup.bash
+source ~/work/garra/install/setup.bash
+
+ros2 run garra_coleta camera_cubo          # aperte P com o cubo parado
+```
+
+O terminal mostra `… cm da borda dianteira … (robo_base x=…)`. Antes de executar na garra real, confira com `pegar_cubo --so-planejar` se a pose no RViz cai em cima do cubo.
+
+### 8.2.4 Coleta completa
+
+```bash
+source /opt/ros/jazzy/setup.bash
+source ~/work/garra/install/setup.bash
+
+ros2 launch garra_coleta coleta.launch.py garra:=real sempre_ativo:=true   # só para teste: a base pode se mexer
+```
+
+Veja os launchers e argumentos na seção 7.5 do README.
 
 ## 9. Diagnóstico de falhas
 
@@ -490,13 +596,16 @@ O `validar_garra.py` não encontrou todos os serviços/ações necessários.
 - aguarde a inicialização completa;
 - confira `ros2 service list` e `ros2 action list`;
 - verifique os logs do `move_group`;
-- confirme o `source` do Jazzy e do workspace em todos os terminais.
+- confirme o `source /opt/ros/jazzy/setup.bash` e o `source ~/work/garra/install/setup.bash` em todos os terminais (e de novo depois de cada `colcon build`).
 
 ### 9.2 `Nada publicado em /joint_states`
 
 O cliente não recebeu o estado das juntas dentro do tempo limite.
 
 ```bash
+source /opt/ros/jazzy/setup.bash
+source ~/work/garra/install/setup.bash
+
 ros2 topic echo /joint_states
 ros2 control list_controllers
 ```
@@ -551,5 +660,7 @@ Use esta ordem para reduzir o risco de testar várias camadas ao mesmo tempo:
 9. Iniciar `garra_real.launch.py` com a estrutura em condição segura e velocidade/escala reduzida quando aplicável.
 10. Fazer movimentos físicos pequenos e supervisionados antes de qualquer operação completa.
 11. Testar a coleta do cubo com `pegar_cubo.py`: primeiro `--so-planejar`, depois a execução real.
+12. Calibrar a câmera (`calibrar_camera.py`) e conferir as medidas em vários pontos (seção 8.2).
+13. Testar câmera → garra e, por último, a coleta completa.
 
 A validação em simulação confirma aspectos do modelo e do planejamento. Ela não comprova, por si só, que os servos estão calibrados, que a estrutura suporta os movimentos ou que a alimentação elétrica é adequada.

@@ -25,6 +25,12 @@ from garra_coleta.cliente_garra import ClienteGarra, HOME, JUNTAS, LIMITES, PRON
 
 NOMES = {'J1': 0, 'J2': 1, 'J3': 2}
 POSES = {'home': HOME, 'pronta': PRONTA}
+# Posicao inicial escolhida na pagina do pose_inicial_web.py
+ARQ_INICIAL = os.environ.get('GARRA_POSE_INICIAL',
+                             os.path.join(os.path.expanduser('~'), '.config', 'garra', 'pose_inicial.json'))
+if os.path.exists(ARQ_INICIAL):
+    import json
+    POSES['inicial'] = json.load(open(ARQ_INICIAL))['q']
 
 
 def mostrar(q):
@@ -34,7 +40,7 @@ def mostrar(q):
 def main():
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('alvo', nargs='*', help='home | pronta | J<n> <valor> [J<n> <valor> ...]')
+    parser.add_argument('alvo', nargs='*', help='home | pronta | inicial | J<n> <valor> [J<n> <valor> ...]')
     parser.add_argument('--graus', action='store_true', help='valores das juntas em graus')
     parser.add_argument('--velocidade', type=float, default=0.1)
     args = parser.parse_args()

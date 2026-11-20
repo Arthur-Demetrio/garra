@@ -60,12 +60,28 @@ CONFIG = pasta_config()
 CALIB = CONFIG / 'camera_calib_webcam.yaml'
 TOPICO = '/pegar_cubo'
 TOPICO_PLATAFORMA = '/garra/plataforma_y/posicao'
+TOPICO_VISTO = '/cubo_visto'   # cubo alvo em TODO quadro (o plataforma_y --seguir-cubo usa)
 TAG = 0.032              # m, lado do quadrado PRETO do AprilTag
 CUBO = 0.042             # m, aresta do cubo
 Z_CHAO = CUBO / 2        # centro do cubo apoiado no chao
 PARADO_S = 1.0           # envio automatico: cubo parado por este tempo
 PARADO_M = 0.005         # m de tremido aceito como parado
 MOVEU_M = 0.02           # envio automatico: so manda de novo se o cubo andou mais que isso
+# MEDIDAS COM A TRENA: sempre a partir da BORDA DIANTEIRA da base (x da trena). O codigo trabalha em
+# robo_base (centro da base): x_robo_base = x_trena + BORDA_DIANTEIRA. Base de 0,55 m (dimensoes.md).
+BORDA_DIANTEIRA = 0.275  # m, do centro do robo ate a borda dianteira
+
+
+def da_borda(x):
+    """x em robo_base -> distancia a frente da borda dianteira (o que a trena mede)."""
+    return x - BORDA_DIANTEIRA
+
+
+def para_robo_base(x_borda):
+    """Distancia medida a partir da borda dianteira -> x em robo_base."""
+    return x_borda + BORDA_DIANTEIRA
+
+
 Y_PLANO = -0.029         # m: plano da garra (o braco ainda e planar)
 Y_TOLERANCIA = 0.015
 
@@ -242,6 +258,7 @@ class Publicador:
         self.no = rclpy.create_node('camera_cubo')
         self.pub = self.no.create_publisher(Point, topico, 10)
         self.pub_plataforma = self.no.create_publisher(Point, TOPICO_PLATAFORMA, 10)
+        self.pub_visto = self.no.create_publisher(Point, TOPICO_VISTO, 10)
 
     def ativo(self):
         return self.no is None or self.rclpy.ok()
@@ -257,6 +274,10 @@ class Publicador:
         if self.no is not None and self.rclpy.ok():
             self.pub_plataforma.publish(self.Point(x=x, y=y, z=z))
             self.rclpy.spin_once(self.no, timeout_sec=0.0)
+
+    def visto(self, x, y, z):
+        if self.no is not None and self.rclpy.ok():
+            self.pub_visto.publish(self.Point(x=x, y=y, z=z))
 
     def fechar(self):
         if self.no is not None:
@@ -314,7 +335,8 @@ class App:
 
     def enviar(self, cubo):
         x, y, z = self.posicao_final(cubo)
-        texto = f'Cubo {cubo["id"]}: x={x:.3f} y={y:.3f} z={z:.3f} (robo_base)'
+        texto = (f'Cubo {cubo["id"]}: {da_borda(x) * 100:.1f} cm da borda dianteira, y={y * 100:.1f} cm '
+                 f'(robo_base x={x:.3f} y={y:.3f} z={z:.3f})')
         if abs(y - Y_PLANO) > Y_TOLERANCIA:
             texto += f'  AVISO: fora do plano da garra (y~{Y_PLANO:.3f}); y e ignorado'
         print(('Enviado ' if not self.args.sem_ros else '[sem ROS] ') + texto, flush=True)
@@ -341,9 +363,8 @@ class App:
             cv2.drawFrameAxes(img, det.K, det.dist, c['rvec'], c['tvec'], 0.03)
             x, y, z = c['xyz']
             org = tuple(int(v) for v in c['cantos'][0] - [0, 14])
-            xc, yc = x - CAMERA_EM[0], y - CAMERA_EM[1]
-            cv2.putText(img, f'ID {c["id"]} base: x={x * 100:.1f} y={y * 100:.1f} z={z * 100:.1f}  '
-                        f'| sob camera: x={xc * 100:.1f} y={yc * 100:.1f} cm',
+            cv2.putText(img, f'ID {c["id"]} da borda: x={da_borda(x) * 100:.1f} y={y * 100:.1f} cm  '
+                        f'(centro: x={x * 100:.1f} z={z * 100:.1f})',
                         org, cv2.FONT_HERSHEY_SIMPLEX, 0.9, cor, 2)
         h, w = img.shape[:2]
         cv2.rectangle(img, (0, h - 50), (w, h), (20, 20, 20), -1)
@@ -397,6 +418,8 @@ class App:
                     if xyz is not None:
                         cubos.append(dict(id=i, cantos=c, rvec=r, tvec=t, xyz=xyz))
                 alvo = self.escolher(cubos)
+                if alvo is not None:
+                    self.pub.visto(*self.posicao_final(alvo))
                 self.automatico(alvo)
                 self.desenhar(frame, cubos, alvo, det, fps)
                 cv2.imshow(janela, frame)
@@ -450,7 +473,8 @@ def main():
                     help=f'onde publicar (padrao {TOPICO}; use /cubo_detectado com o alcance_cubo.py)')
     ap.add_argument('--tag-plataforma', type=int, default=None,
                     help=f'ID do AprilTag preso na plataforma Y; publica a posicao em {TOPICO_PLATAFORMA}')
-    ap.add_argument('--altura-plataforma', type=float, default=0.20,
+    # 0.257: ajustada em 2026-11-20 pelo curso medido na trena (26 cm entre as chaves; a camera dava 27,4 com 0.24).
+    ap.add_argument('--altura-plataforma', type=float, default=0.257,
                     help='altura (m) do tag da plataforma em relacao ao chao (medir com a trena)')
     ap.add_argument('--sem-ros', action='store_true', help='nao publica no ROS, so mostra/imprime')
     App(ap.parse_args(argumentos_sem_ros())).rodar()

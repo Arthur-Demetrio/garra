@@ -36,6 +36,8 @@ constexpr double PERIODO_SENSOR_S = 0.05;      // pergunta a chave dos dedos a 2
 constexpr double REPUBLICAR_SENSOR_S = 1.0;    // publica mesmo sem mudanca, como sinal de vida
 const char * TOPICO_SENSOR = "/garra/cubo_preso";
 const char * TOPICO_PLATAFORMA = "/garra/plataforma_y";
+const char * TOPICO_HOME = "/garra/plataforma_y/home";
+const char * TOPICO_HOME_RESULTADO = "/garra/plataforma_y/home/resultado";
 constexpr double TEMPO_MAX_PEDIDO_Y_S = 0.3;   // sem mensagem nesse tempo -> para a plataforma
 constexpr double PERIODO_ENVIO_Y_S = 0.2;      // reenvia antes do timeout de 500 ms do firmware
 }  // namespace
@@ -202,12 +204,23 @@ hardware_interface::CallbackReturn GarraServoSystem::on_configure(const rclcpp_l
     sub_plataforma_ = no_sensor_->create_subscription<std_msgs::msg::Int8>(
       TOPICO_PLATAFORMA, rclcpp::QoS(1).best_effort(),
       [this](const std_msgs::msg::Int8 & msg) {
-        plataforma_pedido_ = std::clamp<int>(msg.data, -1, 1);
+        plataforma_pedido_ = std::clamp<int>(msg.data, -2, 2);
         tempo_desde_pedido_y_ = 0.0;
+      });
+    pub_home_ = no_sensor_->create_publisher<std_msgs::msg::String>(TOPICO_HOME_RESULTADO, 10);
+    sub_home_ = no_sensor_->create_subscription<std_msgs::msg::String>(
+      TOPICO_HOME, 10,
+      [this](const std_msgs::msg::String & msg) {
+        if (msg.data == "E" || msg.data == "D") {
+          home_pedido_ = msg.data[0];
+        } else {
+          RCLCPP_WARN(LOGGER, "%s: use \"E\" ou \"D\" (recebido \"%s\")", TOPICO_HOME, msg.data.c_str());
+        }
       });
   }
   plataforma_pedido_ = 0;
   plataforma_enviado_ = 0;
+  home_pedido_ = 0;
   sensor_ativo_ = true;
   sensor_respondeu_ = false;
   aguardando_sensor_ = false;
@@ -309,6 +322,17 @@ hardware_interface::return_type GarraServoSystem::read(
     if (linha == "Y TIMEOUT") {
       RCLCPP_WARN(LOGGER, "Plataforma Y parada pelo timeout do firmware");
       plataforma_enviado_ = 0;
+    } else if (linha.rfind("Y HOME ", 0) == 0) {
+      // "Y HOME E INICIO" so informa; o resultado final vai para o topico.
+      if (linha.find("INICIO") == std::string::npos && pub_home_) {
+        std_msgs::msg::String r;
+        r.data = linha.substr(7);   // "E OK", "D ERRO", "E CANCELADO"
+        pub_home_->publish(r);
+      }
+      RCLCPP_INFO(LOGGER, "Plataforma Y: %s", linha.c_str());
+    } else if (linha.rfind("Y FIM ", 0) == 0) {
+      RCLCPP_INFO(LOGGER, "Plataforma Y parada no fim de curso: %s", linha.c_str());
+      plataforma_enviado_ = 0;
     } else if (!linha.empty() && linha[0] == 'S') {
       tratar_sensor(linha);
     } else if (linha == "E comando" && aguardando_sensor_ && !sensor_respondeu_) {
@@ -356,10 +380,21 @@ hardware_interface::return_type GarraServoSystem::write(
     plataforma_pedido_ != plataforma_enviado_ ||
     (plataforma_pedido_ != 0 && tempo_desde_envio_y_ >= PERIODO_ENVIO_Y_S))
   {
-    const char * cmd = plataforma_pedido_ < 0 ? "Y E\n" : plataforma_pedido_ > 0 ? "Y D\n" : "Y P\n";
+    const char * cmd =
+      plataforma_pedido_ == -2 ? "Y L E\n" : plataforma_pedido_ == -1 ? "Y E\n" :
+      plataforma_pedido_ == 1 ? "Y D\n" : plataforma_pedido_ == 2 ? "Y L D\n" : "Y P\n";
     plataforma_enviado_ = plataforma_pedido_;
     tempo_desde_envio_y_ = 0.0;
     if (!enviar(cmd)) {
+      return return_type::ERROR;
+    }
+  }
+  // Homing pedido: manda uma vez; o firmware conduz sozinho. Um pedido de movimento depois cancela.
+  if (home_pedido_ != 0) {
+    const std::string cmd = std::string("Y H ") + home_pedido_ + "\n";
+    home_pedido_ = 0;
+    plataforma_pedido_ = plataforma_enviado_ = 0;
+    if (!enviar(cmd.c_str())) {
       return return_type::ERROR;
     }
   }

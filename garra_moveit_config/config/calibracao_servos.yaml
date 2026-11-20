@@ -1,10 +1,17 @@
 # Gerado por calibrar_servos.py (servo de 180 graus).
-# 2026-11-16: escalas J1-J3 refeitas com inclinometro (6 poses): os DS3218 giram ~200 graus em 2000 us.
+# 2026-11-20: zero e limites refeitos depois de girar o braco do J1 no eixo do servo.
+# 2026-11-20: ZERO = POSE DO MODELO EM q=0 (nao "elo vertical"): no CAD, em q=0, o 1o elo fica ~5 graus para
+# tras, o 2o ~2 para a frente e a GARRA ~23,5 para a frente. Zeros medidos com os elos verticais deslocados
+# de +5/+7/-22 graus (J1/J2/J3): a ponta real ia ~8 cm mais longe que o modelo. Antes: 1833/1472/1472.
+# 2026-11-20: sentido do J2 voltou a -550. A inversao (+550) foi um erro: no modelo J2 -0.5 com J1 0.5 da o
+# 2o elo a ~59 graus (somando), que era o medido (56); conferido pela pose da garra para baixo.
+# Escalas (us_por_rad) mantidas as medidas com inclinometro em 2026-11-16 (6 poses): os DS3218 giram
+# ~200 graus em 2000 us. O calibrador grava a nominal (-590.8); girar o braco no eixo nao muda a escala.
 # As de 2026-11-10 (medir_escala.py: -636.2/-646.8/-713.2) faziam as juntas andarem 10-25% a mais.
 juntas:
-  Revolucionar_46: {zero_us: 1678, us_por_rad: -580.0, min_us: 504, max_us: 2091}
-  Revolucionar_49: {zero_us: 1432, us_por_rad: -550.0, min_us: 544, max_us: 2400}
-  Revolucionar_72: {zero_us: 1492, us_por_rad: -570.0, min_us: 544, max_us: 2400}
+  Revolucionar_46: {zero_us: 1884, us_por_rad: -580.0, min_us: 544, max_us: 2297}
+  Revolucionar_49: {zero_us: 1539, us_por_rad: -550.0, min_us: 544, max_us: 2400}
+  Revolucionar_72: {zero_us: 1253, us_por_rad: -570.0, min_us: 544, max_us: 2400}
   # J4 (dedos, DS-S006MP): medido pelo Monitor Serial. 0 graus = aberta (544 us), 95 graus = presa no
   # cubo; max_us = 100 graus (1575 us), para o servo nao forcar fechado sem cubo.
   dedos: {zero_us: 544, us_por_rad: 590.8, min_us: 544, max_us: 1575}

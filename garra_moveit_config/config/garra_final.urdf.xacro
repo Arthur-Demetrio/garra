@@ -5,7 +5,7 @@
     <!-- Por padrao, hardware simulado. A garra fisica usa launch/garra_real.launch.py. -->
     <xacro:arg name="hardware_plugin" default="mock_components/GenericSystem"/>
     <xacro:arg name="calibracao_file" default="$(find garra_moveit_config)/config/calibracao_servos.yaml"/>
-    <xacro:arg name="porta_serial" default="/dev/ttyUSB0"/>
+    <xacro:arg name="porta_serial" default="/dev/serial/by-path/pci-0000:00:14.0-usb-0:3.3:1.0-port0"/>
 
     <!-- Importa a descrição original do robô -->
     <xacro:include filename="$(find garra_final_description)/urdf/garra_final.urdf" />

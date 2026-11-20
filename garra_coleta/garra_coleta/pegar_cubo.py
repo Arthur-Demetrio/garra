@@ -52,11 +52,11 @@ TOPICO = '/pegar_cubo'
 TOPICO_RESULTADO = '/pegar_cubo/resultado'
 TOPICO_ENTREGA = '/entregar_cubo'
 TOPICO_ENTREGA_RESULTADO = '/entregar_cubo/resultado'
-# TEMPORARIO: aberta em 65 graus (o normal e 0.0).
-ABERTA = math.radians(65.0)
+# TEMPORARIO: aberta em 50 graus e fechamento em 90 desde 2026-11-17 (engrenagem dos dedos remontada; o normal e 0.0).
+ABERTA = math.radians(50.0)
 # Graus do comando do J4 ao fechar no cubo. Em 95 graus os dedos forcam o cubo e prendem as
 # engrenagens; use o menor valor que ainda segura o cubo (--fechamento).
-FECHAMENTO_GRAUS = 85.0
+FECHAMENTO_GRAUS = 90.0
 # mm que a ponta desce alem do que o modelo permite antes de fechar. Era 10 mm para compensar a
 # calibracao antiga (garra real acima do modelo). Com as escalas de 2026-11-16 a garra real fica ate
 # ~1,5 cm ABAIXO do modelo com o braco esticado: padrao 0, para nao empurrar os dedos no chao.
