@@ -60,7 +60,9 @@ FECHAMENTO_GRAUS = 90.0
 # mm que a ponta desce alem do que o modelo permite antes de fechar. Era 10 mm para compensar a
 # calibracao antiga (garra real acima do modelo). Com as escalas de 2026-11-16 a garra real fica ate
 # ~1,5 cm ABAIXO do modelo com o braco esticado: padrao 0, para nao empurrar os dedos no chao.
-DESCER_MM = 0.0
+# 2026-11-20: com os zeros novos (pose do modelo em q=0), testado na bancada a 18,5 cm da borda:
+# 0 e 10 mm fecham acima do cubo; 15 mm fecha no meio das laterais. Conferir em 13 e 21 cm.
+DESCER_MM = 15.0
 RECUO = 0.06          # m: pre-pegada recuada na direcao de aproximacao
 SUBIDA = 0.05         # m: quanto sobe depois de pegar
 INCLINACOES = range(-90, 1, 5)  # graus; negativo = ponta para baixo
