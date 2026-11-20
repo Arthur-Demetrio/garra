@@ -30,9 +30,9 @@
     <group name="dedos">
         <joint name="dedos"/>
     </group>
-    <!-- Aberta em 50 graus (0.873 rad), desde 2026-11-17 (engrenagem dos dedos remontada). Comecou como valor temporario (antes era 0) e pode mudar depois. -->
+    <!-- Aberta em 60 graus (1.047 rad) desde 2026-11-20; antes 50 graus (2026-11-17, engrenagem dos dedos remontada) e 0 no inicio. Temporario, pode mudar depois. -->
     <group_state name="aberta" group="dedos">
-        <joint name="dedos" value="0.873"/>
+        <joint name="dedos" value="1.047"/>
     </group_state>
     <!-- 95 graus: prende o cubo sem o servo forcar. -->
     <group_state name="fechada" group="dedos">

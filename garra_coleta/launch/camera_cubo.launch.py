@@ -19,6 +19,8 @@ ARGS = [
     ('indice', '', 'indice da webcam /dev/videoN (vazio = acha a "Web Camera")'),
     ('id', '', 'ID do AprilTag do cubo (vazio = o mais perto)'),
     ('apoio', '0.0', 'altura (m) da superficie dos cubos: 0 = chao; mesa = altura do tampo'),
+    ('tag_plataforma', '256', 'ID do tag da plataforma Y (nao e cubo; vazio = desliga)'),
+    ('altura_plataforma', '0.257', 'altura (m) do centro do tag da plataforma ate o chao'),
 ]
 
 
@@ -31,6 +33,8 @@ def montar(context):
         extra += ['--camera', a['indice']]
     if a['id']:
         extra += ['--id', a['id']]
+    if a['tag_plataforma']:
+        extra += ['--tag-plataforma', a['tag_plataforma'], '--altura-plataforma', a['altura_plataforma']]
     return [no('camera_cubo', *extra)]
 
 

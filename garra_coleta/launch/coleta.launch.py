@@ -12,6 +12,8 @@ Argumentos:
     camera:=camera_cubo|vision|nenhuma  padrao camera_cubo; com vision, suba o cube_vision em outro
                                         terminal (com o .venv da camera)
     base:=true|false                    roda o ajuste_base.py (padrao true)
+    plataforma:=true|false              com camera:=camera_cubo, roda o plataforma_y.py e centraliza
+                                        a plataforma Y no plano da garra (y = -0,029) ao subir (padrao true)
     girar, sempre_ativo, id             repassados ao alcance_cubo.launch.py
     apoio                               altura da superficie dos cubos, repassada ao camera_cubo
     velocidade                          repassado ao pegar_cubo.launch.py
@@ -22,6 +24,7 @@ Exemplos:
 """
 
 import os
+import sys
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
@@ -29,10 +32,15 @@ from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, Opaq
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 
+sys.path.insert(0, os.path.dirname(__file__))
+from coleta_comum import SIM, no  # noqa: E402
+
+Y_PLANO = '-0.029'   # plano da garra: o mesmo Y_PLANO do alcance_cubo.py e do camera_cubo.py
+
 
 def montar(context):
     a = {k: LaunchConfiguration(k).perform(context) for k in
-         ('garra', 'camera', 'base', 'girar', 'sempre_ativo', 'velocidade', 'id', 'apoio')}
+         ('garra', 'camera', 'base', 'plataforma', 'girar', 'sempre_ativo', 'velocidade', 'id', 'apoio')}
     pasta = os.path.join(get_package_share_directory('garra_coleta'), 'launch')
     moveit = os.path.join(get_package_share_directory('garra_moveit_config'), 'launch')
 
@@ -55,6 +63,8 @@ def montar(context):
         acoes.append(incluir('tf_camera.launch.py'))
     elif a['camera'] == 'camera_cubo':
         acoes.append(incluir('camera_cubo.launch.py', id=a['id'], apoio=a['apoio']))
+        if a['plataforma'] in SIM:
+            acoes.append(no('plataforma_y', '--centralizar', Y_PLANO))
     return acoes
 
 
@@ -64,6 +74,7 @@ def generate_launch_description():
         DeclareLaunchArgument('camera', default_value='camera_cubo',
                               choices=['camera_cubo', 'vision', 'nenhuma']),
         DeclareLaunchArgument('base', default_value='true'),
+        DeclareLaunchArgument('plataforma', default_value='true'),
         DeclareLaunchArgument('girar', default_value='false'),
         DeclareLaunchArgument('sempre_ativo', default_value='false'),
         DeclareLaunchArgument('velocidade', default_value='0.2'),

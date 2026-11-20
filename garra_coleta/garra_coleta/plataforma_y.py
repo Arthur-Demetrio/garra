@@ -21,6 +21,7 @@ Uso (garra_real.launch.py e camera_cubo --tag-plataforma N rodando):
   ros2 run garra_coleta plataforma_y
   ros2 topic pub --once /garra/plataforma_y/alvo std_msgs/msg/Float64 "{data: 0.05}"
   ros2 run garra_coleta plataforma_y --seguir-cubo   # segue o y do cubo visto (/cubo_visto)
+  ros2 run garra_coleta plataforma_y --centralizar -0.029   # vai ao plano da garra do alcance_cubo, 1 vez
 
 Perto das bordas (a menos de --zona-borda de --y-min/--y-max) anda devagar. Para encostar numa borda
 com o teste da chave (homing, feito pelo firmware):
@@ -65,6 +66,7 @@ class PlataformaY:
         self.cubo_em = 0.0
         self.saltos = 0
         self.cubo_hist = []       # (t, y) recentes do cubo, para so aceitar um alvo estavel
+        self.centralizar = args.centralizar   # alvo inicial; vira None depois de usado
         if args.seguir_cubo:
             no.create_subscription(Point, TOPICO_CUBO, self._cubo, 10)
             no.get_logger().info(f'Seguindo o y do cubo em {TOPICO_CUBO}')
@@ -103,6 +105,10 @@ class PlataformaY:
             self.saltos += 1
             return
         self.y, self.visto_em = y, agora
+        if self.centralizar is not None:
+            alvo, self.centralizar = self.centralizar, None
+            self.no.get_logger().info(f'Centralizando: tag visto, plano da garra em y={y:.3f}')
+            self._alvo(Float64(data=alvo))
 
     def _alvo(self, msg):
         y = msg.data
@@ -206,8 +212,12 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--direita-aumenta-y', action='store_true',
                     help='o comando "direita" (1600 us) aumenta o y de robo_base (padrao: diminui)')
-    ap.add_argument('--deslocamento', type=float, default=0.0,
+    # 2026-11-20: medido na bancada: dedos a -2,0 cm na trena com o tag a -1,27 cm na camera.
+    ap.add_argument('--deslocamento', type=float, default=-0.0073,
                     help='y do plano da garra menos o y do tag (m), medido uma vez')
+    ap.add_argument('--centralizar', type=float, default=None, metavar='Y',
+                    help='leva o plano da garra a este y (m) assim que a camera ver o tag, uma vez '
+                         '(o coleta.launch.py usa -0.029, o Y_PLANO do alcance_cubo)')
     ap.add_argument('--tolerancia', type=float, default=0.005, help='erro aceito (m)')
     ap.add_argument('--zona-lenta', type=float, default=0.03, help='abaixo desse erro anda em pulsos (m)')
     ap.add_argument('--pulso-s', type=float, default=0.10)
