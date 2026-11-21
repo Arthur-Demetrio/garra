@@ -204,6 +204,7 @@ Aperte uma chave de cada vez e veja o estado mudar na tela. Depois, **regrave o 
 |---|---|---|
 | `garra_moveit_config/config/calibracao_servos.yaml` | zero, escala e limites dos servos | sim |
 | `scripts/ajustar_urdf.py` e `garra_coleta/garra_coleta/cliente_garra.py` | limites em rad | sim |
-| `~/.config/garra/camera_montagem.json` | pose calibrada da câmera | não (fica no computador) |
+| `~/.config/garra/camera_montagem.json` | pose calibrada da câmera (o `calibrar_camera.py` grava aqui) | não (fica no computador) |
+| `garra_coleta/config/camera_montagem.json` | cópia da pose calibrada, usada quando o arquivo acima não existe (ex.: computador novo do robô). Depois de recalibrar, copie o de `~/.config` para cá e faça commit | sim |
 | `garra_coleta/config/camera_calib_webcam.yaml` | lente da webcam | sim |
 | `~/.config/garra/pose_inicial.json` | pose inicial do braço (`pose_inicial_web.py`) | não |

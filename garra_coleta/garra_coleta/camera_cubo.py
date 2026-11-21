@@ -93,7 +93,11 @@ MONTAGEM = dict(x=-0.44, y=0.0, z=0.54, inclinacao=41.0, guinada=0.0)
 # Fica fora do pacote para valer sem recompilar e sobreviver ao colcon build.
 ARQ_MONTAGEM = Path(os.environ.get('GARRA_MONTAGEM',
                                    Path.home() / '.config' / 'garra' / 'camera_montagem.json'))
-MONTAGEM_CALIBRADA = dict(MONTAGEM, **json.loads(ARQ_MONTAGEM.read_text())) if ARQ_MONTAGEM.exists() else None
+# Copia versionada da calibracao (2026-11-21: robo no chao + y ajustado em +1,06 cm com um cubo na trena),
+# usada quando ~/.config/garra/camera_montagem.json nao existe (ex.: computador novo do robo).
+ARQ_MONTAGEM_GIT = CONFIG / 'camera_montagem.json'
+_ARQ_USADO = ARQ_MONTAGEM if ARQ_MONTAGEM.exists() else (ARQ_MONTAGEM_GIT if ARQ_MONTAGEM_GIT.exists() else None)
+MONTAGEM_CALIBRADA = dict(MONTAGEM, **json.loads(_ARQ_USADO.read_text())) if _ARQ_USADO else None
 # Pose calibrada no -WORK (extrinsic_height: tags na mesa + altura 57 cm). O frame dela tem origem no
 # chao LOGO ABAIXO da camera (x = para onde ela aponta); somando CAMERA_EM vira robo_base.
 ARQ_GIT = CONFIG / 'robot_config_webcam.yaml'
@@ -104,7 +108,8 @@ def pose_camera():
     """(R, t, origem) da camera em robo_base: calibrar_camera.py > -WORK > trena."""
     if MONTAGEM_CALIBRADA:
         m = MONTAGEM_CALIBRADA
-        return rotacao_camera(m), np.array([m['x'], m['y'], m['z']]), 'calibrar_camera.py'
+        origem = 'calibrar_camera.py' if _ARQ_USADO == ARQ_MONTAGEM else f'{ARQ_MONTAGEM_GIT.name} (copia do git)'
+        return rotacao_camera(m), np.array([m['x'], m['y'], m['z']]), origem
     if ARQ_GIT.exists():
         T = np.array(yaml.safe_load(ARQ_GIT.read_text())['T_base_cam'], float)
         return T[:3, :3], T[:3, 3] + CAMERA_EM, ARQ_GIT.name + ' (-WORK)'
