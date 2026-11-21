@@ -20,7 +20,7 @@ ARGS = [
     ('id', '', 'ID do AprilTag do cubo (vazio = o mais perto)'),
     ('apoio', '0.0', 'altura (m) da superficie dos cubos: 0 = chao; mesa = altura do tampo'),
     ('tag_plataforma', '256', 'ID do tag da plataforma Y (nao e cubo; vazio = desliga)'),
-    ('altura_plataforma', '0.257', 'altura (m) do centro do tag da plataforma ate o chao'),
+    ('altura_plataforma', '0.174', 'altura (m) do centro do tag da plataforma ate o chao'),
 ]
 
 

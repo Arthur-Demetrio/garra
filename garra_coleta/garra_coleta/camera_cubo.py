@@ -473,8 +473,12 @@ def main():
                     help=f'onde publicar (padrao {TOPICO}; use /cubo_detectado com o alcance_cubo.py)')
     ap.add_argument('--tag-plataforma', type=int, default=None,
                     help=f'ID do AprilTag preso na plataforma Y; publica a posicao em {TOPICO_PLATAFORMA}')
-    # 0.257: ajustada em 2026-11-20 pelo curso medido na trena (26 cm entre as chaves; a camera dava 27,4 com 0.24).
-    ap.add_argument('--altura-plataforma', type=float, default=0.257,
+    # 0.257: ajustada em 2026-11-20 pelo curso medido na trena, com a calibracao da camera feita com o robo
+    # num suporte de ~5 cm. 2026-11-21, camera recalibrada no chao: 0.174 (com a 0.257 a camera via a
+    # plataforma andar 12,35 cm quando andou 16 cm na trena, de -3 a +13 cm). ATENCAO: 0.174 e um valor
+    # EFETIVO, nao a altura fisica (o tag esta a ~24 cm do chao): compensa o erro da calibracao da camera para
+    # pontos altos. Ajustado junto com o --deslocamento -0.0346 do plataforma_y; recalibrando a camera, refazer.
+    ap.add_argument('--altura-plataforma', type=float, default=0.174,
                     help='altura (m) do tag da plataforma em relacao ao chao (medir com a trena)')
     ap.add_argument('--sem-ros', action='store_true', help='nao publica no ROS, so mostra/imprime')
     App(ap.parse_args(argumentos_sem_ros())).rodar()

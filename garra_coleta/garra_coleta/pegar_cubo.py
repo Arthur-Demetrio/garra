@@ -161,17 +161,24 @@ class Coleta:
         Com descer > 0, prefere as inclinacoes em que a descida extra inteira cabe nas juntas; o
         dict leva 'descer' = quanto da para descer de fato (m) na inclinacao escolhida."""
         y = self.c.fk(q_ini, FRAME).position.y
+        parcial = None   # melhor candidato sem a descida inteira, se nenhuma altura a permitir
         for dz in ALTURAS_PEGADA:
             validas = self._inclinacoes_validas(x, y, z + dz)
-            if validas:
-                print(f'Ponta {dz * 1000:.0f} mm acima do centro do cubo. Inclinacoes possiveis: '
-                      + ', '.join(str(v['graus']) for v in validas))
-                for v in validas:
-                    v['descer'] = self._descida_possivel(v['q_pega'], descer)
-                inteiras = [v for v in validas if v['descer'] >= descer - 1e-4]
-                escolha = inteiras or sorted(validas, key=lambda v: v['descer'])[-1:]
-                return escolha[len(escolha) // 2]
-        return None
+            if not validas:
+                continue
+            print(f'Ponta {dz * 1000:.0f} mm acima do centro do cubo. Inclinacoes possiveis: '
+                  + ', '.join(str(v['graus']) for v in validas))
+            for v in validas:
+                v['descer'] = self._descida_possivel(v['q_pega'], descer)
+            inteiras = [v for v in validas if v['descer'] >= descer - 1e-4]
+            if inteiras:
+                return inteiras[len(inteiras) // 2]
+            # 2026-11-21: a x=0.443 a 1a altura so tinha -90 graus com 2 de 10 mm; a seguinte serve.
+            melhor = max(validas, key=lambda v: v['descer'])
+            if parcial is None or melhor['descer'] > parcial['descer']:
+                parcial = melhor
+            print(f'  nenhuma deixa descer {descer * 1000:.0f} mm; tentando mais alto')
+        return parcial
 
     def _descida_possivel(self, q_pega, descer):
         """Quanto (m) da para descer em reta a partir de q_pega, ate descer."""

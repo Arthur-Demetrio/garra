@@ -23,13 +23,15 @@ ARGS = [
     ('sempre_ativo', 'false', 'age sem /coleta/pedido (SO PARA TESTES: move a base a qualquer hora)'),
     ('max_ajustes', '4', 'ajustes da base por coleta antes de desistir'),
     ('max_pegadas', '2', 'tentativas da garra por coleta antes de desistir'),
+    ('plataforma', 'false', 'alinha o Y pela plataforma Y (precisa do plataforma_y.py) em vez da base'),
 ]
 
 
 def montar(context):
     a = valores(context, ARGS)
     extra = ['--max-ajustes', a['max_ajustes'], '--max-pegadas', a['max_pegadas']]
-    extra += [f'--{n.replace("_", "-")}' for n in ('vision', 'girar', 'sempre_ativo') if a[n] in SIM]
+    extra += [f'--{n.replace("_", "-")}' for n in ('vision', 'girar', 'sempre_ativo', 'plataforma')
+              if a[n] in SIM]
     if a['id']:
         extra += ['--id', a['id']]
     return [no('alcance_cubo', *extra)]

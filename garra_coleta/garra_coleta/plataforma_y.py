@@ -45,6 +45,11 @@ TOPICO_POSICAO = '/garra/plataforma_y/posicao'
 TOPICO_ALVO = '/garra/plataforma_y/alvo'
 TOPICO_RESULTADO = '/garra/plataforma_y/resultado'
 TOPICO_CUBO = '/cubo_visto'   # camera_cubo: cubo alvo a cada quadro (modo --seguir-cubo)
+SEGURAR_MM = 6.0         # depois de chegar, corrige sozinho se o plano sair mais que isso do alvo
+TRAVA_S = 1.5            # andando sem o y mudar TRAVA_MM neste tempo = travada (para)
+TRAVA_MM = 3.0
+ESTAVEL_INICIAL_S = 1.0  # --centralizar: tag visto sem falhas por este tempo antes de comecar
+TENTATIVAS_INICIAL = 3   # --centralizar: novas tentativas se a camera perder o tag no caminho
 PERIODO_S = 0.05      # 20 Hz: bem abaixo dos 300 ms do driver
 
 
@@ -66,7 +71,15 @@ class PlataformaY:
         self.cubo_em = 0.0
         self.saltos = 0
         self.cubo_hist = []       # (t, y) recentes do cubo, para so aceitar um alvo estavel
-        self.centralizar = args.centralizar   # alvo inicial; vira None depois de usado
+        self.centralizar = args.centralizar   # alvo inicial pendente; vira None quando comeca
+        self.centralizar_alvo = args.centralizar
+        self.centralizando = False            # movimento inicial em andamento
+        self.tentativas = 0
+        self.visto_desde = None               # inicio da sequencia continua de leituras do tag
+        self.trava_ref = (0.0, None)          # (t, y) da ultima vez que o y andou TRAVA_MM
+        self.segurar = None                   # ultimo alvo atingido: corrige se sair SEGURAR_MM
+        self.segurando = False                # correcao silenciosa em andamento (nao publica resultado)
+        self.alvo_atingido = None
         if args.seguir_cubo:
             no.create_subscription(Point, TOPICO_CUBO, self._cubo, 10)
             no.get_logger().info(f'Seguindo o y do cubo em {TOPICO_CUBO}')
@@ -104,9 +117,14 @@ class PlataformaY:
                 and abs(y - self.y) > self.a.max_salto):
             self.saltos += 1
             return
+        if self.visto_desde is None or agora - self.visto_em > self.a.sem_camera_s:
+            self.visto_desde = agora
         self.y, self.visto_em = y, agora
-        if self.centralizar is not None:
+        # Posicao inicial so depois de ver o tag por ESTAVEL_INICIAL_S seguidos: logo que a camera abre,
+        # alguns quadros atrasam e o movimento parava por "camera nao ve o tag" (2026-11-21).
+        if self.centralizar is not None and agora - self.visto_desde >= ESTAVEL_INICIAL_S:
             alvo, self.centralizar = self.centralizar, None
+            self.centralizando = True
             self.no.get_logger().info(f'Centralizando: tag visto, plano da garra em y={y:.3f}')
             self._alvo(Float64(data=alvo))
 
@@ -115,12 +133,42 @@ class PlataformaY:
         if not self.a.y_min <= y <= self.a.y_max:
             self._fim(f'erro: alvo y={y:.3f} fora de [{self.a.y_min}, {self.a.y_max}]')
             return
-        self.alvo, self.inicio, self.parado_desde = y, time.monotonic(), None
+        agora = time.monotonic()
+        self.segurando, self.alvo_atingido = False, y   # alvo novo (externo) cancela o segurar em curso
+        # Posicao inicial: se o plano ja esta no alvo, ou o alvo e junto de uma borda (a menos de
+        # --zona-borda) e o plano ja esta entre o alvo e essa borda, nao anda.
+        if self.centralizando and self.y is not None:
+            borda = self.a.y_max if y > 0 else self.a.y_min
+            junto_da_borda = abs(borda - y) <= self.a.zona_borda
+            alem = abs(borda - self.y) < abs(borda - y) and (self.y - y) * (borda - y) > 0
+            if abs(y - self.y) <= self.a.tolerancia or (junto_da_borda and alem):
+                self._fim(f'ok y={self.y:.4f} (ja na posicao inicial, sem andar)')
+                return
+        self.alvo, self.inicio, self.parado_desde = y, agora, None
+        self.alvo_atingido = y
+        self.trava_ref = (agora, self.y)
         self.no.get_logger().info(f'Alvo y={y:.3f} m')
 
     def _fim(self, texto):
         self.alvo = None
         self._mandar(0)
+        if self.segurando:
+            # Correcao do segurar: nao publica (quem pediu o alvo ja recebeu o "ok"); so registra.
+            self.segurando = False
+            (self.no.get_logger().info if texto.startswith('ok') else self.no.get_logger().warn)(
+                f'Segurando posicao: {texto}')
+            if not texto.startswith('ok'):
+                self.segurar = None
+            return
+        self.segurar = self.alvo_atingido if texto.startswith('ok') else None
+        if self.centralizando:
+            if texto.startswith('erro: camera nao ve') and self.tentativas < TENTATIVAS_INICIAL:
+                self.tentativas += 1
+                self.centralizar, self.visto_desde = self.centralizar_alvo, None
+                self.no.get_logger().warn(f'Posicao inicial: {texto}; tentando de novo '
+                                          f'({self.tentativas}/{TENTATIVAS_INICIAL}) quando o tag voltar')
+                return
+            self.centralizando = False
         self.pub_res.publish(String(data=texto))
         (self.no.get_logger().info if texto.startswith('ok') else self.no.get_logger().error)(texto)
 
@@ -147,16 +195,39 @@ class PlataformaY:
         if self.alvo is None:
             if self.comando != 0:
                 self._mandar(0)
+            # Segurar: a plataforma nao tem freio e escorregou ~16 cm durante uma pegada (2026-11-21).
+            # Com o tag visivel e o plano a mais de SEGURAR_MM do ultimo alvo, volta para ele.
+            if (self.a.segurar_mm > 0 and self.segurar is not None and self.y is not None
+                    and agora - self.visto_em <= self.a.sem_camera_s
+                    and abs(self.segurar - self.y) > self.a.segurar_mm / 1000.0):
+                self.no.get_logger().warn(f'Plataforma saiu do lugar (y={self.y:.4f}, alvo '
+                                          f'{self.segurar:.4f}): voltando')
+                self.segurando = True
+                alvo = self.segurar
+                self.alvo, self.inicio, self.parado_desde = alvo, agora, None
+                self.alvo_atingido = alvo
+                self.trava_ref = (agora, self.y)
             return
         if self.y is None or agora - self.visto_em > self.a.sem_camera_s:
-            self._fim('erro: camera nao ve o tag da plataforma')
+            self._fim('erro: camera nao ve o tag da plataforma'
+                      + (f' (ultimo y={self.y:.4f})' if self.y is not None else ''))
             return
         if agora - self.inicio > self.a.tempo_max_s:
             self._fim(f'erro: tempo esgotado (y={self.y:.3f}, alvo {self.alvo:.3f})')
             return
 
+        # Travou: mandando andar e o y nao muda TRAVA_MM em TRAVA_S (fim de curso, cabo preso, camera
+        # errando a posicao perto da borda). 2026-11-21: ficou 30 s forcando no limite da esquerda.
+        ref_t, ref_y = self.trava_ref
+        if ref_y is None or abs(self.y - ref_y) >= TRAVA_MM / 1000.0:
+            self.trava_ref = (agora, self.y)
+        elif agora - ref_t > TRAVA_S:
+            self._fim(f'erro: travada (y={self.y:.4f} nao mudou em {TRAVA_S:.1f} s, alvo {self.alvo:.3f})')
+            return
+
         erro = self.alvo - self.y
         if abs(erro) <= self.a.tolerancia:
+            self.trava_ref = (agora, self.y)
             self._mandar(0)
             if self.parado_desde is None:
                 self.parado_desde = agora
@@ -212,19 +283,26 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--direita-aumenta-y', action='store_true',
                     help='o comando "direita" (1600 us) aumenta o y de robo_base (padrao: diminui)')
-    # 2026-11-20: medido na bancada: dedos a -2,0 cm na trena com o tag a -1,27 cm na camera.
-    ap.add_argument('--deslocamento', type=float, default=-0.0073,
+    # 2026-11-20: -0.0073 (dedos -2,0 cm na trena, tag -1,27 cm), com a calibracao da camera do suporte.
+    # 2026-11-21: camera recalibrada no chao (+ y corrigido em +1,06 cm com um cubo a -3 cm na trena): dedos
+    # a ~-5 cm na trena com o tag a ~-2,1 cm -> -0.029; com a altura do tag corrigida para 0.174 no camera_cubo
+    # (ajuste por 2 pontos na trena: -3 e +13 cm) -> -0.0346; na 1a coleta completa a garra fechou ~5 mm a
+    # esquerda do cubo (2,5 mm da tolerancia + ~2,5 mm daqui) -> -0.0321; na 2a, com a plataforma a <1 mm
+    # do cubo pela camera, ainda ~3 mm a esquerda -> -0.0291. Remedir se a camera for recalibrada.
+    ap.add_argument('--deslocamento', type=float, default=-0.0291,
                     help='y do plano da garra menos o y do tag (m), medido uma vez')
     ap.add_argument('--centralizar', type=float, default=None, metavar='Y',
                     help='leva o plano da garra a este y (m) assim que a camera ver o tag, uma vez '
                          '(o coleta.launch.py usa -0.029, o Y_PLANO do alcance_cubo)')
-    ap.add_argument('--tolerancia', type=float, default=0.005, help='erro aceito (m)')
+    # 3 mm (era 5): a 5 mm a garra fechava em cima do cubo; um pulso da zona lenta anda ~2,6 mm.
+    ap.add_argument('--tolerancia', type=float, default=0.003, help='erro aceito (m)')
     ap.add_argument('--zona-lenta', type=float, default=0.03, help='abaixo desse erro anda em pulsos (m)')
     ap.add_argument('--pulso-s', type=float, default=0.10)
     ap.add_argument('--pausa-s', type=float, default=0.25)
     ap.add_argument('--assentar-s', type=float, default=0.3, help='tempo parado dentro da tolerancia')
     ap.add_argument('--sem-camera-s', type=float, default=0.3)
-    ap.add_argument('--tempo-max-s', type=float, default=15.0)
+    # 30 s (era 15): perto das bordas anda devagar e em pulsos; de -1,7 a +11 cm esgotou os 15 s (2026-11-21).
+    ap.add_argument('--tempo-max-s', type=float, default=30.0)
     # TEMPORARIO (2026-11-20, sem homing ate a peca nova da chave): 20 mm antes dos contatos medidos,
     # chaves em -12,3 cm (direita, calculado) e 13,7 cm (esquerda, medido), com a camera recalibrada
     # e o tag a 25,7 cm (curso de 26 cm conferido na trena). Trocar pelo homing depois.
@@ -232,6 +310,8 @@ def main():
     ap.add_argument('--y-max', type=float, default=0.117, help='limite do curso, esquerda (m, robo_base)')
     ap.add_argument('--zona-borda', type=float, default=0.02,
                     help='a menos disso de --y-min/--y-max anda devagar (m); 0 desliga')
+    ap.add_argument('--segurar-mm', type=float, default=SEGURAR_MM,
+                    help=f'depois de chegar, corrige se sair mais que isso (mm); 0 desliga (padrao {SEGURAR_MM:.0f})')
     ap.add_argument('--testar-sentido', action='store_true')
     ap.add_argument('--seguir-cubo', action='store_true',
                     help=f'alinha o plano da garra com o y do cubo visto ({TOPICO_CUBO}), sem parar')

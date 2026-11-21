@@ -12,8 +12,9 @@ Argumentos:
     camera:=camera_cubo|vision|nenhuma  padrao camera_cubo; com vision, suba o cube_vision em outro
                                         terminal (com o .venv da camera)
     base:=true|false                    roda o ajuste_base.py (padrao true)
-    plataforma:=true|false              com camera:=camera_cubo, roda o plataforma_y.py e centraliza
-                                        a plataforma Y no plano da garra (y = -0,029) ao subir (padrao true)
+    plataforma:=true|false              com camera:=camera_cubo, roda o plataforma_y.py, centraliza
+                                        a plataforma Y junto do limite da esquerda (y = +0,11) ao subir e o
+                                        alcance_cubo alinha o Y do cubo pela plataforma (padrao true)
     girar, sempre_ativo, id             repassados ao alcance_cubo.launch.py
     apoio                               altura da superficie dos cubos, repassada ao camera_cubo
     velocidade                          repassado ao pegar_cubo.launch.py
@@ -35,7 +36,10 @@ from launch.substitutions import LaunchConfiguration
 sys.path.insert(0, os.path.dirname(__file__))
 from coleta_comum import SIM, no  # noqa: E402
 
-Y_PLANO = '-0.029'   # plano da garra: o mesmo Y_PLANO do alcance_cubo.py e do camera_cubo.py
+# Posicao inicial da plataforma Y ao subir a coleta: junto do limite da ESQUERDA (y_max do plataforma_y
+# = +0.117, ja 2 cm antes da chave), para a garra nao tapar os cubos da camera. O alcance_cubo le o
+# "ok y=..." e passa a usar esse plano; na hora de pegar, a plataforma vai ate o y do cubo.
+Y_INICIAL = '0.110'
 
 
 def montar(context):
@@ -57,14 +61,16 @@ def montar(context):
     if a['base'] in ('true', '1', 'sim'):
         acoes.append(incluir('ajuste_base.launch.py'))
     vision = 'true' if a['camera'] == 'vision' else 'false'
+    # A plataforma so tem a posicao medida pelo camera_cubo (tag da plataforma): com vision, fica desligada.
+    plataforma = 'true' if a['camera'] == 'camera_cubo' and a['plataforma'] in SIM else 'false'
     acoes.append(incluir('alcance_cubo.launch.py', vision=vision, girar=a['girar'],
-                         sempre_ativo=a['sempre_ativo'], id=a['id']))
+                         sempre_ativo=a['sempre_ativo'], id=a['id'], plataforma=plataforma))
     if a['camera'] == 'vision':
         acoes.append(incluir('tf_camera.launch.py'))
     elif a['camera'] == 'camera_cubo':
         acoes.append(incluir('camera_cubo.launch.py', id=a['id'], apoio=a['apoio']))
         if a['plataforma'] in SIM:
-            acoes.append(no('plataforma_y', '--centralizar', Y_PLANO))
+            acoes.append(no('plataforma_y', '--centralizar', Y_INICIAL))
     return acoes
 
 
