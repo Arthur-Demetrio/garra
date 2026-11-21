@@ -68,6 +68,11 @@ FECHAMENTO_GRAUS = 90.0
 # SUPORTE de ~5 cm e o cubo na mesa, ou seja, o cubo 50 mm abaixo do z passado: nao valem. Com o robo no
 # chao (cubo no nivel das rodas, z = 0.021), 10 mm prende bem a 17 cm sem encostar no chao.
 DESCER_MM = 10.0
+# Descida da pegada por distancia (x do cubo em robo_base, m -> mm), usada quando --descer nao e passado.
+# 2026-11-21, robo no chao: a 14 cm (0.415) 10 mm encostou no chao numa das pegadas (garra vertical, perto
+# do limite do alcance); 5 mm pega (deu uma travadinha). A 17 cm (0.445) em diante, 10 mm. Interpola entre
+# os pontos; fora, usa o ponto mais perto.
+DESCER_POR_X = [(0.415, 5.0), (0.445, DESCER_MM)]
 # Se a descida inteira nao cabe nas juntas (perto do alcance maximo), desce o que der, desde que seja
 # ao menos esta fracao do pedido; abaixo disso desiste (os dedos fechariam alto demais no cubo).
 DESCER_MIN_FRACAO = 0.5
@@ -239,18 +244,21 @@ def descida_usada(plano, pedido_mm):
     return possivel
 
 
+def interpolar(tabela, x):
+    """Valor da tabela [(x, valor), ...] em x: interpola entre os pontos; fora, o ponto mais perto."""
+    pontos = sorted(tabela)
+    if x <= pontos[0][0]:
+        return pontos[0][1]
+    if x >= pontos[-1][0]:
+        return pontos[-1][1]
+    for (x0, v0), (x1, v1) in zip(pontos, pontos[1:]):
+        if x0 <= x <= x1:
+            return v0 + (v1 - v0) * (x - x0) / (x1 - x0)
+
+
 def x_corrigido(x):
     """x a mandar para o modelo para a garra real chegar em x (interpola CORRECAO_X; fora, o mais perto)."""
-    pontos = sorted(CORRECAO_X)
-    if x <= pontos[0][0]:
-        dx = pontos[0][1]
-    elif x >= pontos[-1][0]:
-        dx = pontos[-1][1]
-    else:
-        for (x0, d0), (x1, d1) in zip(pontos, pontos[1:]):
-            if x0 <= x <= x1:
-                dx = d0 + (d1 - d0) * (x - x0) / (x1 - x0)
-                break
+    dx = interpolar(CORRECAO_X, x)
     if abs(dx) >= 0.0005:
         print(f'Correcao de x: {x:.3f} -> {x + dx:.3f} m ({dx * 1000:+.0f} mm)')
     return x + dx
@@ -258,14 +266,15 @@ def x_corrigido(x):
 
 def pegar(c, coleta, x, z, args):
     """Pega (e opcionalmente solta) o cubo com centro em (x, z) de robo_base. Retorna 0 se deu certo."""
+    pedido_mm = args.descer if args.descer is not None else round(interpolar(DESCER_POR_X, x), 1)
     x = x_corrigido(x)
     q_atual = c.juntas_atuais()
-    plano = coleta.plano_de_pegada(x, z, q_atual, args.descer / 1000.0)
+    plano = coleta.plano_de_pegada(x, z, q_atual, pedido_mm / 1000.0)
     if plano is None:
         print(f'Cubo em x={x:.3f} z={z:.3f} fora do alcance (nenhuma inclinacao serve).')
         return 1
     print(f'Inclinacao escolhida: {plano["graus"]} graus')
-    descer = descida_usada(plano, args.descer)
+    descer = descida_usada(plano, pedido_mm)
     if descer is None:
         return 1
     if args.so_planejar:
@@ -419,9 +428,9 @@ def main():
     ap.add_argument('--velocidade', type=float, default=0.2, help='escala de velocidade (0-1)')
     ap.add_argument('--fechamento', type=float, default=FECHAMENTO_GRAUS,
                     help=f'graus do J4 ao fechar no cubo (padrao {FECHAMENTO_GRAUS:.0f}, max 100)')
-    ap.add_argument('--descer', type=float, default=DESCER_MM,
+    ap.add_argument('--descer', type=float, default=None,
                     help='mm a descer em reta depois de chegar no cubo, sem checar colisao com o '
-                         f'chao (o modelo e conservador perto do chao); padrao {DESCER_MM:.0f}, max 35')
+                         'chao; padrao: DESCER_POR_X (5 mm a 14 cm ate 10 mm a 17 cm), max 35')
     ap.add_argument('--descer-entrega', type=float, default=DESCER_ENTREGA_MM,
                     help=f'como --descer, mas na entrega (cubo nos dedos); padrao {DESCER_ENTREGA_MM:.0f}')
     ap.add_argument('--so-planejar', action='store_true', help='planeja sem mexer a garra')
@@ -435,7 +444,7 @@ def main():
         ap.error('informe x e z juntos, ou nenhum dos dois para escutar o topico')
     if args.entregar and (args.x is None or args.soltar):
         ap.error('--entregar precisa de x e z e nao combina com --soltar')
-    if not 0.0 <= args.descer <= 35.0:  # era 20; subido em 2026-11-21 nos testes com o robo no suporte
+    if args.descer is not None and not 0.0 <= args.descer <= 35.0:  # era 20; subido em 2026-11-21 nos testes com o robo no suporte
         ap.error('--descer deve ficar entre 0 e 35 mm')
     if not 0.0 <= args.fechamento <= 100.0:
         ap.error('--fechamento deve ficar entre 0 e 100 graus')
