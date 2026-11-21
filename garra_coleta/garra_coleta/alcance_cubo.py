@@ -87,6 +87,10 @@ X_ALVO = 0.445
 # Curso do plano da garra com a plataforma Y (os mesmos --y-min/--y-max do plataforma_y.py).
 PLATAFORMA_Y_MIN = -0.103
 PLATAFORMA_Y_MAX = 0.117
+# TEMPORARIO (2026-11-21, garra com folga, inclinada para a esquerda): quando a plataforma vai para a
+# DIREITA ate o cubo, os dedos chegam atrasados; o alvo passa do cubo por isto (m) para a direita. Indo para
+# a esquerda, a folga ja fica do lado certo (sem compensacao). Voltar para 0.0 quando a garra for consertada.
+FOLGA_DIREITA = 0.005
 
 
 def alcanca(x, y, y_plano=Y_PLANO):
@@ -287,16 +291,19 @@ def main():
             st['espera'] = None
         if not st['ativo'] or st['espera'] or agora < st['ate']:
             return
-        if alcanca(p.x, p.y, st['y_plano']):
+        # Plataforma indo para a direita (y do cubo menor que o plano atual): compensa a folga da garra.
+        y_alvo = p.y - FOLGA_DIREITA if args.plataforma and p.y < st['y_plano'] else p.y
+        if alcanca(p.x, y_alvo, st['y_plano']):
             mandar_garra(p, agora)
             return
-        if args.plataforma and x_na_janela(p.x) and y_no_curso(p.y):
-            print(f'Cubo em x={p.x:.3f} y={p.y:.3f}: alinhando a plataforma (plano em '
-                  f'y={st["y_plano"]:+.3f}) -> {TOPICO_PLATAFORMA_ALVO}', flush=True)
+        if args.plataforma and x_na_janela(p.x) and y_no_curso(y_alvo):
+            print(f'Cubo em x={p.x:.3f} y={p.y:.3f}: alinhando a plataforma em y={y_alvo:+.3f} (plano em '
+                  f'y={st["y_plano"]:+.3f}, folga {(y_alvo - p.y) * 100:+.1f} cm) '
+                  f'-> {TOPICO_PLATAFORMA_ALVO}', flush=True)
             if not pub_plataforma.get_subscription_count():
                 print(f'  AVISO: ninguem escutando {TOPICO_PLATAFORMA_ALVO} (o plataforma_y.py esta rodando?)')
             st['cubo'] = Point(x=p.x, y=p.y, z=p.z)
-            pub_plataforma.publish(Float64(data=p.y))
+            pub_plataforma.publish(Float64(data=y_alvo))
             st['espera'], st['ate'] = 'plataforma', agora + args.espera_plataforma
             return
         if st['ajustes'] >= args.max_ajustes:
