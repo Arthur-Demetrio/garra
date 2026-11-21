@@ -65,11 +65,14 @@ TOPICO_COLETA = '/coleta/pedido'          # do executor_prova.py (--garra) do ro
 TOPICO_COLETA_RES = '/coleta/resultado'
 
 # Janela de coleta no chao (robo_base, m). Calibracao de 2026-11-16: 0,40-~0,49 (pegada real em 0,465). Alem de -90 graus quase bateu no robo (2026-11-17): nao usar.
-X_MIN = 0.40
+# 2026-11-21 (robo no chao): com a CORRECAO_X do pegar_cubo.py, a garra real so alcanca a partir de
+# ~13,5 cm da borda (0.41): X_MIN 0.415 com folga. X_ALVO fixo em 17 cm (0.445), o ponto conferido na
+# pegada e na entrega (antes era o meio da janela).
+X_MIN = 0.415
 X_MAX = 0.49
 Y_PLANO = -0.029      # plano da garra (Y do TCP)
 Y_TOLERANCIA = 0.015  # mesmo valor do aviso do camera_cubo.py
-X_ALVO = (X_MIN + X_MAX) / 2
+X_ALVO = 0.445
 
 
 def alcanca(x, y):

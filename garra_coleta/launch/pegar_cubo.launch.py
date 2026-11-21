@@ -18,7 +18,9 @@ ARGS = [
     ('fechamento', '', 'graus do J4 ao fechar no cubo (vazio = padrao do script)'),
     ('descer', '', 'mm extras de descida antes de fechar (vazio = padrao do script)'),
     ('so_planejar', 'false', 'so planeja, nao mexe a garra'),
-    ('sem_sensor', 'false', 'nao confere a chave dos dedos'),
+    # 2026-11-21: chave dos dedos retirada (nao fechava nem apertada a mao): sem sensor por padrao.
+    # Ao recolocar a chave, volte para 'false'.
+    ('sem_sensor', 'true', 'nao confere a chave dos dedos'),
 ]
 
 

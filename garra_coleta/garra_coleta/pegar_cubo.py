@@ -64,7 +64,21 @@ FECHAMENTO_GRAUS = 90.0
 # 2026-11-20: com os zeros novos (pose do modelo em q=0), testado na bancada a 18,5 cm da borda:
 # 0 e 10 mm fecham acima do cubo; 15 mm fecha no meio das laterais. Conferido tambem a 13 cm
 # (garra a -90 graus) e a 21 cm (-65 graus): meio das laterais nos dois.
-DESCER_MM = 15.0
+# 2026-11-21: os testes anteriores (15 mm em 2026-11-20 e 15-30 mm em 2026-11-21) foram com o robo num
+# SUPORTE de ~5 cm e o cubo na mesa, ou seja, o cubo 50 mm abaixo do z passado: nao valem. Com o robo no
+# chao (cubo no nivel das rodas, z = 0.021), 10 mm prende bem a 17 cm sem encostar no chao.
+DESCER_MM = 10.0
+# Se a descida inteira nao cabe nas juntas (perto do alcance maximo), desce o que der, desde que seja
+# ao menos esta fracao do pedido; abaixo disso desiste (os dedos fechariam alto demais no cubo).
+DESCER_MIN_FRACAO = 0.5
+# Descida extra na ENTREGA (--entregar / /entregar_cubo). Separada da pegada: com o cubo nos dedos, descer
+# os mesmos mm empurra o cubo contra o chao (2026-11-21, com 10 mm).
+DESCER_ENTREGA_MM = 0.0
+# Correcao de x medida na garra real: (x do cubo em robo_base, m) -> quanto somar ao x mandado ao modelo.
+# 2026-11-21, robo no chao: a 17 cm da borda (0.445) acerta; a 13 cm (0.405) a garra fechava em ~14,5 cm
+# (1,5 cm a frente); a 14 cm (0.415, -11 mm interpolado) e a 21 cm (0.485, sem correcao) pega e entrega
+# certinho. Entre pontos interpola; fora, usa o ponto mais perto.
+CORRECAO_X = [(0.405, -0.015), (0.445, 0.0), (0.485, 0.0)]
 RECUO = 0.06          # m: pre-pegada recuada na direcao de aproximacao
 SUBIDA = 0.05         # m: quanto sobe depois de pegar
 INCLINACOES = range(-90, 1, 5)  # graus; negativo = ponta para baixo
@@ -136,16 +150,30 @@ class Coleta:
             rclpy.spin_once(self.c, timeout_sec=0.05)
         return self.cubo_preso
 
-    def plano_de_pegada(self, x, z, q_ini):
-        """Melhor inclinacao para o cubo em (x, z). Retorna dict com as etapas ou None."""
+    def plano_de_pegada(self, x, z, q_ini, descer=0.0):
+        """Melhor inclinacao para o cubo em (x, z). Retorna dict com as etapas ou None.
+
+        Com descer > 0, prefere as inclinacoes em que a descida extra inteira cabe nas juntas; o
+        dict leva 'descer' = quanto da para descer de fato (m) na inclinacao escolhida."""
         y = self.c.fk(q_ini, FRAME).position.y
         for dz in ALTURAS_PEGADA:
             validas = self._inclinacoes_validas(x, y, z + dz)
             if validas:
                 print(f'Ponta {dz * 1000:.0f} mm acima do centro do cubo. Inclinacoes possiveis: '
                       + ', '.join(str(v['graus']) for v in validas))
-                return validas[len(validas) // 2]
+                for v in validas:
+                    v['descer'] = self._descida_possivel(v['q_pega'], descer)
+                inteiras = [v for v in validas if v['descer'] >= descer - 1e-4]
+                escolha = inteiras or sorted(validas, key=lambda v: v['descer'])[-1:]
+                return escolha[len(escolha) // 2]
         return None
+
+    def _descida_possivel(self, q_pega, descer):
+        """Quanto (m) da para descer em reta a partir de q_pega, ate descer."""
+        if descer <= 0.0:
+            return 0.0
+        teste = self.c.linha_cartesiana(q_pega, (0.0, 0.0, -descer), evitar_colisao=False)
+        return descer if teste.fracao >= 0.99 else descer * max(teste.fracao, 0.0)
 
     def _inclinacoes_validas(self, x, y, z):
         validas = []
@@ -193,21 +221,53 @@ class Coleta:
         self.executar(nome, traj)
 
 
+def descida_usada(plano, pedido_mm):
+    """Descida extra (m) a usar no plano, ou None se nao der nem DESCER_MIN_FRACAO do pedido."""
+    pedido = pedido_mm / 1000.0
+    if pedido <= 0.0:
+        return 0.0
+    possivel = plano['descer']
+    if possivel >= pedido - 1e-4:
+        print(f'Desce mais {pedido_mm:.0f} mm.')
+        return pedido
+    if possivel < DESCER_MIN_FRACAO * pedido:
+        print(f'Nao da para descer {pedido_mm:.0f} mm a mais (limite das juntas; so '
+              f'{possivel * 1000:.0f} mm).')
+        return None
+    print(f'AVISO: so da para descer {possivel * 1000:.0f} de {pedido_mm:.0f} mm (limite das juntas): '
+          f'os dedos fecham {(pedido - possivel) * 1000:.0f} mm mais alto.')
+    return possivel
+
+
+def x_corrigido(x):
+    """x a mandar para o modelo para a garra real chegar em x (interpola CORRECAO_X; fora, o mais perto)."""
+    pontos = sorted(CORRECAO_X)
+    if x <= pontos[0][0]:
+        dx = pontos[0][1]
+    elif x >= pontos[-1][0]:
+        dx = pontos[-1][1]
+    else:
+        for (x0, d0), (x1, d1) in zip(pontos, pontos[1:]):
+            if x0 <= x <= x1:
+                dx = d0 + (d1 - d0) * (x - x0) / (x1 - x0)
+                break
+    if abs(dx) >= 0.0005:
+        print(f'Correcao de x: {x:.3f} -> {x + dx:.3f} m ({dx * 1000:+.0f} mm)')
+    return x + dx
+
+
 def pegar(c, coleta, x, z, args):
     """Pega (e opcionalmente solta) o cubo com centro em (x, z) de robo_base. Retorna 0 se deu certo."""
+    x = x_corrigido(x)
     q_atual = c.juntas_atuais()
-    plano = coleta.plano_de_pegada(x, z, q_atual)
+    plano = coleta.plano_de_pegada(x, z, q_atual, args.descer / 1000.0)
     if plano is None:
         print(f'Cubo em x={x:.3f} z={z:.3f} fora do alcance (nenhuma inclinacao serve).')
         return 1
     print(f'Inclinacao escolhida: {plano["graus"]} graus')
-    descer = args.descer / 1000.0
-    if descer > 0.0:
-        teste = c.linha_cartesiana(plano['q_pega'], (0.0, 0.0, -descer), evitar_colisao=False)
-        if teste.fracao < 0.99:
-            print(f'Nao da para descer {args.descer:.0f} mm a mais (limite das juntas).')
-            return 1
-        print(f'Desce mais {args.descer:.0f} mm antes de fechar.')
+    descer = descida_usada(plano, args.descer)
+    if descer is None:
+        return 1
     if args.so_planejar:
         return 0
 
@@ -270,17 +330,15 @@ def entregar(c, coleta, x, z, args):
 
     Mesma aproximacao da pegada (pre-pegada recuada -> reta), sem abrir os dedos antes de chegar.
     """
-    plano = coleta.plano_de_pegada(x, z, c.juntas_atuais())
+    x = x_corrigido(x)
+    plano = coleta.plano_de_pegada(x, z, c.juntas_atuais(), args.descer_entrega / 1000.0)
     if plano is None:
         print(f'Destino x={x:.3f} z={z:.3f} fora do alcance (nenhuma inclinacao serve).')
         return 1
     print(f'Inclinacao escolhida: {plano["graus"]} graus')
-    descer = args.descer / 1000.0
-    if descer > 0.0:
-        teste = c.linha_cartesiana(plano['q_pega'], (0.0, 0.0, -descer), evitar_colisao=False)
-        if teste.fracao < 0.99:
-            print(f'Nao da para descer {args.descer:.0f} mm a mais (limite das juntas).')
-            return 1
+    descer = descida_usada(plano, args.descer_entrega)
+    if descer is None:
+        return 1
     if args.so_planejar:
         return 0
 
@@ -363,7 +421,9 @@ def main():
                     help=f'graus do J4 ao fechar no cubo (padrao {FECHAMENTO_GRAUS:.0f}, max 100)')
     ap.add_argument('--descer', type=float, default=DESCER_MM,
                     help='mm a descer em reta depois de chegar no cubo, sem checar colisao com o '
-                         f'chao (o modelo e conservador perto do chao); padrao {DESCER_MM:.0f}, max 20')
+                         f'chao (o modelo e conservador perto do chao); padrao {DESCER_MM:.0f}, max 35')
+    ap.add_argument('--descer-entrega', type=float, default=DESCER_ENTREGA_MM,
+                    help=f'como --descer, mas na entrega (cubo nos dedos); padrao {DESCER_ENTREGA_MM:.0f}')
     ap.add_argument('--so-planejar', action='store_true', help='planeja sem mexer a garra')
     ap.add_argument('--soltar', action='store_true', help='devolve o cubo no mesmo lugar')
     ap.add_argument('--entregar', action='store_true',
@@ -375,8 +435,8 @@ def main():
         ap.error('informe x e z juntos, ou nenhum dos dois para escutar o topico')
     if args.entregar and (args.x is None or args.soltar):
         ap.error('--entregar precisa de x e z e nao combina com --soltar')
-    if not 0.0 <= args.descer <= 20.0:
-        ap.error('--descer deve ficar entre 0 e 20 mm')
+    if not 0.0 <= args.descer <= 35.0:  # era 20; subido em 2026-11-21 nos testes com o robo no suporte
+        ap.error('--descer deve ficar entre 0 e 35 mm')
     if not 0.0 <= args.fechamento <= 100.0:
         ap.error('--fechamento deve ficar entre 0 e 100 graus')
 
