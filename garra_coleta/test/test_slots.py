@@ -1,0 +1,197 @@
+import tempfile
+import unittest
+from pathlib import Path
+
+from garra_coleta.sequencia_slots import (
+    ConfigSlots, ErroSlots, PoseSlot, SequenciaSlots, carregar_config)
+from garra_coleta.slots import GerenciadorSlots
+
+CONFIG = Path(__file__).resolve().parents[1] / "config" / "slots.yaml"
+
+
+class TestGerenciadorSlots(unittest.TestCase):
+    def test_comeca_totalmente_vazio(self):
+        self.assertEqual(GerenciadorSlots().estado().para_dict()["slots"],
+                         {"0": None, "1": None, "2": None, "3": None})
+
+    def test_guarda_no_menor_slot_disponivel(self):
+        g = GerenciadorSlots()
+        self.assertEqual(g.guardar(12), 0)
+        self.assertEqual(g.guardar(7), 1)
+        g.retirar_por_slot(0)
+        self.assertEqual(g.guardar(3), 0)
+        self.assertEqual(g.guardar(5), 2)
+
+    def test_retirada_por_slot_e_por_cubo(self):
+        g = GerenciadorSlots()
+        g.guardar(12)
+        g.guardar(7)
+        self.assertEqual(g.retirar_por_slot(1), 7)
+        self.assertEqual(g.guardar(9), 1)
+        self.assertEqual(g.retirar_por_cubo(12), 0)
+        self.assertEqual(g.estado().slots, {0: None, 1: 9, 2: None, 3: None})
+
+    def test_reserva_nao_e_oferecida_e_cancelar_libera(self):
+        g = GerenciadorSlots()
+        s = g.reservar(4)
+        self.assertEqual(g.primeiro_disponivel(), 1)
+        with self.assertRaises(RuntimeError):
+            g.retirar_por_slot(s)
+        g.cancelar(s)
+        self.assertEqual(g.primeiro_disponivel(), 0)
+
+    def test_cubo_repetido_e_id_invalido(self):
+        g = GerenciadorSlots()
+        g.guardar(1)
+        with self.assertRaises(ValueError):
+            g.guardar("1")
+        with self.assertRaises(ValueError):
+            g.guardar("abc")
+
+    def test_estoque_cheio(self):
+        g = GerenciadorSlots()
+        for c in (1, 2, 3, 4):
+            g.guardar(c)
+        with self.assertRaises(RuntimeError):
+            g.guardar(5)
+
+    def test_salvar_e_carregar_ignora_reserva(self):
+        g = GerenciadorSlots()
+        g.guardar(8)
+        g.reservar(9)
+        with tempfile.TemporaryDirectory() as d:
+            arq = Path(d) / "estado.json"
+            g.salvar(arq)
+            self.assertEqual(GerenciadorSlots.carregar(arq).estado().slots,
+                             {0: 8, 1: None, 2: None, 3: None})
+
+
+class BracoFake:
+    def __init__(self, preso=True, falhar_em=None):
+        self.passos, self.preso, self.falhar_em = [], preso, falhar_em
+
+    def _p(self, nome):
+        self.passos.append(nome)
+        if nome == self.falhar_em:
+            raise RuntimeError("falha simulada")
+
+    def ir_para(self, nome, q): self._p(nome)
+    def entrar_slot(self, q, subida): self._p(f"entrar {q[0]:.0f}")
+    def sair_slot(self, subida): self._p("sair")
+    def abrir_dedos(self): self._p("abrir")
+    def fechar_dedos(self): self._p("fechar")
+    def cubo_preso(self): return self.preso
+    def ir_y(self, y): self._p(f"y {y}")
+
+
+class LeitorFake:
+    def __init__(self, *leituras):
+        self.leituras = list(leituras)
+
+    def ler(self, timeout_s):
+        return self.leituras.pop(0) if self.leituras else []
+
+
+def config():
+    pontos = {n: [0.0, 0.0, 0.0] for n in ("pronta", "mostrar_apriltag", "acima_slots")}
+    slots = {s: PoseSlot([float(s), 0.0, 0.0], 0.05 if s == 3 else None) for s in range(4)}
+    return ConfigSlots(pontos, slots, 0.04)
+
+
+class TestSequenciaSlots(unittest.TestCase):
+    def seq(self, braco, leitor, **kw):
+        return SequenciaSlots(braco, leitor, config(), log=lambda _m: None, **kw)
+
+    def test_guardar_ordem_dos_passos(self):
+        b = BracoFake()
+        s = self.seq(b, LeitorFake([5]))
+        self.assertEqual(s.guardar(), 0)
+        self.assertEqual(b.passos, ["mostrar_apriltag", "acima_slots", "entrar 0", "abrir",
+                                    "sair", "acima_slots", "pronta"])
+        self.assertEqual(s.estoque.estado().slots[0], 5)
+
+    def test_guardar_vale_o_tag_lido_e_usa_esperado_se_nao_ler(self):
+        s = self.seq(BracoFake(), LeitorFake([6], [], []))
+        s.guardar(cubo_id_esperado=2)
+        s.guardar(cubo_id_esperado=2)
+        self.assertEqual(s.estoque.estado().slots, {0: 6, 1: 2, 2: None, 3: None})
+
+    def test_guardar_sem_tag_nem_esperado_nao_mexe(self):
+        b = BracoFake()
+        with self.assertRaises(ErroSlots) as e:
+            self.seq(b, LeitorFake([], [])).guardar()
+        self.assertEqual(e.exception.cubo_na_garra, -1)
+        self.assertEqual(b.passos, ["mostrar_apriltag"])
+
+    def test_dois_tags_na_imagem_nao_conta(self):
+        s = self.seq(BracoFake(), LeitorFake([1, 2], [3]))
+        s.guardar()
+        self.assertEqual(s.estoque.estado().slots[0], 3)
+
+    def test_falha_antes_de_soltar_libera_reserva(self):
+        s = self.seq(BracoFake(falhar_em="entrar 0"), LeitorFake([5]))
+        with self.assertRaises(ErroSlots) as e:
+            s.guardar()
+        self.assertEqual(e.exception.cubo_na_garra, 5)
+        self.assertIsNone(s.estoque.estado().slots[0])
+
+    def test_falha_depois_de_soltar_mantem_cubo_no_slot(self):
+        s = self.seq(BracoFake(falhar_em="sair"), LeitorFake([5]))
+        with self.assertRaises(ErroSlots) as e:
+            s.guardar()
+        self.assertIsNone(e.exception.cubo_na_garra)
+        self.assertEqual(s.estoque.estado().slots[0], 5)
+
+    def test_slot_com_plataforma_y(self):
+        b = BracoFake()
+        s = self.seq(b, LeitorFake())
+        for c in (1, 2, 3):
+            s.estoque.guardar(c)
+        s.leitor = LeitorFake([4])
+        self.assertEqual(s.guardar(), 3)
+        self.assertIn("y 0.05", b.passos)
+
+    def test_retirar_por_cubo(self):
+        b = BracoFake()
+        s = self.seq(b, LeitorFake([7]))
+        s.estoque.guardar(3)
+        s.estoque.guardar(7)
+        r = s.retirar(cubo_id=7)
+        self.assertEqual((r.cubo_id, r.slot, r.confirmado), (7, 1, True))
+        self.assertEqual(b.passos, ["abrir", "acima_slots", "entrar 1", "fechar", "sair",
+                                    "acima_slots", "mostrar_apriltag"])
+        self.assertEqual(s.estoque.estado().slots, {0: 3, 1: None, 2: None, 3: None})
+        self.assertEqual(s.retirar(cubo_id=3).cubo_id, 3)  # sem leitura: assume o registrado
+
+    def test_retirar_sem_prender_mantem_registro(self):
+        s = self.seq(BracoFake(preso=False), LeitorFake())
+        s.estoque.guardar(3)
+        with self.assertRaises(ErroSlots):
+            s.retirar(slot=0)
+        self.assertEqual(s.estoque.estado().slots[0], 3)
+
+    def test_retirar_corrige_cubos_trocados(self):
+        s = self.seq(BracoFake(), LeitorFake([9]))
+        s.estoque.guardar(3)
+        s.estoque.guardar(9)
+        r = s.retirar(slot=0)
+        self.assertEqual((r.cubo_id, r.esperado), (9, 3))
+        self.assertEqual(s.estoque.estado().slots, {0: None, 1: 3, 2: None, 3: None})
+
+    def test_retirar_slot_vazio(self):
+        with self.assertRaises(ErroSlots):
+            self.seq(BracoFake(), LeitorFake()).retirar(slot=2)
+
+
+class TestConfig(unittest.TestCase):
+    def test_config_do_pacote_lista_o_que_falta(self):
+        with self.assertRaises(ValueError) as e:
+            carregar_config(CONFIG)
+        self.assertIn("mostrar_apriltag", str(e.exception))
+        self.assertIn("slot 3", str(e.exception))
+        cfg = carregar_config(CONFIG, exigir_completa=False)
+        self.assertEqual(cfg.pontos["pronta"], [0.12, -0.95, 0.87])
+
+
+if __name__ == "__main__":
+    unittest.main()
