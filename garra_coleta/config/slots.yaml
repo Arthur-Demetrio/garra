@@ -1,0 +1,24 @@
+# Poses do sistema de slots, em juntas (q1, q2, q3) em radianos (ordem de JUNTAS do cliente_garra).
+# null = ainda nao calibrado. O sequenciador recusa rodar enquanto faltar alguma pose.
+# Para calibrar: levar o braco a mao/teleop ate a pose e copiar /joint_states.
+
+# Os 3 pontos comuns a todos os slots.
+pontos:
+  # Espera da coleta (= PRONTA do cliente_garra.py).
+  pronta: [0.12, -0.95, 0.87]
+  # Cubo preso nos dedos com o AprilTag virado para a camera, de perto e de frente.
+  mostrar_apriltag: null
+  # Transito acima da fileira de slots, alto o bastante para nao bater nos cubos guardados.
+  acima_slots: null
+
+# Distancia (m) da reta vertical de entrada/saida em cada slot: o braco vai por juntas ate
+# 'subida_m' acima do slot e so entao desce reto (e sobe reto ao sair).
+subida_m: 0.04
+
+# Uma pose por slot: o cubo assentado no slot, dedos ainda fechados.
+# y_plataforma (m, robo_base): y da plataforma Y para alcancar o slot; null = nao mexe na plataforma.
+slots:
+  0: {juntas: null, y_plataforma: null}
+  1: {juntas: null, y_plataforma: null}
+  2: {juntas: null, y_plataforma: null}
+  3: {juntas: null, y_plataforma: null}

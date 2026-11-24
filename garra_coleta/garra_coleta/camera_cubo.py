@@ -61,6 +61,9 @@ CALIB = CONFIG / 'camera_calib_webcam.yaml'
 TOPICO = '/pegar_cubo'
 TOPICO_PLATAFORMA = '/garra/plataforma_y/posicao'
 TOPICO_VISTO = '/cubo_visto'   # cubo alvo em TODO quadro (o plataforma_y --seguir-cubo usa)
+# IDs de TODOS os tags vistos no quadro (menos o da plataforma), do MAIOR para o menor na imagem:
+# o primeiro e o mais perto da camera (o cubo mostrado pela garra). Lista vazia = nenhum tag.
+TOPICO_TAGS = '/camera/tags_vistos'
 TAG = 0.032              # m, lado do quadrado PRETO do AprilTag
 CUBO = 0.042             # m, aresta do cubo
 Z_CHAO = CUBO / 2        # centro do cubo apoiado no chao
@@ -264,6 +267,9 @@ class Publicador:
         self.pub = self.no.create_publisher(Point, topico, 10)
         self.pub_plataforma = self.no.create_publisher(Point, TOPICO_PLATAFORMA, 10)
         self.pub_visto = self.no.create_publisher(Point, TOPICO_VISTO, 10)
+        from std_msgs.msg import Int32MultiArray
+        self.Int32MultiArray = Int32MultiArray
+        self.pub_tags = self.no.create_publisher(Int32MultiArray, TOPICO_TAGS, 10)
 
     def ativo(self):
         return self.no is None or self.rclpy.ok()
@@ -283,6 +289,10 @@ class Publicador:
     def visto(self, x, y, z):
         if self.no is not None and self.rclpy.ok():
             self.pub_visto.publish(self.Point(x=x, y=y, z=z))
+
+    def tags(self, ids):
+        if self.no is not None and self.rclpy.ok():
+            self.pub_tags.publish(self.Int32MultiArray(data=[int(i) for i in ids]))
 
     def fechar(self):
         if self.no is not None:
@@ -408,7 +418,11 @@ class App:
                 t_ant = agora
 
                 cubos = []
-                for i, c, r, t in det.detectar(frame):
+                deteccoes = det.detectar(frame)
+                vistos = sorted((d for d in deteccoes if d[0] != self.args.tag_plataforma),
+                                key=lambda d: -cv2.contourArea(d[1]))
+                self.pub.tags([d[0] for d in vistos])
+                for i, c, r, t in deteccoes:
                     if i == self.args.tag_plataforma:
                         p = ponto_no_plano(c, det.K, det.dist, self.R, self.t, self.args.altura_plataforma)
                         if p is not None:
