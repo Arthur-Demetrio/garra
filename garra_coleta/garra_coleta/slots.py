@@ -1,6 +1,6 @@
-"""Estoque dos quatro slots da garra (sem ROS).
+"""Estoque dos tres slots da garra (sem ROS).
 
-Slots numerados de 0 a 3. Cada slot guarda o ID do AprilTag do cubo (int) ou None.
+Slots numerados de 0 a 2 (0 = limite da esquerda, 1 = meio, 2 = limite da direita). Cada slot guarda o ID do AprilTag do cubo (int) ou None.
 Ao guardar, sempre se usa o MENOR slot livre.
 
 Guardar e feito em duas fases, porque o braco leva segundos ate soltar o cubo:
@@ -17,6 +17,8 @@ import json
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, Optional
+
+CAPACIDADE = 3
 
 
 @dataclass(frozen=True)
@@ -54,7 +56,7 @@ def _id(cubo_id) -> int:
 
 class GerenciadorSlots:
 
-    def __init__(self, capacidade: int = 4):
+    def __init__(self, capacidade: int = CAPACIDADE):
         if capacidade < 1:
             raise ValueError("capacidade deve ser pelo menos 1")
         self.capacidade = capacidade
@@ -151,7 +153,7 @@ class GerenciadorSlots:
         temp.replace(caminho)
 
     @classmethod
-    def carregar(cls, caminho, capacidade: int = 4) -> "GerenciadorSlots":
+    def carregar(cls, caminho, capacidade: int = CAPACIDADE) -> "GerenciadorSlots":
         g = cls(capacidade)
         caminho = Path(caminho)
         if caminho.exists():

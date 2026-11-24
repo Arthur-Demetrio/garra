@@ -13,7 +13,7 @@ CONFIG = Path(__file__).resolve().parents[1] / "config" / "slots.yaml"
 class TestGerenciadorSlots(unittest.TestCase):
     def test_comeca_totalmente_vazio(self):
         self.assertEqual(GerenciadorSlots().estado().para_dict()["slots"],
-                         {"0": None, "1": None, "2": None, "3": None})
+                         {"0": None, "1": None, "2": None})
 
     def test_guarda_no_menor_slot_disponivel(self):
         g = GerenciadorSlots()
@@ -30,7 +30,7 @@ class TestGerenciadorSlots(unittest.TestCase):
         self.assertEqual(g.retirar_por_slot(1), 7)
         self.assertEqual(g.guardar(9), 1)
         self.assertEqual(g.retirar_por_cubo(12), 0)
-        self.assertEqual(g.estado().slots, {0: None, 1: 9, 2: None, 3: None})
+        self.assertEqual(g.estado().slots, {0: None, 1: 9, 2: None})
 
     def test_reserva_nao_e_oferecida_e_cancelar_libera(self):
         g = GerenciadorSlots()
@@ -51,7 +51,7 @@ class TestGerenciadorSlots(unittest.TestCase):
 
     def test_estoque_cheio(self):
         g = GerenciadorSlots()
-        for c in (1, 2, 3, 4):
+        for c in (1, 2, 3):
             g.guardar(c)
         with self.assertRaises(RuntimeError):
             g.guardar(5)
@@ -64,7 +64,7 @@ class TestGerenciadorSlots(unittest.TestCase):
             arq = Path(d) / "estado.json"
             g.salvar(arq)
             self.assertEqual(GerenciadorSlots.carregar(arq).estado().slots,
-                             {0: 8, 1: None, 2: None, 3: None})
+                             {0: 8, 1: None, 2: None})
 
 
 class BracoFake:
@@ -96,7 +96,7 @@ class LeitorFake:
 
 def config(busca=()):
     pontos = {n: [0.0, 0.0, 0.0] for n in ("pronta", "mostrar_apriltag", "acima_slots")}
-    slots = {s: PoseSlot([float(s), 0.0, 0.0], 0.05 if s == 3 else None) for s in range(4)}
+    slots = {s: PoseSlot([float(s), 0.0, 0.0], -0.10 if s == 2 else None) for s in range(3)}
     return ConfigSlots(pontos, slots, 0.04, tuple(math.radians(g) for g in busca))
 
 
@@ -116,7 +116,7 @@ class TestSequenciaSlots(unittest.TestCase):
         s = self.seq(BracoFake(), LeitorFake([6], [], []))
         s.guardar(cubo_id_esperado=2)
         s.guardar(cubo_id_esperado=2)
-        self.assertEqual(s.estoque.estado().slots, {0: 6, 1: 2, 2: None, 3: None})
+        self.assertEqual(s.estoque.estado().slots, {0: 6, 1: 2, 2: None})
 
     def test_guardar_sem_tag_nem_esperado_nao_mexe(self):
         b = BracoFake()
@@ -147,11 +147,11 @@ class TestSequenciaSlots(unittest.TestCase):
     def test_slot_com_plataforma_y(self):
         b = BracoFake()
         s = self.seq(b, LeitorFake())
-        for c in (1, 2, 3):
+        for c in (1, 2):
             s.estoque.guardar(c)
         s.leitor = LeitorFake([4])
-        self.assertEqual(s.guardar(), 3)
-        self.assertIn("y 0.05", b.passos)
+        self.assertEqual(s.guardar(), 2)
+        self.assertIn("y -0.1", b.passos)
 
     def test_retirar_por_cubo(self):
         b = BracoFake()
@@ -162,7 +162,7 @@ class TestSequenciaSlots(unittest.TestCase):
         self.assertEqual((r.cubo_id, r.slot, r.confirmado), (7, 1, True))
         self.assertEqual(b.passos, ["abrir", "acima_slots", "entrar 1", "fechar", "sair",
                                     "acima_slots", "mostrar_apriltag"])
-        self.assertEqual(s.estoque.estado().slots, {0: 3, 1: None, 2: None, 3: None})
+        self.assertEqual(s.estoque.estado().slots, {0: 3, 1: None, 2: None})
 
     def test_retirar_sem_leitura_devolve_ao_slot_e_mantem_registro(self):
         b = BracoFake()
@@ -182,7 +182,7 @@ class TestSequenciaSlots(unittest.TestCase):
         s.estoque.guardar(9)
         r = s.retirar(slot=0)
         self.assertEqual((r.cubo_id, r.esperado), (9, 3))
-        self.assertEqual(s.estoque.estado().slots, {0: None, 1: 3, 2: None, 3: None})
+        self.assertEqual(s.estoque.estado().slots, {0: None, 1: 3, 2: None})
 
     def test_busca_em_j3_ate_ler(self):
         b = BracoFake()
@@ -205,7 +205,7 @@ class TestSequenciaSlots(unittest.TestCase):
     def test_estoque_cheio_le_o_id_e_nao_guarda(self):
         b = BracoFake()
         s = self.seq(b, LeitorFake([7]))
-        for c in (1, 2, 3, 4):
+        for c in (1, 2, 3):
             s.estoque.guardar(c)
         with self.assertRaises(ErroSlots) as e:
             s.guardar()
@@ -218,14 +218,42 @@ class TestSequenciaSlots(unittest.TestCase):
 
 
 class TestConfig(unittest.TestCase):
-    def test_config_do_pacote_lista_o_que_falta(self):
-        with self.assertRaises(ValueError) as e:
-            carregar_config(CONFIG)
-        self.assertIn("mostrar_apriltag", str(e.exception))
-        self.assertIn("slot 3", str(e.exception))
+    def test_lista_o_que_falta(self):
+        with tempfile.TemporaryDirectory() as d:
+            arq = Path(d) / "slots.yaml"
+            arq.write_text("pontos: {pronta: [0, 0, 0], mostrar_apriltag: null}\n"
+                           "slots: {0: {juntas: [0, 0, 0], y_cm: 11.0}}\n", encoding="utf-8")
+            with self.assertRaises(ValueError) as e:
+                carregar_config(arq)
+            msg = str(e.exception)
+            for falta in ("mostrar_apriltag", "acima_slots", "slot 1", "slot 2"):
+                self.assertIn(falta, msg)
+            self.assertNotIn("slot 0", msg)
+            self.assertNotIn("slot 3", msg)
+            cfg = carregar_config(arq, exigir_completa=False)
+            self.assertAlmostEqual(cfg.slots[0].y_plataforma, 0.11)
+
+    def test_config_do_pacote_carrega(self):
         cfg = carregar_config(CONFIG, exigir_completa=False)
         self.assertEqual(cfg.pontos["pronta"], [0.12, -0.95, 0.87])
+        self.assertEqual(len(cfg.slots), 3)
         self.assertEqual(len(cfg.busca_j3), 4)
+
+
+class TestGravarPose(unittest.TestCase):
+    def test_grava_ponto_e_slot_mantendo_comentarios(self):
+        from garra_coleta.ajustar_poses import gravar_no_yaml
+        texto = CONFIG.read_text(encoding="utf-8")
+        novo = gravar_no_yaml(texto, "mostrar_apriltag", [0.1, -0.2, 0.3])
+        novo = gravar_no_yaml(novo, "slot2", [1.0, 0.5, -0.25])
+        self.assertIn("  mostrar_apriltag: [0.100, -0.200, 0.300]\n", novo)
+        self.assertIn("  2: {juntas: [1.000, 0.500, -0.250], y_cm: null}   # limite da direita", novo)
+        self.assertEqual(texto.count("#"), novo.count("#"))
+        import yaml
+        dados = yaml.safe_load(novo)
+        self.assertEqual(dados["slots"][2]["juntas"], [1.0, 0.5, -0.25])
+        with self.assertRaises(ValueError):
+            gravar_no_yaml(texto, "slot3", [0, 0, 0])
 
 
 if __name__ == "__main__":

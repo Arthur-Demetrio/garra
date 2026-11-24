@@ -38,7 +38,7 @@ import math
 
 import yaml
 
-from garra_coleta.slots import GerenciadorSlots
+from garra_coleta.slots import CAPACIDADE, GerenciadorSlots
 
 PONTOS = ("pronta", "mostrar_apriltag", "acima_slots")
 BUSCA_J3_PADRAO_GRAUS = (8.0, -8.0, 15.0, -15.0)
@@ -70,7 +70,7 @@ class ErroSlots(RuntimeError):
 @dataclass(frozen=True)
 class PoseSlot:
     juntas: List[float]
-    y_plataforma: Optional[float] = None
+    y_plataforma: Optional[float] = None   # m, robo_base (no yaml: y_cm, em cm)
 
 
 @dataclass(frozen=True)
@@ -97,7 +97,7 @@ def _juntas(nome, valor):
     return [float(v) for v in valor]
 
 
-def carregar_config(caminho, capacidade=4, exigir_completa=True) -> ConfigSlots:
+def carregar_config(caminho, capacidade=CAPACIDADE, exigir_completa=True) -> ConfigSlots:
     """Le config/slots.yaml. Com exigir_completa, falha listando todas as poses ainda null."""
     dados = yaml.safe_load(Path(caminho).read_text(encoding="utf-8")) or {}
     faltando = []
@@ -114,8 +114,8 @@ def carregar_config(caminho, capacidade=4, exigir_completa=True) -> ConfigSlots:
         q = _juntas(f"slot {s}", item.get("juntas"))
         if q is None:
             faltando.append(f"slot {s}")
-        y = item.get("y_plataforma")
-        slots[s] = PoseSlot(q, None if y is None else float(y))
+        y_cm = item.get("y_cm")
+        slots[s] = PoseSlot(q, None if y_cm is None else float(y_cm) / 100.0)
     subida = float(dados.get("subida_m", 0.04))
     if not 0.0 < subida <= 0.15:
         raise ValueError(f"subida_m fora de (0, 0.15]: {subida}")

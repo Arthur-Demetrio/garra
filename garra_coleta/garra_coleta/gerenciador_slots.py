@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Interface ROS 2 para o estoque de quatro slots da garra.
+"""Interface ROS 2 para o estoque de tres slots da garra.
 
 Comandos em std_msgs/String em /garra/slots/comando:
   {"acao":"status"}
@@ -43,7 +43,7 @@ class GerenciadorSlotsNode:
     def __init__(self, no, cliente, velocidade=0.2):
         self.no = no
         self.cliente = cliente
-        self.estoque = GerenciadorSlots(4)
+        self.estoque = GerenciadorSlots()
         self.velocidade = velocidade
         self.config = carregar_config()
         self.dedos = ActionClient(
