@@ -11,27 +11,38 @@ duas interfaces, que serao implementadas na integracao (MoveIt/ROS) e aqui nos t
   Braco.entrar_slot(q_slot, subida)  juntas ate 'subida' acima de q_slot e desce reto ate ele
   Braco.sair_slot(subida)            sobe reto 'subida' a partir da pose atual
   Braco.abrir_dedos() / fechar_dedos()
-  Braco.cubo_preso() -> bool | None  chave dos dedos (/garra/cubo_preso); None = sem sensor
   Braco.ir_y(y)                      plataforma Y (/garra/plataforma_y/alvo); so se configurado
   LeitorTag.ler(timeout_s) -> list[int]   IDs que a camera ve agora
 
 Guardar (o cubo ja esta nos dedos, depois do pegar_cubo):
-  mostrar_apriltag -> le ID -> reserva o menor slot -> acima_slots -> entra no slot -> abre
+  mostrar_apriltag (+ busca em J3) -> le ID -> reserva o menor slot -> acima_slots -> entra no slot -> abre
   -> sai do slot -> acima_slots -> pronta
 Retirar (de um slot ou de um cubo pelo ID):
-  abre -> acima_slots -> entra no slot -> fecha -> confere sensor -> sai do slot -> acima_slots
+  abre -> acima_slots -> entra no slot -> fecha -> sai do slot -> acima_slots
   -> mostrar_apriltag -> le ID (confirma qual cubo saiu) -> devolve o ID para a missao decidir
+  Sem leitura: volta ao slot, abre e sai; o registro nao muda (ErroSlots, cubo_na_garra=None).
+
+A pose mostrar_apriltag so serve para CONFIRMAR o cubo nos dedos e saber o ID. J1 e J2 ficam fixos;
+se o tag nao for lido, a junta 3 tenta os desvios de 'busca_j3_graus' (o cubo nunca fica preso
+igual, e J3 corrige a inclinacao do tag sem tirar o cubo da imagem).
+
+A chave dos dedos (/garra/cubo_preso) NAO e usada: esta presa na posicao fechada e sempre diria
+"preso". A unica confirmacao de que o cubo esta nos dedos e a camera ler o tag.
 """
 
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable, Dict, List, Optional, Protocol
 
+import math
+
 import yaml
 
 from garra_coleta.slots import GerenciadorSlots
 
 PONTOS = ("pronta", "mostrar_apriltag", "acima_slots")
+BUSCA_J3_PADRAO_GRAUS = (8.0, -8.0, 15.0, -15.0)
+BUSCA_J3_MAX_GRAUS = 30.0
 
 
 class Braco(Protocol):
@@ -40,7 +51,6 @@ class Braco(Protocol):
     def sair_slot(self, subida: float) -> None: ...
     def abrir_dedos(self) -> None: ...
     def fechar_dedos(self) -> None: ...
-    def cubo_preso(self) -> Optional[bool]: ...
     def ir_y(self, y: float) -> None: ...
 
 
@@ -68,11 +78,12 @@ class ConfigSlots:
     pontos: Dict[str, List[float]]
     slots: Dict[int, PoseSlot]
     subida_m: float
+    busca_j3: tuple = ()      # desvios (rad) somados a J3 de mostrar_apriltag, em ordem
 
 
 @dataclass(frozen=True)
 class ResultadoRetirada:
-    cubo_id: Optional[int]   # ID lido pela camera (ou o registrado, se a leitura falhou)
+    cubo_id: Optional[int]   # ID lido pela camera
     slot: int
     confirmado: bool          # a camera leu o tag
     esperado: Optional[int]   # o que o estoque dizia estar no slot
@@ -108,9 +119,13 @@ def carregar_config(caminho, capacidade=4, exigir_completa=True) -> ConfigSlots:
     subida = float(dados.get("subida_m", 0.04))
     if not 0.0 < subida <= 0.15:
         raise ValueError(f"subida_m fora de (0, 0.15]: {subida}")
+    graus = dados.get("busca_j3_graus", BUSCA_J3_PADRAO_GRAUS) or ()
+    if any(abs(float(g)) > BUSCA_J3_MAX_GRAUS for g in graus):
+        raise ValueError(f"busca_j3_graus passa de +-{BUSCA_J3_MAX_GRAUS}: {graus}")
+    busca = tuple(math.radians(float(g)) for g in graus)
     if exigir_completa and faltando:
         raise ValueError("poses nao calibradas em slots.yaml: " + ", ".join(faltando))
-    return ConfigSlots(pontos, slots, subida)
+    return ConfigSlots(pontos, slots, subida, busca)
 
 
 class SequenciaSlots:
@@ -128,13 +143,33 @@ class SequenciaSlots:
         self.log = log
 
     # ---- passos ----------------------------------------------------------------------------
+    def _ler_uma(self, rotulo) -> Optional[int]:
+        ids = sorted(set(self.leitor.ler(self.timeout_tag_s)))
+        if len(ids) == 1:
+            return ids[0]
+        self.log(f"leitura do tag ({rotulo}): viu {ids or 'nada'}")
+        return None
+
     def ler_tag(self) -> Optional[int]:
-        """Um unico ID visto na pose mostrar_apriltag; None se nenhum ou mais de um."""
+        """Vai para mostrar_apriltag e devolve o unico ID visto; None se nenhum ou mais de um.
+
+        Primeiro 'tentativas_tag' leituras na pose; depois uma leitura em cada desvio de J3.
+        Se ler, a garra fica onde leu; se nao, volta para a pose original.
+        """
+        q = self.cfg.pontos["mostrar_apriltag"]
+        self.b.ir_para("mostrar_apriltag", q)
         for tentativa in range(self.tentativas_tag):
-            ids = sorted(set(self.leitor.ler(self.timeout_tag_s)))
-            if len(ids) == 1:
-                return ids[0]
-            self.log(f"leitura do tag {tentativa + 1}/{self.tentativas_tag}: viu {ids or 'nada'}")
+            lido = self._ler_uma(f"{tentativa + 1}/{self.tentativas_tag}")
+            if lido is not None:
+                return lido
+        for desvio in self.cfg.busca_j3:
+            g = math.degrees(desvio)
+            self.b.ir_para(f"mostrar_apriltag j3{g:+.0f}", [q[0], q[1], q[2] + desvio])
+            lido = self._ler_uma(f"j3 {g:+.0f} graus")
+            if lido is not None:
+                return lido
+        if self.cfg.busca_j3:
+            self.b.ir_para("mostrar_apriltag", q)
         return None
 
     def _ir(self, nome):
@@ -153,14 +188,12 @@ class SequenciaSlots:
 
     # ---- guardar ---------------------------------------------------------------------------
     def guardar(self, cubo_id_esperado: Optional[int] = None) -> int:
-        """Guarda o cubo que esta nos dedos. Devolve o slot usado.
+        """Confirma o cubo nos dedos, le o ID e guarda no menor slot livre. Devolve o slot.
 
         cubo_id_esperado (opcional) e o ID que a camera viu antes da pegada; se a leitura na
         pose mostrar_apriltag falhar, ele e usado. Se as duas faltarem, nao guarda.
+        Estoque cheio: o ID e lido mesmo assim e vai em ErroSlots.cubo_na_garra.
         """
-        if self.estoque.primeiro_disponivel() is None:
-            raise ErroSlots("estoque cheio", cubo_na_garra=cubo_id_esperado)
-        self._ir("mostrar_apriltag")
         lido = self.ler_tag()
         if lido is None and cubo_id_esperado is None:
             raise ErroSlots("tag nao lido e sem ID esperado: cubo continua na garra",
@@ -168,6 +201,9 @@ class SequenciaSlots:
         if lido is not None and cubo_id_esperado is not None and lido != cubo_id_esperado:
             self.log(f"AVISO: esperava o cubo {cubo_id_esperado}, a camera leu {lido}; vale o lido")
         cubo_id = lido if lido is not None else cubo_id_esperado
+        if self.estoque.primeiro_disponivel() is None:
+            raise ErroSlots(f"estoque cheio: cubo {cubo_id} continua na garra",
+                            cubo_na_garra=cubo_id)
 
         slot = self.estoque.reservar(cubo_id)
         self.log(f"guardando cubo {cubo_id} no slot {slot}")
@@ -213,33 +249,33 @@ class SequenciaSlots:
         except Exception as exc:
             raise ErroSlots(f"falha ao chegar no slot {slot}: {exc}") from exc
 
-        if self.b.cubo_preso() is False:
-            self.log(f"sensor: nada nos dedos no slot {slot}")
-            # Nao da para saber se o slot esta vazio ou se a pegada errou: mantem o registro.
-            self.b.abrir_dedos()
-            self._sair_slot()
-            raise ErroSlots(f"nao prendeu o cubo do slot {slot} (registro mantido)")
-
-        # A partir daqui o cubo saiu do slot.
-        self.estoque.retirar_por_slot(slot)
-        self._salvar(self.estoque)
+        # Sem sensor nos dedos: o registro so muda depois que a camera ler o tag.
         try:
             self._sair_slot()
-            self._ir("mostrar_apriltag")
         except Exception as exc:
-            raise ErroSlots(f"cubo do slot {slot} esta na garra, mas o movimento falhou: {exc}",
-                            cubo_na_garra=esperado) from exc
+            raise ErroSlots(f"movimento falhou saindo do slot {slot} (registro mantido): {exc}",
+                            cubo_na_garra=-1) from exc
 
         lido = self.ler_tag()
         if lido is None:
-            self.log(f"AVISO: tag nao lido; assumindo o registrado ({esperado})")
-            return ResultadoRetirada(esperado, slot, False, esperado)
+            self.log(f"AVISO: tag nao lido; devolvendo ao slot {slot} (registro mantido)")
+            try:
+                self._ir_slot(slot)
+                self.b.abrir_dedos()
+                self._sair_slot()
+            except Exception as exc:
+                raise ErroSlots(f"tag nao lido e a devolucao ao slot {slot} falhou: {exc}",
+                                cubo_na_garra=-1) from exc
+            raise ErroSlots(f"tag nao lido: soltou de novo no slot {slot} (registro mantido)",
+                            cubo_na_garra=None)
+
+        self.estoque.retirar_por_slot(slot)
         if lido != esperado:
             self.log(f"AVISO: slot {slot} tinha {lido}, nao {esperado}")
             outro = self.estoque.slot_do_cubo(lido)
             if outro is not None:
                 # O registro tinha o cubo lido em outro slot: provavelmente estao trocados.
                 self.estoque.corrigir(outro, esperado)
-                self._salvar(self.estoque)
                 self.log(f"AVISO: slot {outro} corrigido para {esperado}")
+        self._salvar(self.estoque)
         return ResultadoRetirada(lido, slot, True, esperado)

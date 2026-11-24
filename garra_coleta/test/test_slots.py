@@ -1,3 +1,4 @@
+import math
 import tempfile
 import unittest
 from pathlib import Path
@@ -67,20 +68,21 @@ class TestGerenciadorSlots(unittest.TestCase):
 
 
 class BracoFake:
-    def __init__(self, preso=True, falhar_em=None):
-        self.passos, self.preso, self.falhar_em = [], preso, falhar_em
+    def __init__(self, falhar_em=None):
+        self.passos, self.falhar_em = [], falhar_em
 
     def _p(self, nome):
         self.passos.append(nome)
         if nome == self.falhar_em:
             raise RuntimeError("falha simulada")
 
-    def ir_para(self, nome, q): self._p(nome)
+    def ir_para(self, nome, q):
+        self.q = list(q)
+        self._p(nome)
     def entrar_slot(self, q, subida): self._p(f"entrar {q[0]:.0f}")
     def sair_slot(self, subida): self._p("sair")
     def abrir_dedos(self): self._p("abrir")
     def fechar_dedos(self): self._p("fechar")
-    def cubo_preso(self): return self.preso
     def ir_y(self, y): self._p(f"y {y}")
 
 
@@ -92,10 +94,10 @@ class LeitorFake:
         return self.leituras.pop(0) if self.leituras else []
 
 
-def config():
+def config(busca=()):
     pontos = {n: [0.0, 0.0, 0.0] for n in ("pronta", "mostrar_apriltag", "acima_slots")}
     slots = {s: PoseSlot([float(s), 0.0, 0.0], 0.05 if s == 3 else None) for s in range(4)}
-    return ConfigSlots(pontos, slots, 0.04)
+    return ConfigSlots(pontos, slots, 0.04, tuple(math.radians(g) for g in busca))
 
 
 class TestSequenciaSlots(unittest.TestCase):
@@ -161,13 +163,17 @@ class TestSequenciaSlots(unittest.TestCase):
         self.assertEqual(b.passos, ["abrir", "acima_slots", "entrar 1", "fechar", "sair",
                                     "acima_slots", "mostrar_apriltag"])
         self.assertEqual(s.estoque.estado().slots, {0: 3, 1: None, 2: None, 3: None})
-        self.assertEqual(s.retirar(cubo_id=3).cubo_id, 3)  # sem leitura: assume o registrado
 
-    def test_retirar_sem_prender_mantem_registro(self):
-        s = self.seq(BracoFake(preso=False), LeitorFake())
+    def test_retirar_sem_leitura_devolve_ao_slot_e_mantem_registro(self):
+        b = BracoFake()
+        s = self.seq(b, LeitorFake())
         s.estoque.guardar(3)
-        with self.assertRaises(ErroSlots):
-            s.retirar(slot=0)
+        with self.assertRaises(ErroSlots) as e:
+            s.retirar(cubo_id=3)
+        self.assertIsNone(e.exception.cubo_na_garra)
+        self.assertEqual(b.passos, ["abrir", "acima_slots", "entrar 0", "fechar", "sair",
+                                    "acima_slots", "mostrar_apriltag",
+                                    "acima_slots", "entrar 0", "abrir", "sair", "acima_slots"])
         self.assertEqual(s.estoque.estado().slots[0], 3)
 
     def test_retirar_corrige_cubos_trocados(self):
@@ -177,6 +183,34 @@ class TestSequenciaSlots(unittest.TestCase):
         r = s.retirar(slot=0)
         self.assertEqual((r.cubo_id, r.esperado), (9, 3))
         self.assertEqual(s.estoque.estado().slots, {0: None, 1: 3, 2: None, 3: None})
+
+    def test_busca_em_j3_ate_ler(self):
+        b = BracoFake()
+        s = SequenciaSlots(b, LeitorFake([], [], [], [4]), config((8, -8, 15)),
+                           log=lambda _m: None)
+        self.assertEqual(s.guardar(), 0)
+        self.assertEqual(b.passos[:3], ["mostrar_apriltag", "mostrar_apriltag j3+8",
+                                        "mostrar_apriltag j3-8"])
+        self.assertEqual(s.estoque.estado().slots[0], 4)
+
+    def test_busca_em_j3_so_mexe_j3_e_volta_se_falhar(self):
+        b = BracoFake()
+        s = SequenciaSlots(b, LeitorFake(), config((10,)), log=lambda _m: None)
+        s.cfg.pontos["mostrar_apriltag"] = [0.1, 0.2, 0.3]
+        self.assertIsNone(s.ler_tag())
+        self.assertEqual(b.passos, ["mostrar_apriltag", "mostrar_apriltag j3+10",
+                                    "mostrar_apriltag"])
+        self.assertEqual(b.q, [0.1, 0.2, 0.3])
+
+    def test_estoque_cheio_le_o_id_e_nao_guarda(self):
+        b = BracoFake()
+        s = self.seq(b, LeitorFake([7]))
+        for c in (1, 2, 3, 4):
+            s.estoque.guardar(c)
+        with self.assertRaises(ErroSlots) as e:
+            s.guardar()
+        self.assertEqual(e.exception.cubo_na_garra, 7)
+        self.assertEqual(b.passos, ["mostrar_apriltag"])
 
     def test_retirar_slot_vazio(self):
         with self.assertRaises(ErroSlots):
@@ -191,6 +225,7 @@ class TestConfig(unittest.TestCase):
         self.assertIn("slot 3", str(e.exception))
         cfg = carregar_config(CONFIG, exigir_completa=False)
         self.assertEqual(cfg.pontos["pronta"], [0.12, -0.95, 0.87])
+        self.assertEqual(len(cfg.busca_j3), 4)
 
 
 if __name__ == "__main__":

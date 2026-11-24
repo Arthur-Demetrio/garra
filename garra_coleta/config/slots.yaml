@@ -11,6 +11,11 @@ pontos:
   # Transito acima da fileira de slots, alto o bastante para nao bater nos cubos guardados.
   acima_slots: null
 
+# Busca na pose mostrar_apriltag: se o tag nao for lido, soma estes desvios (graus) a J3, um por
+# vez, na ordem. J1 e J2 nao mudam. Limite +-30. Lista vazia = sem busca.
+# Ajustar depois de ver ate quantos graus a camera ainda le o tag.
+busca_j3_graus: [8, -8, 15, -15]
+
 # Distancia (m) da reta vertical de entrada/saida em cada slot: o braco vai por juntas ate
 # 'subida_m' acima do slot e so entao desce reto (e sobe reto ao sair).
 subida_m: 0.04

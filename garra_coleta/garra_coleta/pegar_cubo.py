@@ -6,8 +6,9 @@ O braco e planar: o cubo precisa estar no plano da garra (Y do TCP, ~-0,029 m).
 
 Sequencia: abrir dedos -> pre-pegada (recuada na direcao de aproximacao) -> reta ate o cubo ->
 descida extra (--descer) ->
-fechar dedos -> conferir a chave dos dedos (/garra/cubo_preso) -> subir em reta -> pronta.
-Se a chave disser que nao ha cubo, abre os dedos, sobe e volta para pronta (codigo 2).
+fechar dedos -> subir em reta -> pronta.
+A chave dos dedos (/garra/cubo_preso) esta presa fechada e e IGNORADA por padrao; --com-sensor
+volta a conferir (se a chave disser que nao ha cubo: abre, sobe e volta para pronta, codigo 2).
 
 A inclinacao da garra e escolhida sozinha: o script testa de -90 (para baixo) a 0 graus
 (horizontal) e usa o meio da faixa que funciona para o cubo pedido.
@@ -301,7 +302,7 @@ def pegar(c, coleta, x, z, args):
             velocidade=args.velocidade)
         coleta.executar('descida extra', ajuste.trajetoria)
     coleta.mover_dedos(math.radians(args.fechamento))
-    if not args.sem_sensor:
+    if args.com_sensor:
         preso = coleta.conferir_cubo()
         if preso is None:
             print(f'AVISO: nada em {TOPICO_SENSOR} (simulacao ou firmware sem sensor); seguindo sem conferir.')
@@ -444,8 +445,11 @@ def main():
     ap.add_argument('--soltar', action='store_true', help='devolve o cubo no mesmo lugar')
     ap.add_argument('--entregar', action='store_true',
                     help='so solta em (x, z) o cubo que ja esta nos dedos (nao pega)')
+    ap.add_argument('--com-sensor', action='store_true',
+                    help=f'confere a chave dos dedos ({TOPICO_SENSOR}) depois de fechar '
+                         '(desligado: a chave esta presa fechada)')
     ap.add_argument('--sem-sensor', action='store_true',
-                    help=f'nao confere a chave dos dedos ({TOPICO_SENSOR}) depois de fechar')
+                    help='sem efeito (o sensor ja e ignorado); mantido por compatibilidade')
     args = ap.parse_args(argumentos_sem_ros())
     if (args.x is None) != (args.z is None):
         ap.error('informe x e z juntos, ou nenhum dos dois para escutar o topico')
